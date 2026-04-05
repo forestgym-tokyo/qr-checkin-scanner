@@ -11,6 +11,12 @@ body {
   background: #111;
   color: #fff;
   padding: 20px;
+  margin: 0;
+}
+
+h1 {
+  margin: 0 0 16px;
+  font-size: 32px;
 }
 
 button {
@@ -20,20 +26,105 @@ button {
   border: none;
   background: #2e7d32;
   color: #fff;
+  margin-bottom: 16px;
+}
+
+#cameraWrap {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 #video {
   width: 100%;
   max-width: 400px;
-  margin-top: 20px;
   border-radius: 12px;
   background: #000;
+  display: block;
+}
+
+#overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 220px;
+  height: 220px;
+  transform: translate(-50%, -50%);
+  border: 3px solid #00ff88;
+  border-radius: 16px;
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.8);
+  box-sizing: border-box;
+}
+
+.frame::before,
+.frame::after {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: #ffffff;
+  border-style: solid;
+}
+
+.frame::before {
+  top: -3px;
+  left: -3px;
+  border-width: 4px 0 0 4px;
+  border-top-left-radius: 10px;
+}
+
+.frame::after {
+  right: -3px;
+  bottom: -3px;
+  border-width: 0 4px 4px 0;
+  border-bottom-right-radius: 10px;
+}
+
+#guide {
+  margin-top: 18px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #ddd;
+  white-space: pre-wrap;
 }
 
 #message {
-  margin-top: 20px;
+  margin-top: 18px;
   font-size: 22px;
   white-space: pre-wrap;
+  min-height: 60px;
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 28px;
+  }
+
+  button {
+    font-size: 22px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .frame {
+    width: 200px;
+    height: 200px;
+  }
+
+  #guide {
+    font-size: 16px;
+  }
+
+  #message {
+    font-size: 20px;
+  }
 }
 </style>
 </head>
@@ -44,8 +135,18 @@ button {
 
 <button onclick="startScan()">QR読み込み</button>
 
-<br>
-<video id="video" autoplay playsinline muted></video>
+<div id="cameraWrap">
+  <video id="video" autoplay playsinline muted></video>
+  <div id="overlay">
+    <div class="frame"></div>
+  </div>
+</div>
+
+<div id="guide">QRコードを枠内に合わせてください
+Please align the QR code within the frame
+
+15〜20cm離してください
+Keep 15–20 cm distance</div>
 
 <div id="message"></div>
 
