@@ -52,7 +52,7 @@ button {
 
 .frame {
   position: absolute;
-  top: 44%;
+  top: 38%;
   left: 50%;
   width: 220px;
   height: 220px;
@@ -88,7 +88,7 @@ button {
 }
 
 #guide {
-  margin-top: 40px;
+  margin-top: 90px;
   font-size: 18px;
   line-height: 1.8;
   color: #ddd;
@@ -116,13 +116,12 @@ button {
   .frame {
     width: 190px;
     height: 190px;
-    top: 42%;
+    top: 37%;
   }
 
   #guide {
-    margin-top: 48px;
+    margin-top: 95px;
     font-size: 16px;
-    line-height: 1.8;
   }
 
   #message {
@@ -298,9 +297,7 @@ function stopCamera() {
 
   const video = document.getElementById("video");
   if (video) {
-    try {
-      video.pause();
-    } catch (e) {}
+    try { video.pause(); } catch (e) {}
     video.srcObject = null;
   }
 
