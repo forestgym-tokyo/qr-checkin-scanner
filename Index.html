@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QRチェックイン</title>
+
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #111;
+  color: #fff;
+  padding: 20px;
+}
+
+button {
+  font-size: 24px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: none;
+  background: #2e7d32;
+  color: #fff;
+}
+
+#video {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 20px;
+  border-radius: 12px;
+}
+
+#message {
+  margin-top: 20px;
+  font-size: 22px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>QRチェックイン</h1>
+
+<button onclick="startScan()">QR読み込み</button>
+
+<br>
+<video id="video" autoplay playsinline></video>
+
+<div id="message"></div>
+
+<script>
+// ★ここを自分のApps ScriptのURLに変更
+const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+
+let stream = null;
+
+async function startScan() {
+  const video = document.getElementById("video");
+  const message = document.getElementById("message");
+
+  message.innerText = "カメラ起動中...";
+
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" }
+    });
+
+    video.srcObject = stream;
+
+    const detector = new BarcodeDetector({ formats: ['qr_code'] });
+
+    setInterval(async () => {
+      const codes = await detector.detect(video);
+      if (codes.length > 0) {
+        handleQR(codes[0].rawValue);
+      }
+    }, 500);
+
+  } catch (e) {
+    message.innerText = "カメラが使えません";
+  }
+}
+
+async function handleQR(text) {
+  const message = document.getElementById("message");
+
+  message.innerText = "読み取り成功\n送信中...";
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "checkinByQrText",
+        qrText: text
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      message.innerText = "チェックインしました";
+    } else {
+      message.innerText = data.message || "失敗";
+    }
+
+  } catch (e) {
+    message.innerText = "通信エラー";
+  }
+
+  stopCamera();
+}
+
+function stopCamera() {
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+  }
+}
+</script>
+
+</body>
+</html>
