@@ -71,20 +71,16 @@ async function startScan() {
   clearScanTimer();
 
   try {
-    // まず権限取得
     const tempStream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: false
     });
 
-    // 一旦止める
     tempStream.getTracks().forEach(track => track.stop());
 
-    // カメラ一覧取得
     const devices = await navigator.mediaDevices.enumerateDevices();
     const videoInputs = devices.filter(d => d.kind === "videoinput");
 
-    // 前カメラっぽいものを優先
     const frontCamera = videoInputs.find(d => {
       const label = (d.label || "").toLowerCase();
       return (
@@ -106,7 +102,6 @@ async function startScan() {
         audio: false
       });
     } else {
-      // 見つからなければ前カメラ希望で取得
       stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: "user",
@@ -160,41 +155,6 @@ async function handleQR(text) {
   clearScanTimer();
 
   try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      body: JSON.stringify({
-        action: "checkinByQrText",
-        qrText: text
-      }),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      message.innerText = "チェックインしました";
-    } else {
-      message.innerText = data.message || "失敗";
-    }
-
-  } catch (e) {
-    console.error(e);
-    message.innerText = "通信エラー";
-  }
-
-  stopCamera();
-  isScanning = false;
-  isProcessing = false;
-}
-async function handleQR(text) {
-  const message = document.getElementById("message");
-
-  message.innerText = "読み取り成功\n送信中...";
-  clearScanTimer();
-
-  try {
     const params = new URLSearchParams();
     params.append("action", "checkinByQrText");
     params.append("qrText", text);
@@ -221,6 +181,7 @@ async function handleQR(text) {
   isScanning = false;
   isProcessing = false;
 }
+
 function clearScanTimer() {
   if (scanTimer) {
     clearInterval(scanTimer);
