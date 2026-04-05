@@ -188,7 +188,39 @@ async function handleQR(text) {
   isScanning = false;
   isProcessing = false;
 }
+async function handleQR(text) {
+  const message = document.getElementById("message");
 
+  message.innerText = "読み取り成功\n送信中...";
+  clearScanTimer();
+
+  try {
+    const params = new URLSearchParams();
+    params.append("action", "checkinByQrText");
+    params.append("qrText", text);
+
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: params
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      message.innerText = "チェックインしました";
+    } else {
+      message.innerText = data.message || "失敗";
+    }
+
+  } catch (e) {
+    console.error(e);
+    message.innerText = "通信エラー";
+  }
+
+  stopCamera();
+  isScanning = false;
+  isProcessing = false;
+}
 function clearScanTimer() {
   if (scanTimer) {
     clearInterval(scanTimer);
