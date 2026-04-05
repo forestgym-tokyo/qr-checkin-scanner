@@ -10,28 +10,33 @@ body {
   text-align: center;
   background: #111;
   color: #fff;
-  padding: 20px;
   margin: 0;
+  padding: 20px 16px 28px;
 }
 
 h1 {
-  margin: 0 0 18px;
+  margin: 0 0 24px;
   font-size: 32px;
+  line-height: 1.2;
 }
 
 #cameraWrap {
   position: relative;
   width: 100%;
-  max-width: 400px;
+  max-width: 360px;
   margin: 0 auto;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
 }
 
 #video {
   width: 100%;
-  max-width: 400px;
-  border-radius: 12px;
-  background: #000;
+  height: 100%;
+  object-fit: cover;
   display: block;
+  background: #000;
 }
 
 #overlay {
@@ -42,14 +47,14 @@ h1 {
 
 .frame {
   position: absolute;
-  top: 40%;
+  top: 50%;
   left: 50%;
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   transform: translate(-50%, -50%);
   border: 3px solid #00ff88;
   border-radius: 16px;
-  box-shadow: 0 0 12px rgba(0, 255, 136, 0.8);
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.85);
   box-sizing: border-box;
 }
 
@@ -57,8 +62,8 @@ h1 {
 .frame::after {
   content: "";
   position: absolute;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-color: #ffffff;
   border-style: solid;
 }
@@ -78,41 +83,51 @@ h1 {
 }
 
 #guide {
-  margin-top: 26px;
+  margin-top: 22px;
   font-size: 18px;
-  line-height: 1.8;
-  color: #ddd;
+  line-height: 1.75;
+  color: #e0e0e0;
   white-space: pre-wrap;
 }
 
 #message {
-  margin-top: 18px;
+  margin-top: 16px;
+  min-height: 56px;
   font-size: 22px;
+  line-height: 1.5;
   white-space: pre-wrap;
-  min-height: 60px;
 }
 
 button {
-  font-size: 24px;
+  width: 100%;
+  max-width: 360px;
+  margin-top: 18px;
   padding: 16px 20px;
-  border-radius: 12px;
+  font-size: 24px;
+  font-weight: bold;
   border: none;
+  border-radius: 12px;
   background: #2e7d32;
   color: #fff;
-  margin-top: 18px;
-  width: 100%;
-  max-width: 400px;
+}
+
+button:disabled {
+  opacity: 0.65;
 }
 
 @media (max-width: 480px) {
   h1 {
     font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  #cameraWrap {
+    max-width: 320px;
   }
 
   .frame {
-    width: 180px;
-    height: 180px;
-    top: 39%;
+    width: 160px;
+    height: 160px;
   }
 
   #guide {
@@ -124,6 +139,7 @@ button {
   }
 
   button {
+    max-width: 320px;
     font-size: 22px;
   }
 }
@@ -149,7 +165,7 @@ Keep 15–20 cm distance</div>
 
 <div id="message"></div>
 
-<button onclick="startScan()">QR読み込み</button>
+<button id="scanBtn" onclick="startScan()">QR読み込み</button>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
@@ -159,6 +175,10 @@ let scanTimer = null;
 let isScanning = false;
 let isProcessing = false;
 
+function setButtonDisabled(disabled) {
+  document.getElementById("scanBtn").disabled = disabled;
+}
+
 async function startScan() {
   const video = document.getElementById("video");
   const message = document.getElementById("message");
@@ -167,6 +187,7 @@ async function startScan() {
 
   isScanning = true;
   isProcessing = false;
+  setButtonDisabled(true);
   message.innerText = "カメラ起動中...";
 
   stopCamera();
@@ -221,6 +242,7 @@ async function startScan() {
       message.innerText = "このブラウザはQR自動読取に対応していません";
       stopCamera();
       isScanning = false;
+      setButtonDisabled(false);
       return;
     }
 
@@ -247,6 +269,7 @@ async function startScan() {
     message.innerText = "カメラが使えません";
     stopCamera();
     isScanning = false;
+    setButtonDisabled(false);
   }
 }
 
@@ -282,6 +305,7 @@ async function handleQR(text) {
   stopCamera();
   isScanning = false;
   isProcessing = false;
+  setButtonDisabled(false);
 }
 
 function clearScanTimer() {
