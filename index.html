@@ -186,109 +186,25 @@ function goBack() {
   window.location.href = RETURN_URL;
 }
 
-async function startScan() {
-  const video = document.getElementById("video");
-  const message = document.getElementById("message");
+function clearScanTimer() {
+  if (scanTimer) {
+    clearInterval(scanTimer);
+    scanTimer = null;
+  }
+}
 
-  if (isScanning) return;
-
-  isScanning = true;
-  isProcessing = false;
-  setButtonDisabled(true);
-  message.innerText = "カメラ起動中...";
-
-  stopCamera();
+function stopCamera() {
   clearScanTimer();
-  clearTimeout(timeoutTimer);
 
-  try {
-    const tempStream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: false
-    });
+  const video = document.getElementById("video");
+  if (video) {
+    try { video.pause(); } catch (e) {}
+    video.srcObject = null;
+  }
 
-    tempStream.getTracks().forEach(track => track.stop());
-
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const videoInputs = devices.filter(d => d.kind === "videoinput");
-
-    const frontCamera = videoInputs.find(d => {
-      const label = (d.label || "").toLowerCase();
-      return (
-        label.includes("front") ||
-        label.includes("user") ||
-        label.includes("inner") ||
-        label.includes("前") ||
-        label.includes("内")
-      );
-    });
-
-    if (frontCamera) {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          deviceId: { exact: frontCamera.deviceId },
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        },
-        audio: false
-      });
-    } else {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: "user",
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        },
-        audio: false
-      });
-    }
-
-    video.srcObject = stream;
-    await video.play();
-
-    if (!("BarcodeDetector" in window)) {
-      message.innerText = "このブラウザはQR自動読取に対応していません";
-      stopCamera();
-      isScanning = false;
-      setButtonDisabled(false);
-      timeoutTimer = setTimeout(goBack, 1500);
-      return;
-    }
-
-    const detector = new BarcodeDetector({ formats: ["qr_code"] });
-    message.innerText = "QRをかざしてください";
-
-    timeoutTimer = setTimeout(() => {
-      message.innerText = "読み取れなかったため元の画面へ戻ります";
-      stopCamera();
-      isScanning = false;
-      isProcessing = false;
-      setButtonDisabled(false);
-      setTimeout(goBack, 1200);
-    }, 10000);
-
-    scanTimer = setInterval(async () => {
-      if (isProcessing) return;
-      if (!video || video.readyState < 2) return;
-
-      try {
-        const codes = await detector.detect(video);
-        if (codes.length > 0 && codes[0].rawValue) {
-          isProcessing = true;
-          await handleQR(codes[0].rawValue);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }, 350);
-
-  } catch (e) {
-    console.error(e);
-    message.innerText = "カメラが使えません";
-    stopCamera();
-    isScanning = false;
-    setButtonDisabled(false);
-    timeoutTimer = setTimeout(goBack, 1500);
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+    stream = null;
   }
 }
 
@@ -330,25 +246,73 @@ async function handleQR(text) {
   setTimeout(goBack, 1200);
 }
 
-function clearScanTimer() {
-  if (scanTimer) {
-    clearInterval(scanTimer);
-    scanTimer = null;
-  }
-}
-
-function stopCamera() {
-  clearScanTimer();
-
+async function startScan() {
   const video = document.getElementById("video");
-  if (video) {
-    try { video.pause(); } catch (e) {}
-    video.srcObject = null;
-  }
+  const message = document.getElementById("message");
 
-  if (stream) {
-    stream.getTracks().forEach(track => track.stop());
-    stream = null;
+  if (isScanning) return;
+
+  isScanning = true;
+  isProcessing = false;
+  setButtonDisabled(true);
+  message.innerText = "カメラ起動中...";
+
+  stopCamera();
+  clearScanTimer();
+  clearTimeout(timeoutTimer);
+
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    });
+
+    video.srcObject = stream;
+    await video.play();
+
+    if (!("BarcodeDetector" in window)) {
+      message.innerText = "この端末はQR自動読取に対応していません";
+      stopCamera();
+      isScanning = false;
+      setButtonDisabled(false);
+      timeoutTimer = setTimeout(goBack, 1500);
+      return;
+    }
+
+    const detector = new BarcodeDetector({ formats: ["qr_code"] });
+    message.innerText = "QRをかざしてください";
+
+    timeoutTimer = setTimeout(() => {
+      message.innerText = "読み取れなかったため戻ります";
+      stopCamera();
+      isScanning = false;
+      isProcessing = false;
+      setButtonDisabled(false);
+      setTimeout(goBack, 1200);
+    }, 10000);
+
+    scanTimer = setInterval(async () => {
+      if (isProcessing) return;
+      if (!video || video.readyState < 2) return;
+
+      try {
+        const codes = await detector.detect(video);
+        if (codes.length > 0 && codes[0].rawValue) {
+          isProcessing = true;
+          await handleQR(codes[0].rawValue);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }, 300);
+
+  } catch (e) {
+    console.error(e);
+    message.innerText = "カメラが使えません";
+    stopCamera();
+    isScanning = false;
+    setButtonDisabled(false);
+    timeoutTimer = setTimeout(goBack, 1500);
   }
 }
 
