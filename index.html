@@ -207,7 +207,7 @@ Keep 15–20 cm distance</div>
 
         osc.type = "sine";
         osc.frequency.setValueAtTime(1300, ctx.currentTime);
-        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        gain.gain.setValueAtTime(0.7, ctx.currentTime);
 
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -229,7 +229,7 @@ Keep 15–20 cm distance</div>
 
           osc.type = "sine";
           osc.frequency.setValueAtTime(400, ctx.currentTime + delay);
-          gain.gain.setValueAtTime(0.30, ctx.currentTime + delay);
+          gain.gain.setValueAtTime(0.7, ctx.currentTime + delay);
 
           osc.connect(gain);
           gain.connect(ctx.destination);
