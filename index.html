@@ -1,336 +1,388 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>QRチェックイン</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>QRチェックイン</title>
 
-<style>
-body {
-  font-family: sans-serif;
-  text-align: center;
-  background: #111;
-  color: #fff;
-  margin: 0;
-  padding: 20px 16px 28px;
-}
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #111;
+      color: #fff;
+      margin: 0;
+      padding: 20px 16px 28px;
+    }
 
-h1 {
-  margin: 0 0 24px;
-  font-size: 32px;
-  line-height: 1.2;
-}
+    h1 {
+      margin: 0 0 24px;
+      font-size: 32px;
+      line-height: 1.2;
+    }
 
-#cameraWrap {
-  position: relative;
-  width: 100%;
-  max-width: 420px;
-  margin: 0 auto;
-  aspect-ratio: 4 / 3;
-  border-radius: 14px;
-  overflow: hidden;
-  background: #000;
-}
+    #cameraWrap {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+      aspect-ratio: 4 / 3;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #000;
+    }
 
-#video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  background: #000;
-  transform: scaleX(-1);
-}
+    #video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #000;
+      transform: scaleX(-1);
+    }
 
-#overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
+    #overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
 
-.frame {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 240px;
-  height: 240px;
-  transform: translate(-50%, -50%);
-  border: 3px solid #00ff88;
-  border-radius: 16px;
-  box-shadow: 0 0 12px rgba(0, 255, 136, 0.85);
-  box-sizing: border-box;
-}
+    .frame {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 240px;
+      height: 240px;
+      transform: translate(-50%, -50%);
+      border: 3px solid #00ff88;
+      border-radius: 16px;
+      box-shadow: 0 0 12px rgba(0, 255, 136, 0.85);
+      box-sizing: border-box;
+    }
 
-.frame::before,
-.frame::after {
-  content: "";
-  position: absolute;
-  width: 26px;
-  height: 26px;
-  border-color: #ffffff;
-  border-style: solid;
-}
+    .frame::before,
+    .frame::after {
+      content: "";
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      border-color: #ffffff;
+      border-style: solid;
+    }
 
-.frame::before {
-  top: -3px;
-  left: -3px;
-  border-width: 4px 0 0 4px;
-  border-top-left-radius: 10px;
-}
+    .frame::before {
+      top: -3px;
+      left: -3px;
+      border-width: 4px 0 0 4px;
+      border-top-left-radius: 10px;
+    }
 
-.frame::after {
-  right: -3px;
-  bottom: -3px;
-  border-width: 0 4px 4px 0;
-  border-bottom-right-radius: 10px;
-}
+    .frame::after {
+      right: -3px;
+      bottom: -3px;
+      border-width: 0 4px 4px 0;
+      border-bottom-right-radius: 10px;
+    }
 
-#guide {
-  margin-top: 22px;
-  font-size: 18px;
-  line-height: 1.75;
-  color: #e0e0e0;
-  white-space: pre-wrap;
-}
+    #guide {
+      margin-top: 22px;
+      font-size: 18px;
+      line-height: 1.75;
+      color: #e0e0e0;
+      white-space: pre-wrap;
+    }
 
-#message {
-  margin-top: 16px;
-  min-height: 56px;
-  font-size: 22px;
-  line-height: 1.5;
-  white-space: pre-wrap;
-}
+    #message {
+      margin-top: 16px;
+      min-height: 56px;
+      font-size: 22px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
 
-button {
-  width: 100%;
-  max-width: 420px;
-  margin-top: 18px;
-  padding: 16px 20px;
-  font-size: 24px;
-  font-weight: bold;
-  border: none;
-  border-radius: 12px;
-  background: #2e7d32;
-  color: #fff;
-}
+    button {
+      width: 100%;
+      max-width: 420px;
+      margin-top: 18px;
+      padding: 16px 20px;
+      font-size: 24px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      background: #2e7d32;
+      color: #fff;
+    }
 
-button:disabled {
-  opacity: 0.65;
-}
+    button:disabled {
+      opacity: 0.65;
+    }
 
-@media (max-width: 480px) {
-  h1 {
-    font-size: 28px;
-    margin-bottom: 20px;
-  }
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 28px;
+        margin-bottom: 20px;
+      }
 
-  #cameraWrap {
-    max-width: 340px;
-  }
+      #cameraWrap {
+        max-width: 340px;
+      }
 
-  .frame {
-    width: 200px;
-    height: 200px;
-  }
+      .frame {
+        width: 200px;
+        height: 200px;
+      }
 
-  #guide {
-    font-size: 16px;
-  }
+      #guide {
+        font-size: 16px;
+      }
 
-  #message {
-    font-size: 20px;
-  }
+      #message {
+        font-size: 20px;
+      }
 
-  button {
-    max-width: 340px;
-    font-size: 22px;
-  }
-}
-</style>
+      button {
+        max-width: 340px;
+        font-size: 22px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>QRチェックイン</h1>
+  <h1>QRチェックイン</h1>
 
-<div id="cameraWrap">
-  <video id="video" autoplay playsinline muted></video>
-  <div id="overlay">
-    <div class="frame"></div>
+  <div id="cameraWrap">
+    <video id="video" autoplay playsinline muted></video>
+    <div id="overlay">
+      <div class="frame"></div>
+    </div>
   </div>
-</div>
 
-<div id="guide">QRコードを枠内に合わせてください
+  <div id="guide">QRコードを枠内に合わせてください
 Please align the QR code within the frame
 
 15〜20cm離してください
 Keep 15–20 cm distance</div>
 
-<div id="message"></div>
+  <div id="message">カメラ起動中...</div>
 
-<button id="scanBtn" onclick="restartScan()">再スキャン</button>
+  <button id="scanBtn" onclick="restartScan()">再スキャン</button>
 
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec?action=scheduletablet";
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+    const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec?action=scheduletablet";
 
-let stream = null;
-let scanTimer = null;
-let timeoutTimer = null;
-let isScanning = false;
-let isProcessing = false;
-let detector = null;
+    let stream = null;
+    let scanTimer = null;
+    let timeoutTimer = null;
+    let isScanning = false;
+    let isProcessing = false;
+    let detector = null;
 
-function setButtonDisabled(disabled) {
-  document.getElementById("scanBtn").disabled = disabled;
-}
-
-function setMessage(text) {
-  document.getElementById("message").innerText = text;
-}
-
-function clearTimers() {
-  if (scanTimer) {
-    clearInterval(scanTimer);
-    scanTimer = null;
-  }
-  if (timeoutTimer) {
-    clearTimeout(timeoutTimer);
-    timeoutTimer = null;
-  }
-}
-
-async function fullyStopCamera() {
-  clearTimers();
-
-  const video = document.getElementById("video");
-  if (video) {
-    try { video.pause(); } catch (e) {}
-    try { video.srcObject = null; } catch (e) {}
-  }
-
-  if (stream) {
-    const tracks = stream.getTracks();
-    for (const track of tracks) {
-      try { track.stop(); } catch (e) {}
-    }
-    stream = null;
-  }
-
-  detector = null;
-  isScanning = false;
-  isProcessing = false;
-  setButtonDisabled(false);
-
-  await new Promise(resolve => setTimeout(resolve, 800));
-}
-
-async function goBack() {
-  await fullyStopCamera();
-  setTimeout(() => {
-    window.location.href = RETURN_URL + "&t=" + Date.now();
-  }, 1200);
-}
-
-async function handleQR(text) {
-  setMessage("読み取り成功\n送信中...");
-  clearTimers();
-
-  try {
-    const params = new URLSearchParams();
-    params.append("action", "checkinByQrText");
-    params.append("qrText", text);
-
-    const res = await fetch(API_URL, {
-      method: "POST",
-      body: params
-    });
-
-    const data = await res.json();
-
-    if (data && data.success) {
-      setMessage("チェックインしました");
-    } else {
-      setMessage((data && data.message) ? data.message : "失敗");
-    }
-  } catch (e) {
-    console.error(e);
-    setMessage("通信エラー");
-  }
-
-  setTimeout(goBack, 1200);
-}
-
-async function startScan() {
-  const video = document.getElementById("video");
-
-  if (isScanning || isProcessing) return;
-
-  await fullyStopCamera();
-
-  isScanning = true;
-  isProcessing = false;
-  setButtonDisabled(true);
-  setMessage("カメラ起動中...");
-
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: "user"
-      },
-      audio: false
-    });
-
-    video.srcObject = stream;
-    await video.play();
-
-    if (!("BarcodeDetector" in window)) {
-      setMessage("この端末はQR自動読取に対応していません");
-      setTimeout(goBack, 1200);
-      return;
+    function setButtonDisabled(disabled) {
+      document.getElementById("scanBtn").disabled = disabled;
     }
 
-    detector = new BarcodeDetector({ formats: ["qr_code"] });
-    setMessage("QRをかざしてください");
+    function setMessage(text) {
+      document.getElementById("message").innerText = text;
+    }
 
-    timeoutTimer = setTimeout(() => {
-      setMessage("読み取れなかったため戻ります");
-      setTimeout(goBack, 1200);
-    }, 10000);
+    function clearTimers() {
+      if (scanTimer) {
+        clearInterval(scanTimer);
+        scanTimer = null;
+      }
+      if (timeoutTimer) {
+        clearTimeout(timeoutTimer);
+        timeoutTimer = null;
+      }
+    }
 
-    scanTimer = setInterval(async () => {
-      if (!isScanning || isProcessing) return;
-      if (!video || video.readyState < 2) return;
+    function playSuccessBeep() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(1300, ctx.currentTime);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.10);
+      } catch (e) {
+        console.error("success beep error", e);
+      }
+    }
+
+    function playErrorBeep() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function beep(delay) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(400, ctx.currentTime + delay);
+          gain.gain.setValueAtTime(0.30, ctx.currentTime + delay);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(ctx.currentTime + delay);
+          osc.stop(ctx.currentTime + delay + 0.15);
+        }
+
+        beep(0);
+        beep(0.25);
+      } catch (e) {
+        console.error("error beep error", e);
+      }
+    }
+
+    async function fullyStopCamera() {
+      clearTimers();
+
+      const video = document.getElementById("video");
+      if (video) {
+        try { video.pause(); } catch (e) {}
+        try { video.srcObject = null; } catch (e) {}
+      }
+
+      if (stream) {
+        try {
+          stream.getTracks().forEach(track => {
+            try { track.stop(); } catch (e) {}
+          });
+        } catch (e) {}
+        stream = null;
+      }
+
+      detector = null;
+      isScanning = false;
+      isProcessing = false;
+      setButtonDisabled(false);
+
+      await new Promise(resolve => setTimeout(resolve, 800));
+    }
+
+    async function goBack() {
+      await fullyStopCamera();
+      setTimeout(() => {
+        window.location.href = RETURN_URL + "&t=" + Date.now();
+      }, 1200);
+    }
+
+    async function handleQR(text) {
+      setMessage("読み取り成功\n送信中...");
+      clearTimers();
 
       try {
-        const codes = await detector.detect(video);
-        if (codes && codes.length > 0 && codes[0].rawValue) {
-          isProcessing = true;
-          await handleQR(codes[0].rawValue);
+        const params = new URLSearchParams();
+        params.append("action", "checkinByQrText");
+        params.append("qrText", text);
+
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: params
+        });
+
+        const data = await res.json();
+
+        if (data && data.success) {
+          playSuccessBeep();
+          setMessage("チェックインしました");
+        } else {
+          playErrorBeep();
+          setMessage((data && data.message) ? data.message : "失敗");
         }
       } catch (e) {
         console.error(e);
+        playErrorBeep();
+        setMessage("通信エラー");
       }
-    }, 300);
 
-  } catch (e) {
-    console.error(e);
-    setMessage("カメラが使えません");
-    setTimeout(goBack, 1200);
-  }
-}
+      setTimeout(goBack, 1200);
+    }
 
-async function restartScan() {
-  await startScan();
-}
+    async function startScan() {
+      const video = document.getElementById("video");
 
-window.addEventListener("load", startScan);
-window.addEventListener("pagehide", fullyStopCamera);
-window.addEventListener("beforeunload", fullyStopCamera);
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) {
-    fullyStopCamera();
-  }
-});
-</script>
+      if (isScanning || isProcessing) return;
+
+      await fullyStopCamera();
+
+      isScanning = true;
+      isProcessing = false;
+      setButtonDisabled(true);
+      setMessage("カメラ起動中...");
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false
+        });
+
+        video.srcObject = stream;
+        await video.play();
+
+        if (!("BarcodeDetector" in window)) {
+          playErrorBeep();
+          setMessage("この端末はQR自動読取に対応していません");
+          setTimeout(goBack, 1500);
+          return;
+        }
+
+        detector = new BarcodeDetector({ formats: ["qr_code"] });
+        setMessage("QRをかざしてください");
+
+        timeoutTimer = setTimeout(() => {
+          playErrorBeep();
+          setMessage("読み取れなかったため戻ります");
+          setTimeout(goBack, 1200);
+        }, 10000);
+
+        scanTimer = setInterval(async () => {
+          if (!isScanning || isProcessing) return;
+          if (!video || video.readyState < 2) return;
+
+          try {
+            const codes = await detector.detect(video);
+            if (codes && codes.length > 0 && codes[0].rawValue) {
+              isProcessing = true;
+              await handleQR(codes[0].rawValue);
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }, 300);
+
+      } catch (e) {
+        console.error(e);
+        playErrorBeep();
+        setMessage("カメラが使えません");
+        setTimeout(goBack, 1200);
+      }
+    }
+
+    async function restartScan() {
+      await startScan();
+    }
+
+    window.addEventListener("load", startScan);
+    window.addEventListener("pagehide", fullyStopCamera);
+    window.addEventListener("beforeunload", fullyStopCamera);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        fullyStopCamera();
+      }
+    });
+  </script>
 
 </body>
 </html>
