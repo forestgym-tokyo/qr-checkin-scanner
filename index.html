@@ -166,7 +166,7 @@ Keep 15–20 cm distance</div>
 
 <div id="message"></div>
 
-<button id="scanBtn" onclick="startScan()">再スキャン</button>
+<button id="scanBtn" onclick="restartScan()">再スキャン</button>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
@@ -182,38 +182,54 @@ function setButtonDisabled(disabled) {
   document.getElementById("scanBtn").disabled = disabled;
 }
 
-function goBack() {
-  window.location.href = RETURN_URL;
+function setMessage(text) {
+  document.getElementById("message").innerText = text;
 }
 
-function clearScanTimer() {
+function clearTimers() {
   if (scanTimer) {
     clearInterval(scanTimer);
     scanTimer = null;
   }
+  if (timeoutTimer) {
+    clearTimeout(timeoutTimer);
+    timeoutTimer = null;
+  }
 }
 
 function stopCamera() {
-  clearScanTimer();
+  clearTimers();
 
   const video = document.getElementById("video");
   if (video) {
     try { video.pause(); } catch (e) {}
-    video.srcObject = null;
+    try { video.srcObject = null; } catch (e) {}
   }
 
   if (stream) {
-    stream.getTracks().forEach(track => track.stop());
+    try {
+      stream.getTracks().forEach(track => {
+        try { track.stop(); } catch (e) {}
+      });
+    } catch (e) {}
     stream = null;
   }
+
+  isScanning = false;
+  isProcessing = false;
+  setButtonDisabled(false);
+}
+
+function goBack() {
+  stopCamera();
+  setTimeout(() => {
+    window.location.replace(RETURN_URL + '&t=' + Date.now());
+  }, 2200);
 }
 
 async function handleQR(text) {
-  const message = document.getElementById("message");
-
-  message.innerText = "読み取り成功\n送信中...";
-  clearScanTimer();
-  clearTimeout(timeoutTimer);
+  setMessage("読み取り成功\n送信中...");
+  clearTimers();
 
   try {
     const params = new URLSearchParams();
@@ -228,38 +244,29 @@ async function handleQR(text) {
     const data = await res.json();
 
     if (data.success) {
-      message.innerText = "チェックインしました";
+      setMessage("チェックインしました");
     } else {
-      message.innerText = data.message || "失敗";
+      setMessage(data.message || "失敗");
     }
 
   } catch (e) {
     console.error(e);
-    message.innerText = "通信エラー";
+    setMessage("通信エラー");
   }
 
-  stopCamera();
-  isScanning = false;
-  isProcessing = false;
-  setButtonDisabled(false);
-
-  setTimeout(goBack, 1200);
+  goBack();
 }
 
 async function startScan() {
   const video = document.getElementById("video");
-  const message = document.getElementById("message");
 
   if (isScanning) return;
 
+  stopCamera();
   isScanning = true;
   isProcessing = false;
   setButtonDisabled(true);
-  message.innerText = "カメラ起動中...";
-
-  stopCamera();
-  clearScanTimer();
-  clearTimeout(timeoutTimer);
+  setMessage("カメラ起動中...");
 
   try {
     stream = await navigator.mediaDevices.getUserMedia({
@@ -271,24 +278,17 @@ async function startScan() {
     await video.play();
 
     if (!("BarcodeDetector" in window)) {
-      message.innerText = "この端末はQR自動読取に対応していません";
-      stopCamera();
-      isScanning = false;
-      setButtonDisabled(false);
-      timeoutTimer = setTimeout(goBack, 1500);
+      setMessage("この端末はQR自動読取に対応していません");
+      goBack();
       return;
     }
 
     const detector = new BarcodeDetector({ formats: ["qr_code"] });
-    message.innerText = "QRをかざしてください";
+    setMessage("QRをかざしてください");
 
     timeoutTimer = setTimeout(() => {
-      message.innerText = "読み取れなかったため戻ります";
-      stopCamera();
-      isScanning = false;
-      isProcessing = false;
-      setButtonDisabled(false);
-      setTimeout(goBack, 1200);
+      setMessage("読み取れなかったため戻ります");
+      goBack();
     }, 10000);
 
     scanTimer = setInterval(async () => {
@@ -308,15 +308,18 @@ async function startScan() {
 
   } catch (e) {
     console.error(e);
-    message.innerText = "カメラが使えません";
-    stopCamera();
-    isScanning = false;
-    setButtonDisabled(false);
-    timeoutTimer = setTimeout(goBack, 1500);
+    setMessage("カメラが使えません");
+    goBack();
   }
 }
 
+function restartScan() {
+  startScan();
+}
+
 window.addEventListener("load", startScan);
+window.addEventListener("pagehide", stopCamera);
+window.addEventListener("beforeunload", stopCamera);
 </script>
 
 </body>
