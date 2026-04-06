@@ -177,6 +177,7 @@ let scanTimer = null;
 let timeoutTimer = null;
 let isScanning = false;
 let isProcessing = false;
+let detector = null;
 
 function setButtonDisabled(disabled) {
   document.getElementById("scanBtn").disabled = disabled;
@@ -197,7 +198,7 @@ function clearTimers() {
   }
 }
 
-function stopCamera() {
+async function fullyStopCamera() {
   clearTimers();
 
   const video = document.getElementById("video");
@@ -207,24 +208,26 @@ function stopCamera() {
   }
 
   if (stream) {
-    try {
-      stream.getTracks().forEach(track => {
-        try { track.stop(); } catch (e) {}
-      });
-    } catch (e) {}
+    const tracks = stream.getTracks();
+    for (const track of tracks) {
+      try { track.stop(); } catch (e) {}
+    }
     stream = null;
   }
 
+  detector = null;
   isScanning = false;
   isProcessing = false;
   setButtonDisabled(false);
+
+  await new Promise(resolve => setTimeout(resolve, 800));
 }
 
-function goBack() {
-  stopCamera();
+async function goBack() {
+  await fullyStopCamera();
   setTimeout(() => {
-    window.location.replace(RETURN_URL + '&t=' + Date.now());
-  }, 2200);
+    window.location.href = RETURN_URL + "&t=" + Date.now();
+  }, 1200);
 }
 
 async function handleQR(text) {
@@ -243,26 +246,26 @@ async function handleQR(text) {
 
     const data = await res.json();
 
-    if (data.success) {
+    if (data && data.success) {
       setMessage("チェックインしました");
     } else {
-      setMessage(data.message || "失敗");
+      setMessage((data && data.message) ? data.message : "失敗");
     }
-
   } catch (e) {
     console.error(e);
     setMessage("通信エラー");
   }
 
-  goBack();
+  setTimeout(goBack, 1200);
 }
 
 async function startScan() {
   const video = document.getElementById("video");
 
-  if (isScanning) return;
+  if (isScanning || isProcessing) return;
 
-  stopCamera();
+  await fullyStopCamera();
+
   isScanning = true;
   isProcessing = false;
   setButtonDisabled(true);
@@ -270,7 +273,9 @@ async function startScan() {
 
   try {
     stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
+      video: {
+        facingMode: "user"
+      },
       audio: false
     });
 
@@ -279,25 +284,25 @@ async function startScan() {
 
     if (!("BarcodeDetector" in window)) {
       setMessage("この端末はQR自動読取に対応していません");
-      goBack();
+      setTimeout(goBack, 1200);
       return;
     }
 
-    const detector = new BarcodeDetector({ formats: ["qr_code"] });
+    detector = new BarcodeDetector({ formats: ["qr_code"] });
     setMessage("QRをかざしてください");
 
     timeoutTimer = setTimeout(() => {
       setMessage("読み取れなかったため戻ります");
-      goBack();
+      setTimeout(goBack, 1200);
     }, 10000);
 
     scanTimer = setInterval(async () => {
-      if (isProcessing) return;
+      if (!isScanning || isProcessing) return;
       if (!video || video.readyState < 2) return;
 
       try {
         const codes = await detector.detect(video);
-        if (codes.length > 0 && codes[0].rawValue) {
+        if (codes && codes.length > 0 && codes[0].rawValue) {
           isProcessing = true;
           await handleQR(codes[0].rawValue);
         }
@@ -309,17 +314,22 @@ async function startScan() {
   } catch (e) {
     console.error(e);
     setMessage("カメラが使えません");
-    goBack();
+    setTimeout(goBack, 1200);
   }
 }
 
-function restartScan() {
-  startScan();
+async function restartScan() {
+  await startScan();
 }
 
 window.addEventListener("load", startScan);
-window.addEventListener("pagehide", stopCamera);
-window.addEventListener("beforeunload", stopCamera);
+window.addEventListener("pagehide", fullyStopCamera);
+window.addEventListener("beforeunload", fullyStopCamera);
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    fullyStopCamera();
+  }
+});
 </script>
 
 </body>
