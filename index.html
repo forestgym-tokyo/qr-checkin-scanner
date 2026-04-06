@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>QRチェックイン</title>
 
 <style>
@@ -23,7 +23,7 @@ h1 {
 #cameraWrap {
   position: relative;
   width: 100%;
-  max-width: 360px;
+  max-width: 420px;
   margin: 0 auto;
   aspect-ratio: 4 / 3;
   border-radius: 14px;
@@ -37,6 +37,7 @@ h1 {
   object-fit: cover;
   display: block;
   background: #000;
+  transform: scaleX(-1);
 }
 
 #overlay {
@@ -49,8 +50,8 @@ h1 {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 180px;
-  height: 180px;
+  width: 240px;
+  height: 240px;
   transform: translate(-50%, -50%);
   border: 3px solid #00ff88;
   border-radius: 16px;
@@ -100,7 +101,7 @@ h1 {
 
 button {
   width: 100%;
-  max-width: 360px;
+  max-width: 420px;
   margin-top: 18px;
   padding: 16px 20px;
   font-size: 24px;
@@ -122,12 +123,12 @@ button:disabled {
   }
 
   #cameraWrap {
-    max-width: 320px;
+    max-width: 340px;
   }
 
   .frame {
-    width: 160px;
-    height: 160px;
+    width: 200px;
+    height: 200px;
   }
 
   #guide {
@@ -139,7 +140,7 @@ button:disabled {
   }
 
   button {
-    max-width: 320px;
+    max-width: 340px;
     font-size: 22px;
   }
 }
@@ -165,18 +166,24 @@ Keep 15–20 cm distance</div>
 
 <div id="message"></div>
 
-<button id="scanBtn" onclick="startScan()">QR読み込み</button>
+<button id="scanBtn" onclick="startScan()">再スキャン</button>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec?action=scheduletablet";
 
 let stream = null;
 let scanTimer = null;
+let timeoutTimer = null;
 let isScanning = false;
 let isProcessing = false;
 
 function setButtonDisabled(disabled) {
   document.getElementById("scanBtn").disabled = disabled;
+}
+
+function goBack() {
+  window.location.href = RETURN_URL;
 }
 
 async function startScan() {
@@ -192,6 +199,7 @@ async function startScan() {
 
   stopCamera();
   clearScanTimer();
+  clearTimeout(timeoutTimer);
 
   try {
     const tempStream = await navigator.mediaDevices.getUserMedia({
@@ -243,11 +251,21 @@ async function startScan() {
       stopCamera();
       isScanning = false;
       setButtonDisabled(false);
+      timeoutTimer = setTimeout(goBack, 1500);
       return;
     }
 
     const detector = new BarcodeDetector({ formats: ["qr_code"] });
     message.innerText = "QRをかざしてください";
+
+    timeoutTimer = setTimeout(() => {
+      message.innerText = "読み取れなかったため元の画面へ戻ります";
+      stopCamera();
+      isScanning = false;
+      isProcessing = false;
+      setButtonDisabled(false);
+      setTimeout(goBack, 1200);
+    }, 10000);
 
     scanTimer = setInterval(async () => {
       if (isProcessing) return;
@@ -262,7 +280,7 @@ async function startScan() {
       } catch (e) {
         console.error(e);
       }
-    }, 500);
+    }, 350);
 
   } catch (e) {
     console.error(e);
@@ -270,6 +288,7 @@ async function startScan() {
     stopCamera();
     isScanning = false;
     setButtonDisabled(false);
+    timeoutTimer = setTimeout(goBack, 1500);
   }
 }
 
@@ -278,6 +297,7 @@ async function handleQR(text) {
 
   message.innerText = "読み取り成功\n送信中...";
   clearScanTimer();
+  clearTimeout(timeoutTimer);
 
   try {
     const params = new URLSearchParams();
@@ -306,6 +326,8 @@ async function handleQR(text) {
   isScanning = false;
   isProcessing = false;
   setButtonDisabled(false);
+
+  setTimeout(goBack, 1200);
 }
 
 function clearScanTimer() {
@@ -329,6 +351,8 @@ function stopCamera() {
     stream = null;
   }
 }
+
+window.addEventListener("load", startScan);
 </script>
 
 </body>
