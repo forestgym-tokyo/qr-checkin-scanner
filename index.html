@@ -1,102 +1,385 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>QRチェックイン</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <title>QR Scanner</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+
+    #app {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+    }
+
+    #video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+    }
+
+    #overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .mask-top,
+    .mask-bottom,
+    .mask-left,
+    .mask-right {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.45);
+    }
+
+    .mask-top {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: calc(50% - 140px);
+    }
+
+    .mask-bottom {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: calc(50% - 140px);
+    }
+
+    .mask-left {
+      top: calc(50% - 140px);
+      left: 0;
+      width: calc(50% - 140px);
+      height: 280px;
+    }
+
+    .mask-right {
+      top: calc(50% - 140px);
+      right: 0;
+      width: calc(50% - 140px);
+      height: 280px;
+    }
+
+    #scan-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 280px;
+      height: 280px;
+      transform: translate(-50%, -50%);
+      border: 3px solid rgba(255,255,255,0.95);
+      border-radius: 20px;
+      box-sizing: border-box;
+      box-shadow: 0 0 0 9999px rgba(0,0,0,0);
+    }
+
+    #scan-box::before,
+    #scan-box::after,
+    #corner1,
+    #corner2 {
+      content: "";
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border-color: #fff;
+      border-style: solid;
+    }
+
+    #scan-box::before {
+      top: -3px;
+      left: -3px;
+      border-width: 4px 0 0 4px;
+      border-top-left-radius: 18px;
+    }
+
+    #scan-box::after {
+      top: -3px;
+      right: -3px;
+      border-width: 4px 4px 0 0;
+      border-top-right-radius: 18px;
+    }
+
+    #corner1 {
+      bottom: -3px;
+      left: -3px;
+      border-width: 0 0 4px 4px;
+      border-bottom-left-radius: 18px;
+    }
+
+    #corner2 {
+      bottom: -3px;
+      right: -3px;
+      border-width: 0 4px 4px 0;
+      border-bottom-right-radius: 18px;
+    }
+
+    #guide {
+      position: absolute;
+      left: 50%;
+      bottom: calc(50% - 190px);
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.55);
+      white-space: nowrap;
+    }
+
+    #status {
+      position: absolute;
+      left: 50%;
+      bottom: calc(50% - 225px);
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.92);
+      font-size: 14px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.55);
+      white-space: nowrap;
+    }
+
+    #flash {
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #flash.show {
+      animation: flashAnim 180ms ease-out;
+    }
+
+    @keyframes flashAnim {
+      0%   { opacity: 0; }
+      30%  { opacity: 0.22; }
+      100% { opacity: 0; }
+    }
+
+    #errorBox {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 24px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.58);
+      color: #fff;
+      font-size: 14px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    canvas {
+      display: none;
+    }
+  </style>
 </head>
-<body style="text-align:center; font-family:sans-serif;">
+<body>
+  <div id="app">
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="canvas"></canvas>
 
-  <h2>QRチェックイン</h2>
+    <div id="overlay">
+      <div class="mask-top"></div>
+      <div class="mask-bottom"></div>
+      <div class="mask-left"></div>
+      <div class="mask-right"></div>
 
-  <video id="video" autoplay playsinline style="width:90%; max-width:400px; border:1px solid #ccc;"></video>
-  <canvas id="canvas" style="display:none;"></canvas>
+      <div id="scan-box">
+        <div id="corner1"></div>
+        <div id="corner2"></div>
+      </div>
 
-  <p id="status">カメラ起動中...</p>
+      <div id="guide">QRコードを枠内に合わせてください</div>
+      <div id="status">カメラを起動しています…</div>
+      <div id="flash"></div>
+      <div id="errorBox"></div>
+    </div>
+  </div>
 
+  <script src="https://unpkg.com/jsqr"></script>
   <script>
-    // ★ 最新GAS URL
     const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
     const RETURN_URL = API_URL + "?action=scheduletablet";
 
     const video = document.getElementById("video");
     const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-    const status = document.getElementById("status");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    const statusEl = document.getElementById("status");
+    const flashEl = document.getElementById("flash");
+    const errorBox = document.getElementById("errorBox");
 
-    let scanning = true;
+    let stream = null;
+    let scanning = false;
+    let sending = false;
+    let lastScanAt = 0;
 
-    // カメラ起動（背面優先）
-    navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "environment" }
-    })
-    .then(stream => {
-      video.srcObject = stream;
-      requestAnimationFrame(scan);
-    })
-    .catch(err => {
-      status.innerText = "カメラ起動失敗";
-      console.error(err);
-    });
+    function setStatus(text) {
+      statusEl.textContent = text;
+    }
 
-    function scan() {
-      if (!scanning) return;
+    function showError(text) {
+      errorBox.style.display = "block";
+      errorBox.textContent = text;
+    }
 
-      if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    function hideError() {
+      errorBox.style.display = "none";
+      errorBox.textContent = "";
+    }
 
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    function flash() {
+      flashEl.classList.remove("show");
+      void flashEl.offsetWidth;
+      flashEl.classList.add("show");
+    }
 
-        const code = jsQR(imageData.data, canvas.width, canvas.height);
+    function beepSuccess() {
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContextClass();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
 
-        if (code) {
-          scanning = false;
-          status.innerText = "読み取り成功";
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(1400, audioCtx.currentTime);
 
-          // 音
-          const audio = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
-          audio.volume = 1.0;
-          audio.play();
+        gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.22, audioCtx.currentTime + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.16);
 
-          sendToGAS(code.data);
-          return;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.17);
+      } catch (e) {
+      }
+    }
+
+    function stopCamera() {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+    }
+
+    async function startCamera() {
+      hideError();
+      setStatus("カメラを起動しています…");
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: "environment" },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
+          audio: false
+        });
+
+        video.srcObject = stream;
+        await video.play();
+
+        scanning = true;
+        setStatus("QRコードを読み取ってください");
+        requestAnimationFrame(scanLoop);
+      } catch (err) {
+        console.error(err);
+        setStatus("カメラを起動できません");
+        showError("カメラの起動に失敗しました。ブラウザ権限とHTTPS接続をご確認ください。");
+      }
+    }
+
+    function scanLoop() {
+      if (!scanning || sending) return;
+
+      if (video.readyState >= 2) {
+        const vw = video.videoWidth;
+        const vh = video.videoHeight;
+
+        if (vw && vh) {
+          canvas.width = vw;
+          canvas.height = vh;
+          ctx.drawImage(video, 0, 0, vw, vh);
+
+          const imageData = ctx.getImageData(0, 0, vw, vh);
+          const code = jsQR(imageData.data, vw, vh, {
+            inversionAttempts: "dontInvert"
+          });
+
+          if (code && code.data) {
+            const now = Date.now();
+            if (now - lastScanAt > 1200) {
+              lastScanAt = now;
+              onDetected(code.data);
+              return;
+            }
+          }
         }
       }
 
-      requestAnimationFrame(scan);
+      requestAnimationFrame(scanLoop);
     }
 
-    function sendToGAS(qrText) {
-      fetch(API_URL, {
-        method: "POST",
-        body: JSON.stringify({
-          action: "checkinByQrText",
-          text: qrText
-        })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          status.innerText = "チェックイン成功";
+    async function onDetected(qrText) {
+      if (sending) return;
+
+      sending = true;
+      scanning = false;
+
+      flash();
+      beepSuccess();
+      setStatus("読み取りました。送信中…");
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            action: "checkinByQrText",
+            text: qrText
+          })
+        });
+
+        const data = await res.json();
+
+        if (data && data.success) {
+          setStatus("チェックイン成功");
+          setTimeout(() => {
+            window.location.href = RETURN_URL + "&t=" + Date.now();
+          }, 900);
         } else {
-          status.innerText = "失敗: " + data.message;
+          setStatus("読み取りに失敗しました");
+          showError((data && data.message) ? data.message : "処理に失敗しました。もう一度お試しください。");
+          sending = false;
+          scanning = true;
+          setTimeout(() => requestAnimationFrame(scanLoop), 500);
         }
-
-        setTimeout(() => {
-          window.location.href = RETURN_URL + "&t=" + Date.now();
-        }, 1500);
-      })
-      .catch(err => {
-        status.innerText = "通信エラー";
+      } catch (err) {
         console.error(err);
-      });
+        setStatus("通信エラー");
+        showError("通信に失敗しました。ネットワーク接続をご確認ください。");
+        sending = false;
+        scanning = true;
+        setTimeout(() => requestAnimationFrame(scanLoop), 500);
+      }
     }
+
+    window.addEventListener("beforeunload", stopCamera);
+    startCamera();
   </script>
-
-  <!-- QRライブラリ -->
-  <script src="https://unpkg.com/jsqr"></script>
-
 </body>
 </html>
