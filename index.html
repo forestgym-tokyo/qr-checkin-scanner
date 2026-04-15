@@ -94,10 +94,11 @@
 
     #message {
       margin-top: 16px;
-      min-height: 56px;
+      min-height: 72px;
       font-size: 22px;
       line-height: 1.5;
       white-space: pre-wrap;
+      word-break: break-word;
     }
 
     button {
@@ -111,10 +112,16 @@
       border-radius: 12px;
       background: #2e7d32;
       color: #fff;
+      cursor: pointer;
     }
 
     button:disabled {
       opacity: 0.65;
+      cursor: default;
+    }
+
+    #backBtn {
+      background: #444;
     }
 
     @media (max-width: 480px) {
@@ -168,10 +175,12 @@ Keep 15–20 cm distance</div>
   <div id="message">カメラ起動中...</div>
 
   <button id="scanBtn" onclick="restartScan()">再スキャン</button>
+  <button id="backBtn" onclick="manualBack()">戻る</button>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec?action=scheduletablet";
+    const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+    const API_URL = WEBAPP_URL;
+    const RETURN_URL = WEBAPP_URL;
 
     let stream = null;
     let scanTimer = null;
@@ -268,14 +277,16 @@ const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J
       isProcessing = false;
       setButtonDisabled(false);
 
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise(resolve => setTimeout(resolve, 400));
     }
 
     async function goBack() {
       await fullyStopCamera();
-      setTimeout(() => {
-        window.location.href = RETURN_URL + "&t=" + Date.now();
-      }, 1200);
+      window.top.location.href = RETURN_URL + "?t=" + Date.now();
+    }
+
+    async function manualBack() {
+      await goBack();
     }
 
     async function handleQR(text) {
@@ -292,22 +303,32 @@ const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J
           body: params
         });
 
-        const data = await res.json();
+        let data = null;
+        try {
+          data = await res.json();
+        } catch (jsonError) {
+          throw new Error("JSON parse error");
+        }
 
         if (data && data.success) {
           playSuccessBeep();
           setMessage("チェックインしました");
+          setTimeout(goBack, 1000);
         } else {
           playErrorBeep();
-          setMessage((data && data.message) ? data.message : "失敗");
+          setMessage((data && data.message) ? data.message : "チェックイン失敗");
+          setButtonDisabled(false);
+          isProcessing = false;
+          isScanning = true;
         }
       } catch (e) {
         console.error(e);
         playErrorBeep();
-        setMessage("通信エラー");
+        setMessage("通信エラー\n" + (e.name || "") + "\n" + (e.message || e));
+        setButtonDisabled(false);
+        isProcessing = false;
+        isScanning = true;
       }
-
-      setTimeout(goBack, 1200);
     }
 
     async function startScan() {
@@ -323,8 +344,20 @@ const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J
       setMessage("カメラ起動中...");
 
       try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          playErrorBeep();
+          setMessage("このブラウザはカメラAPIに対応していません");
+          setButtonDisabled(false);
+          isScanning = false;
+          return;
+        }
+
         stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
+          video: {
+            facingMode: { ideal: "environment" },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
           audio: false
         });
 
@@ -334,7 +367,8 @@ const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J
         if (!("BarcodeDetector" in window)) {
           playErrorBeep();
           setMessage("この端末はQR自動読取に対応していません");
-          setTimeout(goBack, 1500);
+          setButtonDisabled(false);
+          isScanning = false;
           return;
         }
 
@@ -343,8 +377,9 @@ const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J
 
         timeoutTimer = setTimeout(() => {
           playErrorBeep();
-          setMessage("読み取れなかったため戻ります");
-          setTimeout(goBack, 1200);
+          setMessage("読み取れませんでした\n再スキャンしてください");
+          setButtonDisabled(false);
+          isScanning = false;
         }, 10000);
 
         scanTimer = setInterval(async () => {
@@ -355,18 +390,21 @@ const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J
             const codes = await detector.detect(video);
             if (codes && codes.length > 0 && codes[0].rawValue) {
               isProcessing = true;
+              isScanning = false;
               await handleQR(codes[0].rawValue);
             }
           } catch (e) {
-            console.error(e);
+            console.error("detect error", e);
           }
         }, 300);
 
       } catch (e) {
         console.error(e);
         playErrorBeep();
-        setMessage("カメラが使えません");
-        setTimeout(goBack, 1200);
+        setMessage("カメラが使えません\n" + (e.name || "") + "\n" + (e.message || ""));
+        setButtonDisabled(false);
+        isScanning = false;
+        return;
       }
     }
 
