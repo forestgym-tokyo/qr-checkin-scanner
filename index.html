@@ -273,7 +273,6 @@ Keep 15–20 cm distance</div>
 
     async function goBack() {
       await fullyStopCamera();
-
       setTimeout(() => {
         window.open(RETURN_URL + "&t=" + Date.now(), "_self");
       }, 1200);
@@ -305,19 +304,22 @@ Keep 15–20 cm distance</div>
             (data && data.message ? data.message : "失敗") +
             "\n\n再スキャンしてください"
           );
+          setButtonDisabled(false);
+          isScanning = false;
+          isProcessing = false;
         }
       } catch (e) {
         console.error(e);
         playErrorBeep();
         setMessage("通信エラー\n\n再スキャンしてください");
+        setButtonDisabled(false);
+        isScanning = false;
+        isProcessing = false;
       }
     }
 
     async function startScan() {
       const video = document.getElementById("video");
-
-      console.log("startScan called");
-      setMessage("startScan called");
 
       if (isScanning || isProcessing) return;
 
@@ -329,11 +331,12 @@ Keep 15–20 cm distance</div>
       setMessage("カメラ起動中...");
 
       try {
-        console.log("before getUserMedia");
-        setMessage("before getUserMedia");
-
         stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
+          video: {
+            facingMode: { ideal: "environment" },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
           audio: false
         });
 
@@ -343,31 +346,36 @@ Keep 15–20 cm distance</div>
         if (!("BarcodeDetector" in window)) {
           playErrorBeep();
           setMessage("この端末はQR自動読取に対応していません");
+          setButtonDisabled(false);
+          isScanning = false;
           return;
         }
 
         detector = new BarcodeDetector({ formats: ["qr_code"] });
-        setMessage("QRをかざしてください");
+        setMessage("カメラ起動OK / QR待機中");
 
         timeoutTimer = setTimeout(() => {
           playErrorBeep();
           setMessage("読み取れませんでした\n\n再スキャンしてください");
           setButtonDisabled(false);
           isScanning = false;
+          isProcessing = false;
         }, 10000);
 
         scanTimer = setInterval(async () => {
           if (!isScanning || isProcessing) return;
           if (!video || video.readyState < 2) return;
 
+          let codes = [];
           try {
-            const codes = await detector.detect(video);
-            if (codes && codes.length > 0 && codes[0].rawValue) {
-              isProcessing = true;
-              await handleQR(codes[0].rawValue);
-            }
+            codes = await detector.detect(video);
           } catch (e) {
-            console.error(e);
+            console.error("detect error", e);
+          }
+
+          if (codes && codes.length > 0 && codes[0].rawValue) {
+            isProcessing = true;
+            await handleQR(codes[0].rawValue);
           }
         }, 300);
 
@@ -381,6 +389,7 @@ Keep 15–20 cm distance</div>
         );
         setButtonDisabled(false);
         isScanning = false;
+        isProcessing = false;
       }
     }
 
