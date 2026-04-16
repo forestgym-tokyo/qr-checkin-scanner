@@ -1,301 +1,388 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>QRチェックイン</title>
-  <script src="https://unpkg.com/html5-qrcode"></script>
+
   <style>
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
+    body {
+      font-family: sans-serif;
+      text-align: center;
       background: #111;
       color: #fff;
-      font-family: sans-serif;
+      margin: 0;
+      padding: 20px 16px 28px;
     }
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100dvh;
-    }
-    .wrap {
-      width: 100%;
-      max-width: 700px;
-      padding: 24px 20px 32px;
-      text-align: center;
-    }
+
     h1 {
-      margin: 0 0 20px;
-      font-size: 42px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
+      margin: 0 0 24px;
+      font-size: 32px;
+      line-height: 1.2;
     }
-    #reader {
+
+    #cameraWrap {
+      position: relative;
       width: 100%;
       max-width: 420px;
-      margin: 0 auto 20px;
-      border-radius: 24px;
+      margin: 0 auto;
+      aspect-ratio: 4 / 3;
+      border-radius: 14px;
       overflow: hidden;
-      background: #222;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+      background: #000;
     }
-    .msg {
-      margin-top: 16px;
-      line-height: 1.55;
-      font-size: 18px;
-      font-weight: 700;
-      white-space: pre-line;
-    }
-    .sub {
-      margin-top: 14px;
-      font-size: 16px;
-      color: #ddd;
-      line-height: 1.6;
-      white-space: pre-line;
-    }
-    .count {
-      margin-top: 18px;
-      font-size: 18px;
-      font-weight: 800;
-      color: #7CFF72;
-    }
-    .hidden { display: none; }
 
-    .loading {
-      margin-top: 18px;
+    #video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #000;
+      transform: scaleX(-1);
+    }
+
+    #overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .frame {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 240px;
+      height: 240px;
+      transform: translate(-50%, -50%);
+      border: 3px solid #00ff88;
+      border-radius: 16px;
+      box-shadow: 0 0 12px rgba(0, 255, 136, 0.85);
+      box-sizing: border-box;
+    }
+
+    .frame::before,
+    .frame::after {
+      content: "";
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      border-color: #ffffff;
+      border-style: solid;
+    }
+
+    .frame::before {
+      top: -3px;
+      left: -3px;
+      border-width: 4px 0 0 4px;
+      border-top-left-radius: 10px;
+    }
+
+    .frame::after {
+      right: -3px;
+      bottom: -3px;
+      border-width: 0 4px 4px 0;
+      border-bottom-right-radius: 10px;
+    }
+
+    #guide {
+      margin-top: 22px;
       font-size: 18px;
-      font-weight: 700;
-      color: #7CFF72;
+      line-height: 1.75;
+      color: #e0e0e0;
+      white-space: pre-wrap;
+    }
+
+    #message {
+      margin-top: 16px;
+      min-height: 56px;
+      font-size: 22px;
+      line-height: 1.5;
+      white-space: pre-wrap;
     }
 
     button {
-      appearance: none;
-      border: none;
-      border-radius: 16px;
-      padding: 18px 20px;
       width: 100%;
       max-width: 420px;
-      font-size: 28px;
-      font-weight: 800;
-      cursor: pointer;
       margin-top: 18px;
-    }
-    .retry {
-      background: #19d600;
+      padding: 16px 20px;
+      font-size: 24px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      background: #2e7d32;
       color: #fff;
     }
 
-    @media (max-width: 600px) {
-      h1 { font-size: 32px; }
-      .msg { font-size: 16px; }
-      .sub { font-size: 14px; }
-      button { font-size: 24px; }
+    button:disabled {
+      opacity: 0.65;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 28px;
+        margin-bottom: 20px;
+      }
+
+      #cameraWrap {
+        max-width: 340px;
+      }
+
+      .frame {
+        width: 200px;
+        height: 200px;
+      }
+
+      #guide {
+        font-size: 16px;
+      }
+
+      #message {
+        font-size: 20px;
+      }
+
+      button {
+        max-width: 340px;
+        font-size: 22px;
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <h1>QRチェックイン</h1>
 
-    <div id="reader"></div>
+  <h1>QRチェックイン</h1>
 
-    <div class="msg" id="message">
-QRコードを枠内に合わせてください
-Please align the QR code within the frame
+  <div id="cameraWrap">
+    <video id="video" autoplay playsinline muted></video>
+    <div id="overlay">
+      <div class="frame"></div>
     </div>
-
-    <div class="sub" id="subMessage">
-15〜20cm離してください
-Keep 15–20 cm distance
-    </div>
-
-    <div class="loading hidden" id="loadingText">処理中です…</div>
-    <div class="count" id="countdown"></div>
-
-    <button class="retry" id="retryBtn" type="button">再スキャン</button>
   </div>
 
+  <div id="guide">QRコードを枠内に合わせてください
+Please align the QR code within the frame
+
+15〜20cm離してください
+Keep 15–20 cm distance</div>
+
+  <div id="message">カメラ起動中...</div>
+
+  <button id="scanBtn" onclick="restartScan()">再スキャン</button>
+
   <script>
-    // ===== 必ず自分のURLに置き換え =====
-    const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-    const RETURN_URL = WEBAPP_URL + "?action=scheduletablet&t=" + Date.now();
+    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec?action=scheduletablet";
 
-    // 10秒で自動帰還
-    const AUTO_RETURN_MS = 10000;
+    let stream = null;
+    let scanTimer = null;
+    let timeoutTimer = null;
+    let isScanning = false;
+    let isProcessing = false;
+    let detector = null;
 
-    let html5QrCode = null;
-    let alreadyHandled = false;
-    let autoReturnTimer = null;
-    let countdownTimer = null;
-    let streamStarted = false;
-
-    const messageEl = document.getElementById("message");
-    const subMessageEl = document.getElementById("subMessage");
-    const loadingTextEl = document.getElementById("loadingText");
-    const countdownEl = document.getElementById("countdown");
-    const retryBtn = document.getElementById("retryBtn");
-
-    function goToSchedule() {
-      // replaceではなくhref
-      // これでスケジュール画面から端末の戻るでGitHubへ戻れる
-      window.location.href = RETURN_URL;
+    function setButtonDisabled(disabled) {
+      document.getElementById("scanBtn").disabled = disabled;
     }
 
-    function startAutoReturnCountdown(ms) {
-      clearAutoReturnCountdown();
-
-      const endAt = Date.now() + ms;
-
-      function render() {
-        const remain = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
-        countdownEl.textContent = remain > 0
-          ? `${remain}秒後に自動で戻ります`
-          : `移動中…`;
-      }
-
-      render();
-
-      countdownTimer = setInterval(() => {
-        render();
-      }, 250);
-
-      autoReturnTimer = setTimeout(() => {
-        clearAutoReturnCountdown();
-        goToSchedule();
-      }, ms);
+    function setMessage(text) {
+      document.getElementById("message").innerText = text;
     }
 
-    function clearAutoReturnCountdown() {
-      if (autoReturnTimer) {
-        clearTimeout(autoReturnTimer);
-        autoReturnTimer = null;
+    function clearTimers() {
+      if (scanTimer) {
+        clearInterval(scanTimer);
+        scanTimer = null;
       }
-      if (countdownTimer) {
-        clearInterval(countdownTimer);
-        countdownTimer = null;
+      if (timeoutTimer) {
+        clearTimeout(timeoutTimer);
+        timeoutTimer = null;
       }
-      countdownEl.textContent = "";
     }
 
-    async function stopScanner() {
+    function playSuccessBeep() {
       try {
-        if (html5QrCode && streamStarted) {
-          await html5QrCode.stop();
-          streamStarted = false;
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(1300, ctx.currentTime);
+        gain.gain.setValueAtTime(0.7, ctx.currentTime);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.10);
+      } catch (e) {
+        console.error("success beep error", e);
+      }
+    }
+
+    function playErrorBeep() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function beep(delay) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(400, ctx.currentTime + delay);
+          gain.gain.setValueAtTime(0.7, ctx.currentTime + delay);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(ctx.currentTime + delay);
+          osc.stop(ctx.currentTime + delay + 0.15);
+        }
+
+        beep(0);
+        beep(0.25);
+      } catch (e) {
+        console.error("error beep error", e);
+      }
+    }
+
+    async function fullyStopCamera() {
+      clearTimers();
+
+      const video = document.getElementById("video");
+      if (video) {
+        try { video.pause(); } catch (e) {}
+        try { video.srcObject = null; } catch (e) {}
+      }
+
+      if (stream) {
+        try {
+          stream.getTracks().forEach(track => {
+            try { track.stop(); } catch (e) {}
+          });
+        } catch (e) {}
+        stream = null;
+      }
+
+      detector = null;
+      isScanning = false;
+      isProcessing = false;
+      setButtonDisabled(false);
+
+      await new Promise(resolve => setTimeout(resolve, 800));
+    }
+
+    async function goBack() {
+      await fullyStopCamera();
+      setTimeout(() => {
+        window.location.href = RETURN_URL + "&t=" + Date.now();
+      }, 1200);
+    }
+
+    async function handleQR(text) {
+      setMessage("読み取り成功\n送信中...");
+      clearTimers();
+
+      try {
+        const params = new URLSearchParams();
+        params.append("action", "checkinByQrText");
+        params.append("qrText", text);
+
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: params
+        });
+
+        const data = await res.json();
+
+        if (data && data.success) {
+          playSuccessBeep();
+          setMessage("チェックインしました");
+        } else {
+          playErrorBeep();
+          setMessage((data && data.message) ? data.message : "失敗");
         }
       } catch (e) {
-        console.warn("stopScanner error:", e);
+        console.error(e);
+        playErrorBeep();
+        setMessage("通信エラー");
       }
-      try {
-        if (html5QrCode) {
-          await html5QrCode.clear();
-        }
-      } catch (e) {
-        console.warn("clear scanner error:", e);
-      }
+
+      setTimeout(goBack, 1200);
     }
 
-    async function startScanner() {
-      alreadyHandled = false;
-      clearAutoReturnCountdown();
+    async function startScan() {
+      const video = document.getElementById("video");
 
-      loadingTextEl.classList.add("hidden");
-      retryBtn.classList.add("hidden");
-      messageEl.textContent = "QRコードを枠内に合わせてください\nPlease align the QR code within the frame";
-      subMessageEl.textContent = "15〜20cm離してください\nKeep 15–20 cm distance";
+      if (isScanning || isProcessing) return;
+
+      await fullyStopCamera();
+
+      isScanning = true;
+      isProcessing = false;
+      setButtonDisabled(true);
+      setMessage("カメラ起動中...");
 
       try {
-        await stopScanner();
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false
+        });
 
-        html5QrCode = new Html5Qrcode("reader");
+        video.srcObject = stream;
+        await video.play();
 
-        await html5QrCode.start(
-          { facingMode: { ideal: "environment" } },
-          {
-            fps: 10,
-            qrbox: { width: 220, height: 220 },
-            aspectRatio: 1.0
-          },
-          async (decodedText) => {
-            if (alreadyHandled) return;
-            alreadyHandled = true;
+        if (!("BarcodeDetector" in window)) {
+          playErrorBeep();
+          setMessage("この端末はQR自動読取に対応していません");
+          setTimeout(goBack, 1500);
+          return;
+        }
 
-            loadingTextEl.classList.remove("hidden");
-            loadingTextEl.textContent = "チェックイン処理中です…";
-            messageEl.textContent = "QRを読み取りました";
-            subMessageEl.textContent = "処理完了後、自動で戻ります";
-            clearAutoReturnCountdown();
+        detector = new BarcodeDetector({ formats: ["qr_code"] });
+        setMessage("QRをかざしてください");
 
-            await stopScanner();
+        timeoutTimer = setTimeout(() => {
+          playErrorBeep();
+          setMessage("読み取れなかったため戻ります");
+          setTimeout(goBack, 1200);
+        }, 10000);
 
-            try {
-              const res = await fetch(WEBAPP_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({
-                  action: "checkinByQrText",
-                  qrText: decodedText
-                })
-              });
+        scanTimer = setInterval(async () => {
+          if (!isScanning || isProcessing) return;
+          if (!video || video.readyState < 2) return;
 
-              const data = await res.json();
-
-              if (data && data.success) {
-                messageEl.textContent = "チェックインしました";
-                subMessageEl.textContent = "自動でスケジュール画面へ戻ります";
-                startAutoReturnCountdown(1200);
-              } else {
-                messageEl.textContent = "チェックインできませんでした";
-                subMessageEl.textContent = (data && data.message) ? data.message : "10秒後に自動で戻ります";
-                retryBtn.classList.remove("hidden");
-                startAutoReturnCountdown(AUTO_RETURN_MS);
-              }
-            } catch (err) {
-              console.error(err);
-              messageEl.textContent = "通信エラーが発生しました";
-              subMessageEl.textContent = "10秒後に自動で戻ります";
-              retryBtn.classList.remove("hidden");
-              startAutoReturnCountdown(AUTO_RETURN_MS);
+          try {
+            const codes = await detector.detect(video);
+            if (codes && codes.length > 0 && codes[0].rawValue) {
+              isProcessing = true;
+              await handleQR(codes[0].rawValue);
             }
-          },
-          () => {
-            // 読み取り中の失敗は無視
+          } catch (e) {
+            console.error(e);
           }
-        );
+        }, 300);
 
-        streamStarted = true;
-
-        // 読み取りできなくても10秒で戻す
-        startAutoReturnCountdown(AUTO_RETURN_MS);
-
-      } catch (err) {
-        console.error(err);
-        messageEl.textContent = "カメラが使えません";
-        subMessageEl.textContent =
-          (err && err.name ? err.name : "CameraError") +
-          "\n" +
-          (err && err.message ? err.message : "Unknown error") +
-          "\n\n10秒後に自動で戻ります";
-        retryBtn.classList.remove("hidden");
-        startAutoReturnCountdown(AUTO_RETURN_MS);
+      } catch (e) {
+        console.error(e);
+        playErrorBeep();
+        setMessage("カメラが使えません");
+        setTimeout(goBack, 1200);
       }
     }
 
-    retryBtn.addEventListener("click", () => {
-      startScanner();
-    });
+    async function restartScan() {
+      await startScan();
+    }
 
-    window.addEventListener("load", () => {
-      startScanner();
-    });
-
-    window.addEventListener("beforeunload", () => {
-      clearAutoReturnCountdown();
+    window.addEventListener("load", startScan);
+    window.addEventListener("pagehide", fullyStopCamera);
+    window.addEventListener("beforeunload", fullyStopCamera);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        fullyStopCamera();
+      }
     });
   </script>
+
 </body>
 </html>
