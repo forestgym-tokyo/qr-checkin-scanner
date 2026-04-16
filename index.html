@@ -171,7 +171,7 @@ Keep 15–20 cm distance</div>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec?action=scheduletablet";
+    const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec?action=scheduletablet";
 
     let stream = null;
     let scanTimer = null;
@@ -270,13 +270,15 @@ const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J
 
       await new Promise(resolve => setTimeout(resolve, 800));
     }
-async function goBack() {
-  await fullyStopCamera();
 
-  setTimeout(() => {
-    window.open(RETURN_URL + "&t=" + Date.now(), "_self");
-  }, 1200);
-}
+    async function goBack() {
+      await fullyStopCamera();
+
+      setTimeout(() => {
+        window.open(RETURN_URL + "&t=" + Date.now(), "_self");
+      }, 1200);
+    }
+
     async function handleQR(text) {
       setMessage("読み取り成功\n送信中...");
       clearTimers();
@@ -312,6 +314,9 @@ async function goBack() {
     async function startScan() {
       const video = document.getElementById("video");
 
+      console.log("startScan called");
+      setMessage("startScan called");
+
       if (isScanning || isProcessing) return;
 
       await fullyStopCamera();
@@ -322,6 +327,9 @@ async function goBack() {
       setMessage("カメラ起動中...");
 
       try {
+        console.log("before getUserMedia");
+        setMessage("before getUserMedia");
+
         stream = await navigator.mediaDevices.getUserMedia({
           video: true,
           audio: false
@@ -362,41 +370,45 @@ async function goBack() {
         }, 300);
 
       } catch (e) {
-        console.error(e);
+        console.error("startScan error", e);
         playErrorBeep();
-        setMessage("カメラが使えません");
+        setMessage(
+          "カメラが使えません\n" +
+          "name: " + (e && e.name ? e.name : "") + "\n" +
+          "message: " + (e && e.message ? e.message : "")
+        );
         setTimeout(goBack, 1200);
       }
     }
 
     async function restartScan() {
-  await fullyStopCamera();
-  await startScan();
-}
+      await fullyStopCamera();
+      await startScan();
+    }
 
-window.addEventListener("load", () => {
-  startScan();
-});
+    window.addEventListener("load", () => {
+      startScan();
+    });
 
-window.addEventListener("pageshow", (e) => {
-  if (e.persisted) {
-    restartScan();
-  }
-});
+    window.addEventListener("pageshow", (e) => {
+      if (e.persisted) {
+        restartScan();
+      }
+    });
 
-window.addEventListener("pagehide", () => {
-  fullyStopCamera();
-});
+    window.addEventListener("pagehide", () => {
+      fullyStopCamera();
+    });
 
-window.addEventListener("beforeunload", () => {
-  fullyStopCamera();
-});
+    window.addEventListener("beforeunload", () => {
+      fullyStopCamera();
+    });
 
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) {
-    fullyStopCamera();
-  }
-});
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        fullyStopCamera();
+      }
+    });
   </script>
 
 </body>
