@@ -355,12 +355,10 @@ Keep 15–20 cm distance</div>
         setMessage("カメラ起動OK / QR待機中");
 
         timeoutTimer = setTimeout(() => {
-          playErrorBeep();
-          setMessage("読み取れませんでした\n\n再スキャンしてください");
-          setButtonDisabled(false);
-          isScanning = false;
-          isProcessing = false;
-        }, 10000);
+  playErrorBeep();
+  setMessage("読み取れなかったため戻ります");
+  setTimeout(goBack, 1200);
+}, 10000);
 
         scanTimer = setInterval(async () => {
           if (!isScanning || isProcessing) return;
