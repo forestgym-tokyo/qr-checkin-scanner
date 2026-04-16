@@ -270,14 +270,13 @@ const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J
 
       await new Promise(resolve => setTimeout(resolve, 800));
     }
+async function goBack() {
+  await fullyStopCamera();
 
-    async function goBack() {
-      await fullyStopCamera();
-      setTimeout(() => {
-        window.top.location.href = RETURN_URL + "&t=" + Date.now();
-      }, 1200);
-    }
-
+  setTimeout(() => {
+    window.open(RETURN_URL + "&t=" + Date.now(), "_self");
+  }, 1200);
+}
     async function handleQR(text) {
       setMessage("読み取り成功\n送信中...");
       clearTimers();
