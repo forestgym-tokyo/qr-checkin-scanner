@@ -274,7 +274,7 @@ const RETURN_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J
     async function goBack() {
       await fullyStopCamera();
       setTimeout(() => {
-        window.location.href = RETURN_URL + "&t=" + Date.now();
+        window.top.location.href = RETURN_URL + "&t=" + Date.now();
       }, 1200);
     }
 
