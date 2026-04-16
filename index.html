@@ -120,11 +120,9 @@ Keep 15–20 cm distance
   </div>
 
   <script>
-    // ===== 必ず自分のURLに置き換え =====
     const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
     const RETURN_URL = WEBAPP_URL + "?action=scheduletablet&t=" + Date.now();
 
-    // 10秒で自動帰還
     const AUTO_RETURN_MS = 10000;
 
     let html5QrCode = null;
@@ -140,8 +138,6 @@ Keep 15–20 cm distance
     const retryBtn = document.getElementById("retryBtn");
 
     function goToSchedule() {
-      // replaceではなくhref
-      // これでスケジュール画面から端末の戻るでGitHubへ戻れる
       window.location.href = RETURN_URL;
     }
 
@@ -262,14 +258,10 @@ Keep 15–20 cm distance
               startAutoReturnCountdown(AUTO_RETURN_MS);
             }
           },
-          () => {
-            // 読み取り中の失敗は無視
-          }
+          () => {}
         );
 
         streamStarted = true;
-
-        // 読み取りできなくても10秒で戻す
         startAutoReturnCountdown(AUTO_RETURN_MS);
 
       } catch (err) {
