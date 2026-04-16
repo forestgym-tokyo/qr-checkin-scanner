@@ -370,25 +370,33 @@ async function goBack() {
     }
 
     async function restartScan() {
-      await startScan();
-    }
+  await fullyStopCamera();
+  await startScan();
+}
 
-    window.addEventListener("load", startScan);
-
-window.addEventListener("pageshow", (e) => {
+window.addEventListener("load", () => {
   startScan();
 });
 
-window.addEventListener("pagehide", fullyStopCamera);
-window.addEventListener("beforeunload", fullyStopCamera);
+window.addEventListener("pageshow", (e) => {
+  if (e.persisted) {
+    restartScan();
+  }
+});
+
+window.addEventListener("pagehide", () => {
+  fullyStopCamera();
+});
+
+window.addEventListener("beforeunload", () => {
+  fullyStopCamera();
+});
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
     fullyStopCamera();
   }
 });
-      }
-    });
   </script>
 
 </body>
