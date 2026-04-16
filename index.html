@@ -374,11 +374,19 @@ async function goBack() {
     }
 
     window.addEventListener("load", startScan);
-    window.addEventListener("pagehide", fullyStopCamera);
-    window.addEventListener("beforeunload", fullyStopCamera);
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        fullyStopCamera();
+
+window.addEventListener("pageshow", (e) => {
+  startScan();
+});
+
+window.addEventListener("pagehide", fullyStopCamera);
+window.addEventListener("beforeunload", fullyStopCamera);
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    fullyStopCamera();
+  }
+});
       }
     });
   </script>
