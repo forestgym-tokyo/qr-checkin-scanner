@@ -298,17 +298,19 @@ Keep 15–20 cm distance</div>
         if (data && data.success) {
           playSuccessBeep();
           setMessage("チェックインしました");
+          setTimeout(goBack, 1200);
         } else {
           playErrorBeep();
-          setMessage((data && data.message) ? data.message : "失敗");
+          setMessage(
+            (data && data.message ? data.message : "失敗") +
+            "\n\n再スキャンしてください"
+          );
         }
       } catch (e) {
         console.error(e);
         playErrorBeep();
-        setMessage("通信エラー");
+        setMessage("通信エラー\n\n再スキャンしてください");
       }
-
-      setTimeout(goBack, 1200);
     }
 
     async function startScan() {
@@ -341,7 +343,6 @@ Keep 15–20 cm distance</div>
         if (!("BarcodeDetector" in window)) {
           playErrorBeep();
           setMessage("この端末はQR自動読取に対応していません");
-          setTimeout(goBack, 1500);
           return;
         }
 
@@ -350,8 +351,9 @@ Keep 15–20 cm distance</div>
 
         timeoutTimer = setTimeout(() => {
           playErrorBeep();
-          setMessage("読み取れなかったため戻ります");
-          setTimeout(goBack, 1200);
+          setMessage("読み取れませんでした\n\n再スキャンしてください");
+          setButtonDisabled(false);
+          isScanning = false;
         }, 10000);
 
         scanTimer = setInterval(async () => {
@@ -377,7 +379,8 @@ Keep 15–20 cm distance</div>
           "name: " + (e && e.name ? e.name : "") + "\n" +
           "message: " + (e && e.message ? e.message : "")
         );
-        setTimeout(goBack, 1200);
+        setButtonDisabled(false);
+        isScanning = false;
       }
     }
 
