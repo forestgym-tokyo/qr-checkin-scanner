@@ -3,113 +3,430 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tablet</title>
+  <title>WORKOUT CHECK-IN</title>
   <style>
-    body {
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg-1: #0b1015;
+      --bg-2: #101821;
+      --panel: rgba(255,255,255,0.06);
+      --panel-border: rgba(255,255,255,0.08);
+      --text-main: #f5f7fb;
+      --text-sub: rgba(255,255,255,0.72);
+      --accent: #56e7ff;
+
+      --free-1: #1b4a2c;
+      --free-2: #2d6a3f;
+
+      --using-1: #45484d;
+      --using-2: #5b6168;
+
+      --reserved-1: #0f3f7c;
+      --reserved-2: #1f5da8;
+
+      --other-1: #252c34;
+      --other-2: #323a45;
+    }
+
+    html, body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #0f1115;
-      color: #fff;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top left, rgba(86,231,255,0.08), transparent 26%),
+        radial-gradient(circle at top right, rgba(45,106,63,0.12), transparent 24%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
     }
 
-    .header {
-      padding: 22px 24px;
-      font-size: 28px;
+    body {
+      overflow-x: hidden;
+    }
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1.45fr 0.9fr;
+      gap: 16px;
+    }
+
+    .hero,
+    .code-card {
+      border-radius: 24px;
+      border: 1px solid var(--panel-border);
+      box-shadow: 0 18px 34px rgba(0,0,0,0.28);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .hero {
+      min-height: 118px;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .hero-sub {
+      font-size: 16px;
       font-weight: 700;
-      text-align: center;
-      letter-spacing: 1px;
-      background: #000;
-      border-bottom: 2px solid #1f242c;
+      letter-spacing: 0.14em;
+      color: var(--text-sub);
     }
 
-    #authCode {
-      display: inline-block;
-      margin-left: 10px;
-      font-size: 46px;
+    .hero-main {
+      font-size: 40px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      line-height: 1.08;
+    }
+
+    .code-card {
+      min-height: 118px;
+      padding: 18px 18px 16px;
+      background: linear-gradient(135deg, #0b161d 0%, #10232d 100%);
+      border-color: rgba(86,231,255,0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .code-ja {
+      font-size: 14px;
       font-weight: 800;
-      letter-spacing: 4px;
-      color: #00e5ff;
+      letter-spacing: 0.1em;
+      color: var(--text-sub);
+      margin-bottom: 4px;
     }
 
-    .racks {
+    .code-en {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: rgba(255,255,255,0.52);
+      margin-bottom: 8px;
+    }
+
+    .code-value {
+      font-size: 56px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      text-shadow: 0 0 18px rgba(86,231,255,0.16);
+      margin-bottom: 6px;
+    }
+
+    .date-value {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .scan-btn {
+      appearance: none;
+      border: none;
+      border-radius: 18px;
+      min-height: 62px;
+      padding: 16px 28px;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      color: #04131a;
+      background: linear-gradient(135deg, #55e7ff 0%, #82f1ff 100%);
+      box-shadow: 0 14px 26px rgba(0,0,0,0.24);
+      cursor: pointer;
+    }
+
+    .scan-btn:active {
+      transform: scale(0.99);
+    }
+
+    .rack-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      padding: 18px;
-      box-sizing: border-box;
+      gap: 16px;
+      flex: 1 1 auto;
     }
 
-    .rack {
-      min-height: 190px;
-      padding: 24px 18px;
-      border-radius: 22px;
+    .rack-card {
+      position: relative;
+      min-height: 270px;
+      padding: 22px 22px 18px;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 18px 38px rgba(0,0,0,0.3);
       display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .rack-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01));
+      pointer-events: none;
+    }
+
+    .rack-card.free {
+      background: linear-gradient(135deg, var(--free-1) 0%, var(--free-2) 100%);
+    }
+
+    .rack-card.using {
+      background: linear-gradient(135deg, var(--using-1) 0%, var(--using-2) 100%);
+    }
+
+    .rack-card.reserved {
+      background: linear-gradient(135deg, var(--reserved-1) 0%, var(--reserved-2) 100%);
+    }
+
+    .rack-card.other {
+      background: linear-gradient(135deg, var(--other-1) 0%, var(--other-2) 100%);
+    }
+
+    .rack-head,
+    .rack-body,
+    .rack-foot {
+      position: relative;
+      z-index: 1;
+    }
+
+    .rack-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .rack-no {
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+    }
+
+    .rack-state {
+      flex: 0 0 auto;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.94);
+      white-space: nowrap;
+    }
+
+    .rack-body {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .main-line {
+      font-size: 44px;
+      font-weight: 900;
+      line-height: 1.08;
+      text-align: center;
+      letter-spacing: 0.01em;
+      white-space: pre-line;
+    }
+
+    .sub-line {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.28;
+      text-align: center;
+      color: rgba(255,255,255,0.96);
+      white-space: pre-line;
+    }
+
+    .note-line {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.3;
+      text-align: center;
+      color: rgba(255,255,255,0.88);
+      white-space: pre-line;
+    }
+
+    .rack-foot {
+      display: flex;
+      justify-content: center;
+      min-height: 52px;
+      margin-top: 12px;
+    }
+
+    .action-chip {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       text-align: center;
+      min-height: 48px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.2;
       white-space: pre-line;
-      font-size: 34px;
-      font-weight: 700;
-      line-height: 1.38;
-      box-sizing: border-box;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255,255,255,0.08);
+      color: #fff;
     }
 
-    .free {
-      background: linear-gradient(135deg, #1b5e20, #2e7d32);
+    .action-chip:empty {
+      display: none;
     }
 
-    .using {
-      background: linear-gradient(135deg, #424242, #616161);
-    }
-
-    .reserved {
-      background: linear-gradient(135deg, #0d47a1, #1565c0);
-    }
-
-    .other {
-      background: linear-gradient(135deg, #20242b, #2c313a);
-    }
-
-    @media (max-width: 900px) {
-      .header {
-        font-size: 24px;
-        padding: 18px 16px;
+    @media (max-width: 1100px) {
+      .topbar {
+        grid-template-columns: 1fr;
       }
 
-      #authCode {
+      .hero-main {
+        font-size: 34px;
+      }
+
+      .code-value {
+        font-size: 48px;
+      }
+
+      .rack-card {
+        min-height: 240px;
+      }
+
+      .main-line {
         font-size: 38px;
       }
 
-      .racks {
-        gap: 14px;
-        padding: 14px;
+      .sub-line {
+        font-size: 22px;
       }
 
-      .rack {
-        min-height: 150px;
-        font-size: 28px;
-        padding: 18px 14px;
+      .note-line {
+        font-size: 18px;
       }
     }
   </style>
 </head>
 <body>
+  <div class="page">
+    <div class="topbar">
+      <div class="hero">
+        <div class="hero-sub">THE FOREST GYM</div>
+        <div class="hero-main">WORKOUT CHECK-IN</div>
+      </div>
 
-  <div class="header">
-    認証コード：<span id="authCode">----</span>
-  </div>
+      <div class="code-card">
+        <div class="code-ja">認証コード</div>
+        <div class="code-en">ACCESS CODE</div>
+        <div class="code-value" id="authCode">----</div>
+        <div class="date-value" id="todayLabel">----/--/--</div>
+      </div>
+    </div>
 
-  <div class="racks">
-    <div class="rack other" id="rack1">ラック№1</div>
-    <div class="rack other" id="rack2">ラック№2</div>
-    <div class="rack other" id="rack3">ラック№3</div>
-    <div class="rack other" id="rack4">ラック№4</div>
+    <div class="action-row">
+      <button id="scanBtn" class="scan-btn">QR読み込み</button>
+    </div>
+
+    <div class="rack-grid">
+      <div class="rack-card other" id="rack1">
+        <div class="rack-head">
+          <div class="rack-no">ラック№1</div>
+          <div class="rack-state" id="rack1State">確認中</div>
+        </div>
+        <div class="rack-body">
+          <div class="main-line" id="rack1Main">読込中</div>
+          <div class="sub-line" id="rack1Sub"></div>
+          <div class="note-line" id="rack1Note"></div>
+        </div>
+        <div class="rack-foot">
+          <div class="action-chip" id="rack1Action"></div>
+        </div>
+      </div>
+
+      <div class="rack-card other" id="rack2">
+        <div class="rack-head">
+          <div class="rack-no">ラック№2</div>
+          <div class="rack-state" id="rack2State">確認中</div>
+        </div>
+        <div class="rack-body">
+          <div class="main-line" id="rack2Main">読込中</div>
+          <div class="sub-line" id="rack2Sub"></div>
+          <div class="note-line" id="rack2Note"></div>
+        </div>
+        <div class="rack-foot">
+          <div class="action-chip" id="rack2Action"></div>
+        </div>
+      </div>
+
+      <div class="rack-card other" id="rack3">
+        <div class="rack-head">
+          <div class="rack-no">ラック№3</div>
+          <div class="rack-state" id="rack3State">確認中</div>
+        </div>
+        <div class="rack-body">
+          <div class="main-line" id="rack3Main">読込中</div>
+          <div class="sub-line" id="rack3Sub"></div>
+          <div class="note-line" id="rack3Note"></div>
+        </div>
+        <div class="rack-foot">
+          <div class="action-chip" id="rack3Action"></div>
+        </div>
+      </div>
+
+      <div class="rack-card other" id="rack4">
+        <div class="rack-head">
+          <div class="rack-no">ラック№4</div>
+          <div class="rack-state" id="rack4State">確認中</div>
+        </div>
+        <div class="rack-body">
+          <div class="main-line" id="rack4Main">読込中</div>
+          <div class="sub-line" id="rack4Sub"></div>
+          <div class="note-line" id="rack4Note"></div>
+        </div>
+        <div class="rack-foot">
+          <div class="action-chip" id="rack4Action"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
     var API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+
+    function trimText(v) {
+      return String(v || "").replace(/^\s+|\s+$/g, "");
+    }
 
     function getStatusClass(state) {
       if (state === "free") return "free";
@@ -118,11 +435,14 @@
       return "other";
     }
 
-    function trimText(v) {
-      return String(v || "").replace(/^\s+|\s+$/g, "");
+    function getStatusLabel(state) {
+      if (state === "free") return "空き";
+      if (state === "using") return "利用中";
+      if (state === "reserved") return "予約あり";
+      return "確認中";
     }
 
-    function buildQueueLine(row) {
+    function buildActionText(row) {
       if (!row) return "";
 
       if (row.showUseNowButton) {
@@ -140,60 +460,58 @@
       return "";
     }
 
-    function buildRackText(r, row) {
-      var label = "ラック№" + r.rackNo;
+    function renderRack(r, row) {
+      var rackNo = r.rackNo;
+      var wrap = document.getElementById("rack" + rackNo);
+      var stateEl = document.getElementById("rack" + rackNo + "State");
+      var mainEl = document.getElementById("rack" + rackNo + "Main");
+      var subEl = document.getElementById("rack" + rackNo + "Sub");
+      var noteEl = document.getElementById("rack" + rackNo + "Note");
+      var actionEl = document.getElementById("rack" + rackNo + "Action");
+
       var currentText = trimText(r.currentText);
       var nextText = trimText(r.nextText);
-      var queueLine = buildQueueLine(row);
-      var lines = [label];
+      var actionText = buildActionText(row);
 
-      if (currentText) lines.push(currentText);
-      if (nextText) lines.push(nextText);
-      if (queueLine) lines.push(queueLine);
+      wrap.className = "rack-card " + getStatusClass(r.state);
+      stateEl.textContent = getStatusLabel(r.state);
 
-      if (!currentText && !nextText && !queueLine) {
-        if (r.state === "free") lines.push("空き");
-        else if (r.state === "using") lines.push("利用中");
-        else if (r.state === "reserved") lines.push("予約あり");
+      if (currentText) {
+        mainEl.textContent = currentText;
+        subEl.textContent = nextText || "";
+      } else if (nextText) {
+        mainEl.textContent = nextText;
+        subEl.textContent = "";
+      } else {
+        mainEl.textContent = getStatusLabel(r.state);
+        subEl.textContent = "";
       }
 
-      return lines.join("\n");
+      noteEl.textContent = r.cannotQueue ? "順番待ち受付不可" : "";
+      actionEl.textContent = actionText;
     }
 
     function renderTablet(data) {
       var authEl = document.getElementById("authCode");
-      if (authEl) {
-        authEl.textContent = data && data.authCode ? data.authCode : "----";
-      }
+      var dateEl = document.getElementById("todayLabel");
+
+      authEl.textContent = data && data.authCode ? data.authCode : "----";
+      dateEl.textContent = data && data.todayLabel ? data.todayLabel : "----/--/--";
 
       var rowMap = {};
       var queueRows = (data && data.queueUiRows) ? data.queueUiRows : [];
-      var i;
 
-      for (i = 0; i < queueRows.length; i++) {
+      for (var i = 0; i < queueRows.length; i++) {
         if (queueRows[i] && queueRows[i].rackNo) {
           rowMap[queueRows[i].rackNo] = queueRows[i];
         }
       }
 
-      for (i = 1; i <= 4; i++) {
-        var baseEl = document.getElementById("rack" + i);
-        if (!baseEl) continue;
-        baseEl.textContent = "ラック№" + i;
-        baseEl.className = "rack other";
-      }
-
       var racks = (data && data.racks) ? data.racks : [];
-      for (i = 0; i < racks.length; i++) {
-        var r = racks[i];
+      for (var j = 0; j < racks.length; j++) {
+        var r = racks[j];
         if (!r || !r.rackNo) continue;
-
-        var el = document.getElementById("rack" + r.rackNo);
-        if (!el) continue;
-
-        var row = rowMap[r.rackNo] || null;
-        el.textContent = buildRackText(r, row);
-        el.className = "rack " + getStatusClass(r.state);
+        renderRack(r, rowMap[r.rackNo] || null);
       }
     }
 
@@ -206,16 +524,18 @@
           renderTablet(data);
         })
         .catch(function() {
-          var authEl = document.getElementById("authCode");
-          if (authEl) authEl.textContent = "ERR";
+          document.getElementById("authCode").textContent = "ERR";
         });
     }
+
+    document.getElementById("scanBtn").onclick = function() {
+      location.href = "https://forestgym-tokyo.github.io/qr-checkin-scanner/";
+    };
 
     window.onload = function() {
       loadTabletData();
       setInterval(loadTabletData, 5000);
     };
   </script>
-
 </body>
 </html>
