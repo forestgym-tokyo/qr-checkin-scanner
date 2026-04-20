@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tablet</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+    }
+
+    .header {
+      padding: 20px;
+      font-size: 24px;
+    }
+
+    .racks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .rack {
+      background: #222;
+      padding: 30px;
+      font-size: 20px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    認証コード：<span id="authCode">----</span>
+  </div>
+
+  <div class="racks">
+    <div class="rack" id="rack1">ラック1</div>
+    <div class="rack" id="rack2">ラック2</div>
+    <div class="rack" id="rack3">ラック3</div>
+    <div class="rack" id="rack4">ラック4</div>
+  </div>
+
+  <script>
+    const dummy = {
+      authCode: "1234",
+      racks: [
+        { no: 1, text: "空き" },
+        { no: 2, text: "利用中" },
+        { no: 3, text: "13:40〜予約" },
+        { no: 4, text: "空き" }
+      ]
+    };
+
+    document.getElementById("authCode").textContent = dummy.authCode;
+
+    dummy.racks.forEach(r => {
+      document.getElementById("rack" + r.no).textContent = r.text;
+    });
+  </script>
+
+</body>
+</html>
