@@ -4,13 +4,76 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tablet</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+    }
+
+    .header {
+      padding: 20px;
+      font-size: 24px;
+    }
+
+    .racks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .rack {
+      background: #222;
+      padding: 30px;
+      font-size: 20px;
+      border-radius: 10px;
+    }
+  </style>
 </head>
-<body style="margin:0;background:#111;color:#fff;font-family:sans-serif;text-align:center;">
-  <h1>TEST</h1>
-  <p id="x">LOADING</p>
+<body>
+
+  <div class="header">
+    認証コード：<span id="authCode">----</span>
+  </div>
+
+  <div class="racks">
+    <div class="rack" id="rack1">ラック1</div>
+    <div class="rack" id="rack2">ラック2</div>
+    <div class="rack" id="rack3">ラック3</div>
+    <div class="rack" id="rack4">ラック4</div>
+  </div>
 
   <script>
-    document.getElementById('x').textContent = 'SCRIPT OK';
+    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+
+    function renderTablet(data) {
+      const authEl = document.getElementById("authCode");
+      if (authEl) authEl.textContent = data.authCode || "----";
+
+      (data.racks || []).forEach(r => {
+        const el = document.getElementById("rack" + r.no);
+        if (!el) return;
+        el.textContent = r.text || "";
+      });
+    }
+
+    async function loadTabletData() {
+      try {
+        const res = await fetch(API_URL + "?action=getScheduleTabletJson");
+        const data = await res.json();
+        renderTablet(data);
+      } catch (err) {
+        console.error(err);
+        const authEl = document.getElementById("authCode");
+        if (authEl) authEl.textContent = "ERR";
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", loadTabletData);
   </script>
+
 </body>
 </html>
