@@ -63,23 +63,27 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 
-    function getStatusClass(state) {
-      if (state === "free") return "free";
-      if (state === "using") return "using";
-      if (state === "reserved") return "reserved";
-      return "other";
-    }
+   function getStatusClass(state) {
+  if (state === "free") return "free";
+  if (state === "using") return "using";
+  if (state === "reserved") return "reserved";
+  return "other";
+}
 
-    function buildRackText(r) {
-      const currentText = (r.currentText || "").trim();
-      const nextText = (r.nextText || "").trim();
-      const rackLabel = r.rackLabel || ("ラック" + r.rackNo);
+function buildRackText(r) {
+  const currentText = (r.currentText || "").trim();
+  const nextText = (r.nextText || "").trim();
 
-      if (currentText && nextText) return currentText + "\n" + nextText;
-      if (currentText) return currentText;
-      if (nextText) return nextText;
-      return rackLabel;
-    }
+  if (currentText && nextText) return currentText + "\n" + nextText;
+  if (currentText) return currentText;
+  if (nextText) return nextText;
+
+  if (r.state === "free") return "空き";
+  if (r.state === "using") return "利用中";
+  if (r.state === "reserved") return "予約あり";
+
+  return r.rackLabel || ("ラック" + r.rackNo);
+}
 
     function renderTablet(data) {
       const authEl = document.getElementById("authCode");
