@@ -19,9 +19,12 @@
       --sub:#c9d0db;
       --muted:#98a2b3;
       --whitebtn:#f2f4f7;
-      --whitebtn2:#d9dee7;
       --greenbtn:#32c553;
       --greenbtn2:#2ab149;
+      --bluebtn:#3f6db5;
+      --bluebtn2:#355fa1;
+      --goldbtn:#d2a55e;
+      --goldbtn2:#bc8f47;
       --shadow:0 10px 24px rgba(0,0,0,.35);
       --radius:24px;
     }
@@ -152,8 +155,7 @@
       justify-content:center;
       flex-direction:column;
       border-radius:26px;
-      box-shadow:
-        inset 0 -10px 0 rgba(151,163,184,.45);
+      box-shadow: inset 0 -10px 0 rgba(151,163,184,.45);
     }
 
     .qr-ja{
@@ -220,7 +222,7 @@
 
     .state-chip{
       flex:0 0 auto;
-      min-width:116px;
+      min-width:128px;
       padding:10px 14px;
       border-radius:14px;
       background:rgba(0,0,0,.16);
@@ -266,6 +268,7 @@
       color:#ffffff;
       white-space:pre-line;
       margin-bottom:18px;
+      min-height:68px;
     }
 
     .next-block{
@@ -277,6 +280,7 @@
       line-height:1.45;
       color:#e6e9ef;
       white-space:pre-line;
+      min-height:54px;
     }
 
     .queue-area{
@@ -291,7 +295,6 @@
       min-height:78px;
       border:none;
       border-radius:20px;
-      background:linear-gradient(180deg,var(--greenbtn) 0%, var(--greenbtn2) 100%);
       color:#fff;
       box-shadow:
         inset 0 -4px 0 rgba(0,0,0,.12),
@@ -304,6 +307,18 @@
       padding:10px 12px;
       font:inherit;
       cursor:pointer;
+    }
+
+    .queue-btn.use-now{
+      background:linear-gradient(180deg,var(--greenbtn) 0%, var(--greenbtn2) 100%);
+    }
+
+    .queue-btn.gap{
+      background:linear-gradient(180deg,var(--bluebtn) 0%, var(--bluebtn2) 100%);
+    }
+
+    .queue-btn.queue{
+      background:linear-gradient(180deg,var(--goldbtn) 0%, var(--goldbtn2) 100%);
     }
 
     .queue-btn .ja{
@@ -321,17 +336,27 @@
       opacity:.95;
     }
 
-    .queue-btn.secondary{
-      background:linear-gradient(180deg,#3f6db5 0%, #355fa1 100%);
+    .queue-btn .time{
+      margin-top:6px;
+      font-size:13px;
+      font-weight:700;
+      line-height:1.1;
+      letter-spacing:.02em;
+      opacity:.95;
     }
 
-    .queue-btn.tertiary{
-      background:linear-gradient(180deg,#d2a55e 0%, #bc8f47 100%);
-      color:#fff;
-    }
-
-    .hidden{
-      display:none !important;
+    .no-actions{
+      min-height:78px;
+      border-radius:20px;
+      border:1px dashed rgba(255,255,255,.14);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#9aa4b2;
+      font-size:15px;
+      line-height:1.35;
+      text-align:center;
+      padding:8px;
     }
 
     .error{
@@ -399,7 +424,7 @@
         font-size:18px;
       }
       .state-chip{
-        min-width:92px;
+        min-width:98px;
         padding:8px 10px;
       }
       .state-chip .ja{
@@ -413,9 +438,11 @@
       }
       .current-main{
         font-size:20px;
+        min-height:54px;
       }
       .next-text{
         font-size:15px;
+        min-height:44px;
       }
       .queue-btn{
         min-height:64px;
@@ -426,6 +453,13 @@
       }
       .queue-btn .en{
         font-size:12px;
+      }
+      .queue-btn .time{
+        font-size:11px;
+      }
+      .no-actions{
+        min-height:64px;
+        font-size:13px;
       }
     }
   </style>
@@ -468,7 +502,7 @@
     /********************************************************
      * 設定
      ********************************************************/
-    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec?action=getScheduleTabletJson";
+    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec?action=getscheduletabletjson";
     const QR_PAGE_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/";
     const AUTO_REFRESH_MS = 15000;
     const FETCH_TIMEOUT_MS = 10000;
@@ -477,21 +511,70 @@
      * モック
      ********************************************************/
     const MOCK_DATA = {
-      authCode: "6611",
+      ok: true,
+      nowText: "2026/04/21 6:35",
       todayLabel: "2026/04/21",
-      updatedAt: "2026/04/21 6:35",
+      authCode: "6611",
       racks: [
-        { rackNo: 1, state: "free", currentText: "", nextText: "" },
-        { rackNo: 2, state: "free", currentText: "", nextText: "" },
-        { rackNo: 3, state: "free", currentText: "", nextText: "" },
-        { rackNo: 4, state: "free", currentText: "", nextText: "" }
+        {
+          rackNo: 1,
+          rackLabel: "ラック1",
+          state: "free",
+          currentText: "",
+          nextText: "",
+          cannotQueue: false
+        },
+        {
+          rackNo: 2,
+          rackLabel: "ラック2",
+          state: "using_checkedin",
+          currentText: "6:00〜6:40 山田",
+          nextText: "次：7:00〜7:40 田中",
+          cannotQueue: false
+        },
+        {
+          rackNo: 3,
+          rackLabel: "ラック3",
+          state: "using_uncheckedin",
+          currentText: "6:20〜7:00 佐藤",
+          nextText: "次：7:20〜8:00",
+          cannotQueue: false
+        },
+        {
+          rackNo: 4,
+          rackLabel: "ラック4",
+          state: "reserved",
+          currentText: "",
+          nextText: "次：6:45〜7:25 鈴木",
+          cannotQueue: false
+        }
       ],
       queueUiRows: [
         {
-          rackNo: 4,
+          rackNo: 1,
+          rackLabel: "ラック1",
           showUseNowButton: true,
-          useNowStartText: "06:35",
-          useNowEndText: "23:59"
+          useNowStartText: "6:35",
+          useNowEndText: "23:59",
+          showGapButton: false,
+          gapStartText: "",
+          gapEndText: "",
+          gapImmediate: false,
+          showQueueButton: false,
+          queueStartText: ""
+        },
+        {
+          rackNo: 4,
+          rackLabel: "ラック4",
+          showUseNowButton: false,
+          useNowStartText: "",
+          useNowEndText: "",
+          showGapButton: true,
+          gapStartText: "6:35",
+          gapEndText: "6:45",
+          gapImmediate: true,
+          showQueueButton: true,
+          queueStartText: "7:25"
         }
       ]
     };
@@ -566,7 +649,8 @@
 
       authCodeEl.textContent = data.authCode || "----";
       todayLabelEl.textContent = data.todayLabel || "----/--/--";
-      updatedTextEl.textContent = "最終更新 / LAST UPDATED: " + data.updatedAt;
+      updatedTextEl.textContent =
+        "最終更新 / LAST UPDATED: " + (data.nowText || formatDateTime(new Date()));
 
       rackGrid.innerHTML = "";
 
@@ -586,11 +670,14 @@
       for (const r of racks) {
         const no = Number(r && r.rackNo);
         if (!no) continue;
+
         map.set(no, {
           rackNo: no,
+          rackLabel: safe(r.rackLabel) || ("ラック" + no),
           state: normalizeState(r.state),
           currentText: safe(r.currentText),
-          nextText: safe(r.nextText)
+          nextText: safe(r.nextText),
+          cannotQueue: !!r.cannotQueue
         });
       }
 
@@ -598,17 +685,20 @@
         if (!map.has(i)) {
           map.set(i, {
             rackNo: i,
+            rackLabel: "ラック" + i,
             state: "free",
             currentText: "",
-            nextText: ""
+            nextText: "",
+            cannotQueue: false
           });
         }
       }
 
       return {
-        authCode: safe(src.authCode) || "----",
+        ok: !!src.ok,
+        nowText: safe(src.nowText),
         todayLabel: safe(src.todayLabel) || formatDate(new Date()),
-        updatedAt: safe(src.updatedAt) || formatDateTime(new Date()),
+        authCode: safe(src.authCode) || "----",
         racks: Array.from(map.values()).sort(function(a,b){ return a.rackNo - b.rackNo; }),
         queueUiRows: queueUiRows
       };
@@ -616,7 +706,8 @@
 
     function normalizeState(v) {
       const s = String(v || "").toLowerCase();
-      if (s === "using") return "using";
+      if (s === "using_checkedin") return "using_checkedin";
+      if (s === "using_uncheckedin") return "using_uncheckedin";
       if (s === "reserved") return "reserved";
       return "free";
     }
@@ -631,9 +722,8 @@
     }
 
     function createRackCard(rack, queueRow) {
-      const stateJa = rack.state === "using" ? "利用中" : rack.state === "reserved" ? "予約" : "空き";
-      const stateEn = rack.state === "using" ? "IN USE" : rack.state === "reserved" ? "RESERVED" : "AVAILABLE";
-
+      const stateJa = getStateJa(rack.state);
+      const stateEn = getStateEn(rack.state);
       const currentMain = getCurrentMainText(rack);
       const nextText = getNextText(rack);
 
@@ -642,7 +732,7 @@
 
       el.innerHTML = `
         <div class="rack-head">
-          <div class="rack-title">ラック№${escapeHtml(String(rack.rackNo))}</div>
+          <div class="rack-title">${escapeHtml(rack.rackLabel || ("ラック" + rack.rackNo))}</div>
           <div class="state-chip">
             <span class="ja">${escapeHtml(stateJa)}</span>
             <span class="en">${escapeHtml(stateEn)}</span>
@@ -663,48 +753,114 @@
       `;
 
       const queueArea = el.querySelector(".queue-area");
-      appendQueueButtons(queueArea, queueRow);
+      appendQueueButtons(queueArea, rack, queueRow);
 
       return el;
     }
 
-    function appendQueueButtons(container, row) {
-      if (!row) return;
+    function appendQueueButtons(container, rack, row) {
+      if (!row || rack.cannotQueue) {
+        container.appendChild(createNoActionsBox());
+        return;
+      }
+
+      let added = 0;
 
       if (row.showUseNowButton) {
-        container.appendChild(createQueueButton("すぐに利用", "USE NOW", ""));
+        container.appendChild(
+          createQueueButton(
+            "すぐに利用",
+            "USE NOW",
+            buildRangeText(row.useNowStartText, row.useNowEndText),
+            "use-now"
+          )
+        );
+        added++;
       }
 
-      if (row.showGapUseButton) {
-        container.appendChild(createQueueButton("すき間利用", "GAP USE", "secondary"));
+      if (row.showGapButton) {
+        const gapLabel = row.gapImmediate ? "すき間利用" : "すき間予約";
+        container.appendChild(
+          createQueueButton(
+            gapLabel,
+            "GAP USE",
+            buildRangeText(row.gapStartText, row.gapEndText),
+            "gap"
+          )
+        );
+        added++;
       }
 
-      if (row.showWaitButton) {
-        container.appendChild(createQueueButton("順番待ち", "WAIT LIST", "tertiary"));
+      if (row.showQueueButton) {
+        container.appendChild(
+          createQueueButton(
+            "順番待ち",
+            "WAIT LIST",
+            row.queueStartText ? ("開始 " + row.queueStartText + "〜") : "",
+            "queue"
+          )
+        );
+        added++;
+      }
+
+      if (!added) {
+        container.appendChild(createNoActionsBox());
       }
     }
 
-    function createQueueButton(ja, en, extraClass) {
+    function createQueueButton(ja, en, timeText, typeClass) {
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "queue-btn" + (extraClass ? " " + extraClass : "");
+      btn.className = "queue-btn " + typeClass;
+
       btn.innerHTML = `
         <div class="ja">${escapeHtml(ja)}</div>
         <div class="en">${escapeHtml(en)}</div>
+        <div class="time">${escapeHtml(timeText || "")}</div>
       `;
+
       return btn;
+    }
+
+    function createNoActionsBox() {
+      const box = document.createElement("div");
+      box.className = "no-actions";
+      box.textContent = "現在案内中の操作はありません";
+      return box;
+    }
+
+    function getStateJa(state) {
+      if (state === "using_checkedin") return "利用中";
+      if (state === "using_uncheckedin") return "予約";
+      if (state === "reserved") return "予約";
+      return "空き";
+    }
+
+    function getStateEn(state) {
+      if (state === "using_checkedin") return "IN USE";
+      if (state === "using_uncheckedin") return "RESERVED";
+      if (state === "reserved") return "RESERVED";
+      return "AVAILABLE";
     }
 
     function getCurrentMainText(rack) {
       if (rack.state === "free") {
-        return "空いています\nAVAILABLE";
+        return rack.currentText || "空いています\nAVAILABLE";
       }
-      if (rack.state === "using") {
-        const t = rack.currentText || "利用中";
-        return t + "\nIN USE";
+
+      if (rack.state === "using_checkedin") {
+        return rack.currentText || "利用中\nIN USE";
       }
-      const t = rack.currentText || "予約あり";
-      return t + "\nRESERVED";
+
+      if (rack.state === "using_uncheckedin") {
+        return rack.currentText || "予約あり\nRESERVED";
+      }
+
+      if (rack.state === "reserved") {
+        return rack.currentText || "予約あり\nRESERVED";
+      }
+
+      return rack.currentText || "";
     }
 
     function getNextText(rack) {
@@ -712,6 +868,14 @@
         return rack.nextText;
       }
       return "次の予定はありません\nNO UPCOMING SCHEDULE";
+    }
+
+    function buildRangeText(startText, endText) {
+      const s = safe(startText);
+      const e = safe(endText);
+      if (s && e) return s + "〜" + e;
+      if (s) return s + "〜";
+      return "";
     }
 
     function showLoading(show) {
