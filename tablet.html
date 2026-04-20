@@ -2,12 +2,13 @@
   const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 
   function renderTablet(data) {
-    document.getElementById("authCode").textContent = data.authCode || '----';
+    const authEl = document.getElementById("authCode");
+    if (authEl) authEl.textContent = data.authCode || "----";
 
     (data.racks || []).forEach(r => {
       const el = document.getElementById("rack" + r.no);
       if (!el) return;
-      el.textContent = r.text || '';
+      el.textContent = r.text || "";
     });
   }
 
@@ -15,11 +16,11 @@
     try {
       const res = await fetch(API_URL + "?action=getScheduleTabletJson");
       const data = await res.json();
-
       renderTablet(data);
     } catch (err) {
       console.error(err);
-      document.getElementById("authCode").textContent = "ERR";
+      const authEl = document.getElementById("authCode");
+      if (authEl) authEl.textContent = "ERR";
     }
   }
 
