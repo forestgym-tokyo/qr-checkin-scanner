@@ -1,541 +1,912 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WORKOUT CHECK-IN</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Rack Schedule Tablet</title>
   <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
+    :root{
+      --bg:#07090d;
+      --bg2:#0b1016;
+      --panel:rgba(255,255,255,0.07);
+      --panel-strong:rgba(255,255,255,0.11);
+      --line:rgba(255,255,255,0.12);
+      --line-strong:rgba(255,255,255,0.20);
+      --text:#f4f7fb;
+      --muted:#aeb9c8;
+      --muted2:#7e8a9a;
+
+      --free:#dbe7f5;
+      --free-glow:rgba(219,231,245,0.10);
+
+      --using:#d7c29a;
+      --using-glow:rgba(215,194,154,0.12);
+
+      --reserved:#a8b8cf;
+      --reserved-glow:rgba(168,184,207,0.10);
+
+      --accent:#cbb07a;
+      --accent-2:#e5d1a8;
+      --danger:#b98f8f;
+      --shadow:0 16px 40px rgba(0,0,0,0.42);
+      --radius-xl:28px;
+      --radius-lg:22px;
+      --radius-md:16px;
     }
 
-    :root {
-      --bg-1: #0b1015;
-      --bg-2: #101821;
-      --panel: rgba(255,255,255,0.06);
-      --panel-border: rgba(255,255,255,0.08);
-      --text-main: #f5f7fb;
-      --text-sub: rgba(255,255,255,0.72);
-      --accent: #56e7ff;
-
-      --free-1: #1b4a2c;
-      --free-2: #2d6a3f;
-
-      --using-1: #45484d;
-      --using-2: #5b6168;
-
-      --reserved-1: #0f3f7c;
-      --reserved-2: #1f5da8;
-
-      --other-1: #252c34;
-      --other-2: #323a45;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif;
-      color: var(--text-main);
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    html,body{
+      margin:0;
+      padding:0;
+      width:100%;
+      height:100%;
+      font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,-apple-system,sans-serif;
+      color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(86,231,255,0.08), transparent 26%),
-        radial-gradient(circle at top right, rgba(45,106,63,0.12), transparent 24%),
-        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+        radial-gradient(circle at 20% 0%, rgba(203,176,122,0.10), transparent 28%),
+        radial-gradient(circle at 100% 10%, rgba(255,255,255,0.04), transparent 25%),
+        linear-gradient(180deg, #0a0d12 0%, #07090d 100%);
+      overflow:hidden;
     }
 
-    body {
-      overflow-x: hidden;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.03), transparent 28%, transparent 72%, rgba(255,255,255,0.02)),
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.03), transparent 20%);
+      opacity:.8;
     }
 
-    .page {
-      width: 100%;
-      min-height: 100vh;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+    .app{
+      width:100%;
+      height:100%;
+      padding:24px;
+      display:grid;
+      grid-template-rows:auto auto 1fr auto;
+      gap:18px;
     }
 
-    .topbar {
-      display: grid;
-      grid-template-columns: 1.45fr 0.9fr;
-      gap: 16px;
+    .glass{
+      background:linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.05));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(16px) saturate(120%);
+      -webkit-backdrop-filter:blur(16px) saturate(120%);
     }
 
-    .hero,
-    .code-card {
-      border-radius: 24px;
-      border: 1px solid var(--panel-border);
-      box-shadow: 0 18px 34px rgba(0,0,0,0.28);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+    .topbar{
+      border-radius:var(--radius-xl);
+      padding:20px 24px;
+      display:grid;
+      grid-template-columns:1.15fr 1fr auto;
+      gap:18px;
+      align-items:stretch;
     }
 
-    .hero {
-      min-height: 118px;
-      padding: 20px 24px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 8px;
+    .brand{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      min-width:0;
     }
 
-    .hero-sub {
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      color: var(--text-sub);
+    .brand .ja{
+      font-size:14px;
+      color:var(--muted);
+      letter-spacing:.18em;
+      margin-bottom:8px;
+      font-weight:700;
     }
 
-    .hero-main {
-      font-size: 40px;
-      font-weight: 900;
-      letter-spacing: 0.04em;
-      line-height: 1.08;
+    .brand .title{
+      font-size:38px;
+      line-height:1.05;
+      font-weight:800;
+      letter-spacing:.03em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
-    .code-card {
-      min-height: 118px;
-      padding: 18px 18px 16px;
-      background: linear-gradient(135deg, #0b161d 0%, #10232d 100%);
-      border-color: rgba(86,231,255,0.2);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+    .brand .sub{
+      margin-top:10px;
+      font-size:15px;
+      color:var(--muted2);
+      letter-spacing:.08em;
+      font-weight:600;
     }
 
-    .code-ja {
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      color: var(--text-sub);
-      margin-bottom: 4px;
+    .auth-box,
+    .time-box{
+      border-radius:24px;
+      padding:18px 22px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      border:1px solid rgba(255,255,255,0.10);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      min-width:0;
     }
 
-    .code-en {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      color: rgba(255,255,255,0.52);
-      margin-bottom: 8px;
+    .label-ja{
+      font-size:13px;
+      color:var(--muted);
+      letter-spacing:.16em;
+      font-weight:700;
+      margin-bottom:4px;
     }
 
-    .code-value {
-      font-size: 56px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: 0.14em;
-      color: var(--accent);
-      text-shadow: 0 0 18px rgba(86,231,255,0.16);
-      margin-bottom: 6px;
+    .label-en{
+      font-size:12px;
+      color:var(--muted2);
+      letter-spacing:.18em;
+      font-weight:700;
+      margin-bottom:10px;
     }
 
-    .date-value {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.8);
+    .auth-code{
+      font-size:52px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:.14em;
+      color:var(--accent-2);
+      text-shadow:0 0 18px rgba(229,209,168,0.12);
+      white-space:nowrap;
     }
 
-    .action-row {
-      display: flex;
-      justify-content: center;
-      gap: 14px;
+    .today-label{
+      margin-top:10px;
+      font-size:16px;
+      color:var(--text);
+      font-weight:700;
+      letter-spacing:.06em;
     }
 
-    .scan-btn {
-      appearance: none;
-      border: none;
-      border-radius: 18px;
-      min-height: 62px;
-      padding: 16px 28px;
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: 0.03em;
-      color: #04131a;
-      background: linear-gradient(135deg, #55e7ff 0%, #82f1ff 100%);
-      box-shadow: 0 14px 26px rgba(0,0,0,0.24);
-      cursor: pointer;
+    .time-now{
+      font-size:38px;
+      line-height:1;
+      font-weight:900;
+      white-space:nowrap;
     }
 
-    .scan-btn:active {
-      transform: scale(0.99);
+    .time-sub{
+      margin-top:10px;
+      font-size:15px;
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:.06em;
     }
 
-    .rack-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      flex: 1 1 auto;
+    .status-strip{
+      border-radius:20px;
+      padding:14px 18px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      align-items:center;
     }
 
-    .rack-card {
-      position: relative;
-      min-height: 270px;
-      padding: 22px 22px 18px;
-      border-radius: 28px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 18px 38px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+    .legend{
+      border-radius:16px;
+      padding:12px 14px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
     }
 
-    .rack-card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01));
-      pointer-events: none;
+    .legend-dot{
+      width:14px;
+      height:14px;
+      border-radius:50%;
+      flex:0 0 auto;
+      box-shadow:0 0 12px currentColor;
+      opacity:.95;
     }
 
-    .rack-card.free {
-      background: linear-gradient(135deg, var(--free-1) 0%, var(--free-2) 100%);
+    .legend.free .legend-dot{color:var(--free); background:var(--free);}
+    .legend.using .legend-dot{color:var(--using); background:var(--using);}
+    .legend.reserved .legend-dot{color:var(--reserved); background:var(--reserved);}
+
+    .legend .legend-label{
+      font-size:17px;
+      font-weight:800;
+      letter-spacing:.04em;
+      white-space:nowrap;
     }
 
-    .rack-card.using {
-      background: linear-gradient(135deg, var(--using-1) 0%, var(--using-2) 100%);
+    .rack-grid{
+      min-height:0;
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:18px;
     }
 
-    .rack-card.reserved {
-      background: linear-gradient(135deg, var(--reserved-1) 0%, var(--reserved-2) 100%);
+    .rack-card{
+      position:relative;
+      border-radius:30px;
+      padding:22px;
+      overflow:hidden;
+      display:grid;
+      grid-template-rows:auto auto 1fr auto;
+      gap:16px;
+      min-height:0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05)),
+        linear-gradient(135deg, rgba(255,255,255,0.04), transparent 32%);
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:var(--shadow);
     }
 
-    .rack-card.other {
-      background: linear-gradient(135deg, var(--other-1) 0%, var(--other-2) 100%);
+    .rack-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:radial-gradient(circle at right top, rgba(255,255,255,0.07), transparent 34%);
+      opacity:.85;
     }
 
-    .rack-head,
-    .rack-body,
-    .rack-foot {
-      position: relative;
-      z-index: 1;
+    .rack-card.free{
+      box-shadow:var(--shadow), inset 0 0 0 1px rgba(219,231,245,0.06), 0 0 24px var(--free-glow);
     }
 
-    .rack-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
+    .rack-card.using{
+      box-shadow:var(--shadow), inset 0 0 0 1px rgba(215,194,154,0.08), 0 0 24px var(--using-glow);
     }
 
-    .rack-no {
-      font-size: 30px;
-      font-weight: 900;
-      letter-spacing: 0.03em;
+    .rack-card.reserved{
+      box-shadow:var(--shadow), inset 0 0 0 1px rgba(168,184,207,0.08), 0 0 24px var(--reserved-glow);
     }
 
-    .rack-state {
-      flex: 0 0 auto;
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.18);
-      border: 1px solid rgba(255,255,255,0.14);
-      color: rgba(255,255,255,0.94);
-      white-space: nowrap;
+    .rack-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      position:relative;
+      z-index:1;
     }
 
-    .rack-body {
-      flex: 1 1 auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 10px;
+    .rack-no-wrap{
+      min-width:0;
     }
 
-    .main-line {
-      font-size: 44px;
-      font-weight: 900;
-      line-height: 1.08;
-      text-align: center;
-      letter-spacing: 0.01em;
-      white-space: pre-line;
+    .rack-no-label{
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.22em;
+      font-weight:700;
+      margin-bottom:6px;
     }
 
-    .sub-line {
-      font-size: 24px;
-      font-weight: 800;
-      line-height: 1.28;
-      text-align: center;
-      color: rgba(255,255,255,0.96);
-      white-space: pre-line;
+    .rack-no{
+      font-size:34px;
+      font-weight:900;
+      letter-spacing:.05em;
+      line-height:1.05;
     }
 
-    .note-line {
-      font-size: 20px;
-      font-weight: 700;
-      line-height: 1.3;
-      text-align: center;
-      color: rgba(255,255,255,0.88);
-      white-space: pre-line;
+    .state-badge{
+      flex:0 0 auto;
+      min-width:132px;
+      text-align:center;
+      border-radius:999px;
+      padding:11px 16px;
+      font-size:16px;
+      font-weight:900;
+      letter-spacing:.10em;
+      border:1px solid rgba(255,255,255,0.12);
+      background:rgba(255,255,255,0.06);
     }
 
-    .rack-foot {
-      display: flex;
-      justify-content: center;
-      min-height: 52px;
-      margin-top: 12px;
+    .rack-card.free .state-badge{
+      color:#f3f7fc;
+      background:linear-gradient(180deg, rgba(219,231,245,0.18), rgba(219,231,245,0.10));
     }
 
-    .action-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      min-height: 48px;
-      padding: 10px 16px;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.2);
-      border: 1px solid rgba(255,255,255,0.18);
-      font-size: 18px;
-      font-weight: 900;
-      line-height: 1.2;
-      white-space: pre-line;
-      color: #fff;
+    .rack-card.using .state-badge{
+      color:#f6edd8;
+      background:linear-gradient(180deg, rgba(215,194,154,0.20), rgba(215,194,154,0.10));
     }
 
-    .action-chip:empty {
-      display: none;
+    .rack-card.reserved .state-badge{
+      color:#eef4fb;
+      background:linear-gradient(180deg, rgba(168,184,207,0.18), rgba(168,184,207,0.10));
     }
 
-    @media (max-width: 1100px) {
-      .topbar {
-        grid-template-columns: 1fr;
-      }
+    .rack-body{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      min-height:0;
+      position:relative;
+      z-index:1;
+    }
 
-      .hero-main {
-        font-size: 34px;
-      }
+    .info-box{
+      border-radius:20px;
+      padding:16px 18px;
+      background:rgba(255,255,255,0.045);
+      border:1px solid rgba(255,255,255,0.08);
+      min-height:92px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
 
-      .code-value {
-        font-size: 48px;
-      }
+    .info-label{
+      font-size:12px;
+      color:var(--muted2);
+      letter-spacing:.18em;
+      font-weight:800;
+      margin-bottom:9px;
+    }
 
-      .rack-card {
-        min-height: 240px;
-      }
+    .info-text{
+      font-size:26px;
+      line-height:1.25;
+      font-weight:800;
+      color:var(--text);
+      word-break:break-word;
+    }
 
-      .main-line {
-        font-size: 38px;
-      }
+    .info-text.small{
+      font-size:21px;
+      line-height:1.32;
+    }
 
-      .sub-line {
-        font-size: 22px;
-      }
+    .empty-text{
+      color:#7f8b99;
+    }
 
-      .note-line {
-        font-size: 18px;
-      }
+    .actions{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:12px;
+      position:relative;
+      z-index:1;
+    }
+
+    .action-btn{
+      appearance:none;
+      border:none;
+      outline:none;
+      border-radius:18px;
+      padding:16px 12px;
+      min-height:88px;
+      cursor:pointer;
+      color:var(--text);
+      font:inherit;
+      background:linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.05));
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:0 10px 20px rgba(0,0,0,0.22);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      transition:transform .12s ease, background .12s ease, box-shadow .12s ease;
+    }
+
+    .action-btn:active{
+      transform:scale(.985);
+    }
+
+    .action-btn .main{
+      font-size:22px;
+      font-weight:900;
+      letter-spacing:.04em;
+      line-height:1.05;
+    }
+
+    .action-btn .sub{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:700;
+      line-height:1.25;
+      text-align:center;
+      white-space:pre-line;
+    }
+
+    .action-btn.primary{
+      background:linear-gradient(180deg, rgba(203,176,122,0.22), rgba(203,176,122,0.12));
+      border:1px solid rgba(229,209,168,0.22);
+    }
+
+    .action-btn.secondary{
+      background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+    }
+
+    .action-btn.ghost{
+      background:linear-gradient(180deg, rgba(168,184,207,0.12), rgba(168,184,207,0.06));
+    }
+
+    .action-btn.disabled{
+      opacity:.35;
+      cursor:default;
+      filter:grayscale(.15);
+    }
+
+    .footer{
+      border-radius:22px;
+      padding:14px 18px;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:14px;
+      align-items:center;
+    }
+
+    .footer-note{
+      font-size:15px;
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:.04em;
+      line-height:1.5;
+    }
+
+    .qr-btn{
+      appearance:none;
+      border:none;
+      outline:none;
+      cursor:pointer;
+      min-width:240px;
+      border-radius:20px;
+      padding:18px 22px;
+      background:linear-gradient(180deg, rgba(203,176,122,0.24), rgba(203,176,122,0.14));
+      border:1px solid rgba(229,209,168,0.24);
+      color:var(--text);
+      box-shadow:0 14px 28px rgba(0,0,0,0.24);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      gap:6px;
+      transition:transform .12s ease;
+    }
+
+    .qr-btn:active{ transform:scale(.985); }
+
+    .qr-btn .main{
+      font-size:24px;
+      font-weight:900;
+      letter-spacing:.06em;
+    }
+
+    .qr-btn .sub{
+      font-size:13px;
+      color:#eadfc5;
+      font-weight:700;
+      letter-spacing:.08em;
+    }
+
+    .loading,
+    .error-overlay{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(7,9,13,0.72);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      z-index:999;
+    }
+
+    .overlay-card{
+      width:min(720px, calc(100vw - 48px));
+      border-radius:28px;
+      padding:28px 30px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.05));
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+
+    .overlay-card .title{
+      font-size:28px;
+      font-weight:900;
+      margin-bottom:10px;
+      letter-spacing:.04em;
+    }
+
+    .overlay-card .desc{
+      font-size:18px;
+      line-height:1.7;
+      color:var(--muted);
+      font-weight:700;
+      white-space:pre-line;
+    }
+
+    .hidden{display:none !important;}
+
+    @media (max-width: 1200px){
+      .app{padding:16px; gap:14px;}
+      .topbar{grid-template-columns:1fr; gap:14px;}
+      .rack-grid{gap:14px;}
+      .footer{grid-template-columns:1fr;}
+      .qr-btn{width:100%; min-width:0;}
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="topbar">
-      <div class="hero">
-        <div class="hero-sub">THE FOREST GYM</div>
-        <div class="hero-main">WORKOUT CHECK-IN</div>
+  <div class="app">
+    <section class="topbar glass">
+      <div class="brand">
+        <div class="ja">THE FOREST GYM</div>
+        <div class="title">RACK SCHEDULE TABLET</div>
+        <div class="sub">ラック利用状況 / すぐ利用 / すき間利用 / 順番待ち</div>
       </div>
 
-      <div class="code-card">
-        <div class="code-ja">認証コード</div>
-        <div class="code-en">ACCESS CODE</div>
-        <div class="code-value" id="authCode">----</div>
-        <div class="date-value" id="todayLabel">----/--/--</div>
+      <div class="auth-box">
+        <div class="label-ja">認証コード</div>
+        <div class="label-en">ACCESS CODE</div>
+        <div class="auth-code" id="authCode">----</div>
+        <div class="today-label" id="todayLabel">----/--/--</div>
       </div>
+
+      <div class="time-box">
+        <div class="label-ja">現在時刻</div>
+        <div class="label-en">CURRENT TIME</div>
+        <div class="time-now" id="clockText">--:--</div>
+        <div class="time-sub" id="clockDateText">----/--/--</div>
+      </div>
+    </section>
+
+    <section class="status-strip glass">
+      <div class="legend free">
+        <div class="legend-dot"></div>
+        <div class="legend-label">空き / AVAILABLE</div>
+      </div>
+      <div class="legend using">
+        <div class="legend-dot"></div>
+        <div class="legend-label">利用中 / IN USE</div>
+      </div>
+      <div class="legend reserved">
+        <div class="legend-dot"></div>
+        <div class="legend-label">予約 / RESERVED</div>
+      </div>
+    </section>
+
+    <main class="rack-grid" id="rackGrid"></main>
+
+    <footer class="footer glass">
+      <div class="footer-note" id="footerNote">
+        画面は自動更新されます。ご利用前に最新の空き状況をご確認ください。
+      </div>
+      <button class="qr-btn" id="qrScanBtn" type="button">
+        <div class="main">QR 読み込み</div>
+        <div class="sub">CHECK IN / CHECK OUT</div>
+      </button>
+    </footer>
+  </div>
+
+  <div class="loading" id="loadingOverlay">
+    <div class="overlay-card">
+      <div class="title">読み込み中</div>
+      <div class="desc">ラック情報を取得しています…</div>
     </div>
+  </div>
 
-    <div class="action-row">
-      <button id="scanBtn" class="scan-btn">QR読み込み</button>
-    </div>
-
-    <div class="rack-grid">
-      <div class="rack-card other" id="rack1">
-        <div class="rack-head">
-          <div class="rack-no">ラック№1</div>
-          <div class="rack-state" id="rack1State">確認中</div>
-        </div>
-        <div class="rack-body">
-          <div class="main-line" id="rack1Main">読込中</div>
-          <div class="sub-line" id="rack1Sub"></div>
-          <div class="note-line" id="rack1Note"></div>
-        </div>
-        <div class="rack-foot">
-          <div class="action-chip" id="rack1Action"></div>
-        </div>
-      </div>
-
-      <div class="rack-card other" id="rack2">
-        <div class="rack-head">
-          <div class="rack-no">ラック№2</div>
-          <div class="rack-state" id="rack2State">確認中</div>
-        </div>
-        <div class="rack-body">
-          <div class="main-line" id="rack2Main">読込中</div>
-          <div class="sub-line" id="rack2Sub"></div>
-          <div class="note-line" id="rack2Note"></div>
-        </div>
-        <div class="rack-foot">
-          <div class="action-chip" id="rack2Action"></div>
-        </div>
-      </div>
-
-      <div class="rack-card other" id="rack3">
-        <div class="rack-head">
-          <div class="rack-no">ラック№3</div>
-          <div class="rack-state" id="rack3State">確認中</div>
-        </div>
-        <div class="rack-body">
-          <div class="main-line" id="rack3Main">読込中</div>
-          <div class="sub-line" id="rack3Sub"></div>
-          <div class="note-line" id="rack3Note"></div>
-        </div>
-        <div class="rack-foot">
-          <div class="action-chip" id="rack3Action"></div>
-        </div>
-      </div>
-
-      <div class="rack-card other" id="rack4">
-        <div class="rack-head">
-          <div class="rack-no">ラック№4</div>
-          <div class="rack-state" id="rack4State">確認中</div>
-        </div>
-        <div class="rack-body">
-          <div class="main-line" id="rack4Main">読込中</div>
-          <div class="sub-line" id="rack4Sub"></div>
-          <div class="note-line" id="rack4Note"></div>
-        </div>
-        <div class="rack-foot">
-          <div class="action-chip" id="rack4Action"></div>
-        </div>
-      </div>
+  <div class="error-overlay hidden" id="errorOverlay">
+    <div class="overlay-card">
+      <div class="title">接続エラー</div>
+      <div class="desc" id="errorMessage">データの取得に失敗しました。</div>
     </div>
   </div>
 
   <script>
-    var API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+    const CONFIG = {
+      API_URL: 'https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec',
+      API_ACTION: 'getScheduleTabletJson',
+      QR_PAGE_URL: 'https://forestgym-tokyo.github.io/qr-checkin-scanner/',
+      REFRESH_MS: 15000,
+      REQUEST_TIMEOUT_MS: 12000
+    };
 
-    function trimText(v) {
-      return String(v || "").replace(/^\s+|\s+$/g, "");
+    const els = {
+      authCode: document.getElementById('authCode'),
+      todayLabel: document.getElementById('todayLabel'),
+      clockText: document.getElementById('clockText'),
+      clockDateText: document.getElementById('clockDateText'),
+      rackGrid: document.getElementById('rackGrid'),
+      qrScanBtn: document.getElementById('qrScanBtn'),
+      footerNote: document.getElementById('footerNote'),
+      loadingOverlay: document.getElementById('loadingOverlay'),
+      errorOverlay: document.getElementById('errorOverlay'),
+      errorMessage: document.getElementById('errorMessage')
+    };
+
+    let refreshTimer = null;
+    let firstLoaded = false;
+
+    function pad(n){
+      return String(n).padStart(2, '0');
     }
 
-    function getStatusClass(state) {
-      if (state === "free") return "free";
-      if (state === "using") return "using";
-      if (state === "reserved") return "reserved";
-      return "other";
+    function formatNow(){
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = pad(now.getMonth() + 1);
+      const d = pad(now.getDate());
+      const hh = pad(now.getHours());
+      const mm = pad(now.getMinutes());
+
+      els.clockText.textContent = `${hh}:${mm}`;
+      els.clockDateText.textContent = `${y}/${m}/${d}`;
     }
 
-    function getStatusLabel(state) {
-      if (state === "free") return "空き";
-      if (state === "using") return "利用中";
-      if (state === "reserved") return "予約あり";
-      return "確認中";
+    function escapeHtml(str){
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
 
-    function buildActionText(row) {
-      if (!row) return "";
+    function normalizeState(state){
+      const s = String(state || '').toLowerCase().trim();
+      if (s === 'free') return 'free';
+      if (s === 'using') return 'using';
+      if (s === 'reserved') return 'reserved';
+      return 'reserved';
+    }
 
-      if (row.showUseNowButton) {
-        return "すぐ利用 " + trimText(row.useNowStartText) + "〜" + trimText(row.useNowEndText);
+    function stateLabel(state){
+      if (state === 'free') return '空き';
+      if (state === 'using') return '利用中';
+      return '予約';
+    }
+
+    function queueRowMap(queueUiRows){
+      const map = new Map();
+      (queueUiRows || []).forEach(row => {
+        if (!row || typeof row.rackNo === 'undefined') return;
+        map.set(Number(row.rackNo), row);
+      });
+      return map;
+    }
+
+    function textOrFallback(text, fallback = '—'){
+      const value = String(text || '').trim();
+      return value ? value : fallback;
+    }
+
+    function makeButton({label, sub, className = '', disabled = false, onClick = '', dataAttrs = ''}){
+      const disabledClass = disabled ? 'disabled' : '';
+      const clickAttr = disabled ? '' : `onclick="${onClick}"`;
+      return `
+        <button class="action-btn ${className} ${disabledClass}" type="button" ${clickAttr} ${dataAttrs}>
+          <div class="main">${escapeHtml(label)}</div>
+          <div class="sub">${escapeHtml(sub)}</div>
+        </button>
+      `;
+    }
+
+    function renderRackCard(rack, queueRow){
+      const rackNo = Number(rack.rackNo);
+      const state = normalizeState(rack.state);
+      const currentText = String(rack.currentText || '').trim();
+      const nextText = String(rack.nextText || '').trim();
+
+      const showUseNow = !!queueRow?.showUseNowButton;
+      const useNowStart = String(queueRow?.useNowStartText || '').trim();
+      const useNowEnd = String(queueRow?.useNowEndText || '').trim();
+
+      const hasGap = !!(queueRow?.gapStartText || queueRow?.gapEndText || queueRow?.showGapButton);
+      const gapStart = String(queueRow?.gapStartText || '').trim();
+      const gapEnd = String(queueRow?.gapEndText || '').trim();
+
+      const hasQueue = !!(queueRow?.queueStartText || queueRow?.showQueueButton || queueRow?.queueText);
+      const queueStart = String(queueRow?.queueStartText || '').trim();
+      const queueText = String(queueRow?.queueText || '').trim();
+
+      const currentClass = currentText.length > 22 ? 'info-text small' : 'info-text';
+      const nextClass = nextText.length > 22 ? 'info-text small' : 'info-text';
+
+      const useNowSub = showUseNow
+        ? (useNowStart && useNowEnd ? `${useNowStart} - ${useNowEnd}` : '今すぐ受付')
+        : '受付なし';
+
+      const gapSub = hasGap
+        ? (gapStart && gapEnd ? `${gapStart} - ${gapEnd}` : '短時間利用可')
+        : '受付なし';
+
+      const queueSub = hasQueue
+        ? (queueText || (queueStart ? `${queueStart} 以降` : '受付可能'))
+        : '受付なし';
+
+      return `
+        <section class="rack-card glass ${state}">
+          <div class="rack-head">
+            <div class="rack-no-wrap">
+              <div class="rack-no-label">RACK NUMBER</div>
+              <div class="rack-no">ラック ${rackNo}</div>
+            </div>
+            <div class="state-badge">${stateLabel(state)}</div>
+          </div>
+
+          <div class="rack-body">
+            <div class="info-box">
+              <div class="info-label">CURRENT</div>
+              <div class="${currentText ? currentClass : 'info-text empty-text'}">${escapeHtml(textOrFallback(currentText, '現在空いています'))}</div>
+            </div>
+            <div class="info-box">
+              <div class="info-label">NEXT</div>
+              <div class="${nextText ? nextClass : 'info-text empty-text'}">${escapeHtml(textOrFallback(nextText, '次の予定なし'))}</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            ${makeButton({
+              label:'すぐ利用',
+              sub:useNowSub,
+              className:showUseNow ? 'primary' : 'secondary',
+              disabled:!showUseNow,
+              onClick:`goUseNow(${rackNo})`
+            })}
+            ${makeButton({
+              label:'すき間利用',
+              sub:gapSub,
+              className:hasGap ? 'ghost' : 'secondary',
+              disabled:!hasGap,
+              onClick:`goGapUse(${rackNo})`
+            })}
+            ${makeButton({
+              label:'順番待ち',
+              sub:queueSub,
+              className:hasQueue ? 'secondary' : 'secondary',
+              disabled:!hasQueue,
+              onClick:`goQueue(${rackNo})`
+            })}
+          </div>
+        </section>
+      `;
+    }
+
+    function ensureFourRacks(racks){
+      const source = Array.isArray(racks) ? racks : [];
+      const map = new Map(source.map(r => [Number(r.rackNo), r]));
+      const full = [];
+      for (let i = 1; i <= 4; i++) {
+        full.push(map.get(i) || {
+          rackNo: i,
+          state: 'reserved',
+          currentText: '',
+          nextText: ''
+        });
+      }
+      return full;
+    }
+
+    function render(data){
+      els.authCode.textContent = data.authCode || '----';
+      els.todayLabel.textContent = data.todayLabel || '----/--/--';
+
+      const qMap = queueRowMap(data.queueUiRows);
+      const racks = ensureFourRacks(data.racks);
+
+      els.rackGrid.innerHTML = racks
+        .map(rack => renderRackCard(rack, qMap.get(Number(rack.rackNo))))
+        .join('');
+
+      const enabledCount = (data.queueUiRows || []).filter(r => r && (r.showUseNowButton || r.showGapButton || r.showQueueButton || r.queueStartText || r.gapStartText || r.queueText)).length;
+      els.footerNote.textContent = enabledCount > 0
+        ? '画面は自動更新されます。利用ボタンが表示されているラックのみ受付可能です。'
+        : '画面は自動更新されます。現在受付可能なラックがない場合があります。';
+    }
+
+    async function fetchWithTimeout(url, options = {}, timeoutMs = 10000){
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(url, {...options, signal: controller.signal, cache:'no-store'});
+        clearTimeout(timer);
+        return response;
+      } catch (err) {
+        clearTimeout(timer);
+        throw err;
+      }
+    }
+
+    async function loadData(){
+      const url = `${CONFIG.API_URL}?action=${encodeURIComponent(CONFIG.API_ACTION)}&t=${Date.now()}`;
+      const response = await fetchWithTimeout(url, {}, CONFIG.REQUEST_TIMEOUT_MS);
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
       }
 
-      if (row.showGapButton) {
-        return "すき間利用 " + trimText(row.gapStartText) + "〜" + trimText(row.gapEndText);
+      const data = await response.json();
+      if (!data || typeof data !== 'object') {
+        throw new Error('JSON不正');
       }
-
-      if (row.showQueueButton) {
-        return "順番待ち " + trimText(row.queueStartText) + "〜";
-      }
-
-      return "";
+      return data;
     }
 
-    function renderRack(r, row) {
-      var rackNo = r.rackNo;
-      var wrap = document.getElementById("rack" + rackNo);
-      var stateEl = document.getElementById("rack" + rackNo + "State");
-      var mainEl = document.getElementById("rack" + rackNo + "Main");
-      var subEl = document.getElementById("rack" + rackNo + "Sub");
-      var noteEl = document.getElementById("rack" + rackNo + "Note");
-      var actionEl = document.getElementById("rack" + rackNo + "Action");
-
-      var currentText = trimText(r.currentText);
-      var nextText = trimText(r.nextText);
-      var actionText = buildActionText(row);
-
-      wrap.className = "rack-card " + getStatusClass(r.state);
-      stateEl.textContent = getStatusLabel(r.state);
-
-      if (currentText) {
-        mainEl.textContent = currentText;
-        subEl.textContent = nextText || "";
-      } else if (nextText) {
-        mainEl.textContent = nextText;
-        subEl.textContent = "";
+    function showLoading(show){
+      if (show) {
+        els.loadingOverlay.classList.remove('hidden');
       } else {
-        mainEl.textContent = getStatusLabel(r.state);
-        subEl.textContent = "";
+        els.loadingOverlay.classList.add('hidden');
       }
-
-      noteEl.textContent = r.cannotQueue ? "順番待ち受付不可" : "";
-      actionEl.textContent = actionText;
     }
 
-    function renderTablet(data) {
-      var authEl = document.getElementById("authCode");
-      var dateEl = document.getElementById("todayLabel");
+    function showError(message){
+      els.errorMessage.textContent = message || 'データの取得に失敗しました。';
+      els.errorOverlay.classList.remove('hidden');
+    }
 
-      authEl.textContent = data && data.authCode ? data.authCode : "----";
-      dateEl.textContent = data && data.todayLabel ? data.todayLabel : "----/--/--";
+    function hideError(){
+      els.errorOverlay.classList.add('hidden');
+    }
 
-      var rowMap = {};
-      var queueRows = (data && data.queueUiRows) ? data.queueUiRows : [];
-
-      for (var i = 0; i < queueRows.length; i++) {
-        if (queueRows[i] && queueRows[i].rackNo) {
-          rowMap[queueRows[i].rackNo] = queueRows[i];
+    async function refresh(){
+      try {
+        const data = await loadData();
+        render(data);
+        hideError();
+        if (!firstLoaded) {
+          showLoading(false);
+          firstLoaded = true;
+        }
+      } catch (err) {
+        console.error(err);
+        if (!firstLoaded) {
+          showLoading(false);
+          showError('ラック情報の取得に失敗しました。\nネットワークまたはGAS側の応答をご確認ください。');
+          firstLoaded = true;
+        } else {
+          showError('更新に失敗しました。\n前回取得済みの表示を維持しています。');
         }
       }
-
-      var racks = (data && data.racks) ? data.racks : [];
-      for (var j = 0; j < racks.length; j++) {
-        var r = racks[j];
-        if (!r || !r.rackNo) continue;
-        renderRack(r, rowMap[r.rackNo] || null);
-      }
     }
 
-    function loadTabletData() {
-      fetch(API_URL + "?action=getScheduleTabletJson&t=" + new Date().getTime())
-        .then(function(res) {
-          return res.json();
-        })
-        .then(function(data) {
-          renderTablet(data);
-        })
-        .catch(function() {
-          document.getElementById("authCode").textContent = "ERR";
-        });
+    function buildTargetUrl(action, rackNo){
+      return `${CONFIG.API_URL}?action=${encodeURIComponent(action)}&rackNo=${encodeURIComponent(rackNo)}&t=${Date.now()}`;
     }
 
-    document.getElementById("scanBtn").onclick = function() {
-      location.href = "https://forestgym-tokyo.github.io/qr-checkin-scanner/";
-    };
+    function goUseNow(rackNo){
+      location.href = buildTargetUrl('useNow', rackNo);
+    }
 
-    window.onload = function() {
-      loadTabletData();
-      setInterval(loadTabletData, 5000);
-    };
+    function goGapUse(rackNo){
+      location.href = buildTargetUrl('gapUse', rackNo);
+    }
+
+    function goQueue(rackNo){
+      location.href = buildTargetUrl('queue', rackNo);
+    }
+
+    function goQrScan(){
+      location.href = CONFIG.QR_PAGE_URL;
+    }
+
+    function startAutoRefresh(){
+      if (refreshTimer) clearInterval(refreshTimer);
+      refreshTimer = setInterval(refresh, CONFIG.REFRESH_MS);
+    }
+
+    function initClock(){
+      formatNow();
+      setInterval(formatNow, 1000);
+    }
+
+    window.goUseNow = goUseNow;
+    window.goGapUse = goGapUse;
+    window.goQueue = goQueue;
+
+    els.qrScanBtn.addEventListener('click', goQrScan);
+
+    initClock();
+    refresh();
+    startAutoRefresh();
   </script>
 </body>
 </html>
