@@ -8,59 +8,31 @@
     return "other";
   }
 
-  function buildRackText(r, row) {
-    const label = "ラック№" + r.rackNo;
-    const currentText = (r.currentText || "").trim();
-    const nextText = (r.nextText || "").trim();
-
-    if (currentText && nextText) return label + "\n" + currentText + "\n" + nextText;
-    if (currentText) return label + "\n" + currentText;
-    if (nextText) return label + "\n" + nextText;
-
-    if (row) {
-      if (row.showUseNowButton) {
-        return label + "\nすぐ利用 " + row.useNowStartText + "〜" + row.useNowEndText;
-      }
-      if (row.showGapButton) {
-        return label + "\nすき間利用 " + row.gapStartText + "〜" + row.gapEndText;
-      }
-      if (row.showQueueButton) {
-        return label + "\n順番待ち " + row.queueStartText + "〜";
-      }
-    }
-
-    if (r.state === "free") return label + "\n空き";
-    if (r.state === "using") return label + "\n利用中";
-    if (r.state === "reserved") return label + "\n予約あり";
-
-    return label;
-  }
-
   function renderTablet(data) {
     const authEl = document.getElementById("authCode");
     if (authEl) authEl.textContent = data.authCode || "----";
 
-    const rowMap = {};
-    (data.queueUiRows || []).forEach(function(row) {
-      rowMap[row.rackNo] = row;
-    });
-
     for (let i = 1; i <= 4; i++) {
       const el = document.getElementById("rack" + i);
       if (!el) continue;
-      el.textContent = "ラック№" + i;
-      el.className = "rack other";
+
+      const r = (data.racks && data.racks[i-1]) || {};
+
+      let text = "ラック№" + i;
+
+      if (r.currentText) text += "\n" + r.currentText;
+      if (r.nextText) text += "\n" + r.nextText;
+
+      if (!r.currentText && !r.nextText) {
+        if (r.state === "free") text += "\n空き";
+        if (r.state === "using") text += "\n利用中";
+        if (r.state === "reserved") text += "\n予約あり";
+      }
+
+      el.textContent = text;
+      el.className = "rack " + getStatusClass(r.state);
       el.style.whiteSpace = "pre-line";
     }
-
-    (data.racks || []).forEach(function(r) {
-      const el = document.getElementById("rack" + r.rackNo);
-      if (!el) return;
-
-      const row = rowMap[r.rackNo] || null;
-      el.textContent = buildRackText(r, row);
-      el.className = "rack " + getStatusClass(r.state);
-    });
   }
 
   async function loadTabletData() {
@@ -69,13 +41,11 @@
       const data = await res.json();
       renderTablet(data);
     } catch (err) {
-      console.error(err);
-      const authEl = document.getElementById("authCode");
-      if (authEl) authEl.textContent = "ERR";
+      document.getElementById("authCode").textContent = "ERR";
     }
   }
 
-  window.addEventListener("DOMContentLoaded", function() {
+  window.addEventListener("DOMContentLoaded", () => {
     loadTabletData();
     setInterval(loadTabletData, 5000);
   });
