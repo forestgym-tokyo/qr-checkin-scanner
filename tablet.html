@@ -1,56 +1,39 @@
 <script>
   const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 
-  function getStatusClass(status) {
-    if (status === "free") return "free";
-    if (status === "using") return "using";
-    if (status === "reserved") return "reserved";
-    return "other";
-  }
-
   function renderTablet(data) {
-    console.log(data); // ★確認用
+    console.log("DATA:", data);
 
     const authEl = document.getElementById("authCode");
-    if (authEl) {
-      authEl.textContent = data.authCode || "----";
+    if (authEl) authEl.textContent = data.authCode || "----";
+
+    // 強制的に4枠出す（エラー防止）
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById("rack" + i);
+      if (!el) continue;
+
+      const r = (data.racks && data.racks[i-1]) || {};
+
+      el.textContent = r.text || r.label || r.title || "空き";
     }
-
-    // 一旦リセット
-    [1,2,3,4].forEach(no => {
-      const el = document.getElementById("rack" + no);
-      if (!el) return;
-      el.textContent = "ラック" + no;
-      el.className = "rack other";
-    });
-
-    // ★ここが重要
-    (data.racks || []).forEach((r, i) => {
-      const el = document.getElementById("rack" + (i+1));
-      if (!el) return;
-
-      // ↓ここを柔軟対応にする
-      const text = r.text || r.label || r.title || "空き";
-      const status = r.status || r.state || "other";
-
-      el.textContent = text;
-      el.className = "rack " + getStatusClass(status);
-    });
   }
 
   async function loadTabletData() {
     try {
       const res = await fetch(API_URL + "?action=getScheduleTabletJson&t=" + Date.now());
-      const data = await res.json();
+      const text = await res.text();   // ←ここ重要
+
+      console.log("RAW:", text);
+
+      const data = JSON.parse(text);   // ←ここでエラーなら原因確定
+
       renderTablet(data);
+
     } catch (err) {
-      console.error(err);
+      console.error("ERROR:", err);
       document.getElementById("authCode").textContent = "ERR";
     }
   }
 
-  window.addEventListener("DOMContentLoaded", () => {
-    loadTabletData();
-    setInterval(loadTabletData, 5000);
-  });
+  window.addEventListener("DOMContentLoaded", loadTabletData);
 </script>
