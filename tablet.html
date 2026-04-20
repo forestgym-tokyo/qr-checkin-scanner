@@ -1,59 +1,122 @@
-<script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-
-  function getStatusClass(state) {
-    if (state === "free") return "free";
-    if (state === "using") return "using";
-    if (state === "reserved") return "reserved";
-    return "other";
-  }
-
-  function buildRackText(r) {
-    const currentText = (r.currentText || "").trim();
-    const nextText = (r.nextText || "").trim();
-    const rackLabel = r.rackLabel || ("ラック" + r.rackNo);
-
-    if (currentText && nextText) return currentText + "\n" + nextText;
-    if (currentText) return currentText;
-    if (nextText) return nextText;
-    return rackLabel;
-  }
-
-  function renderTablet(data) {
-    const authEl = document.getElementById("authCode");
-    if (authEl) authEl.textContent = data.authCode || "----";
-
-    for (let i = 1; i <= 4; i++) {
-      const el = document.getElementById("rack" + i);
-      if (!el) continue;
-      el.textContent = "ラック" + i;
-      el.className = "rack other";
-      el.style.whiteSpace = "pre-line";
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tablet</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
     }
 
-    (data.racks || []).forEach(r => {
-      const el = document.getElementById("rack" + r.rackNo);
-      if (!el) return;
+    .header {
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      background: #000;
+    }
 
-      el.textContent = buildRackText(r);
-      el.className = "rack " + getStatusClass(r.state);
-    });
-  }
+    .racks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 10px;
+    }
 
-  async function loadTabletData() {
-    try {
-      const res = await fetch(API_URL + "?action=getScheduleTabletJson&t=" + Date.now());
-      const data = await res.json();
-      renderTablet(data);
-    } catch (err) {
-      console.error(err);
+    .rack {
+      padding: 42px 20px;
+      font-size: 32px;
+      font-weight: bold;
+      border-radius: 12px;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      white-space: pre-line;
+      background: #222;
+    }
+
+    .free { background: #2e7d32; }
+    .using { background: #555; }
+    .reserved { background: #1565c0; }
+    .other { background: #222; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    認証コード：<span id="authCode">----</span>
+  </div>
+
+  <div class="racks">
+    <div class="rack other" id="rack1">ラック1</div>
+    <div class="rack other" id="rack2">ラック2</div>
+    <div class="rack other" id="rack3">ラック3</div>
+    <div class="rack other" id="rack4">ラック4</div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+
+    function getStatusClass(state) {
+      if (state === "free") return "free";
+      if (state === "using") return "using";
+      if (state === "reserved") return "reserved";
+      return "other";
+    }
+
+    function buildRackText(r) {
+      const currentText = (r.currentText || "").trim();
+      const nextText = (r.nextText || "").trim();
+      const rackLabel = r.rackLabel || ("ラック" + r.rackNo);
+
+      if (currentText && nextText) return currentText + "\n" + nextText;
+      if (currentText) return currentText;
+      if (nextText) return nextText;
+      return rackLabel;
+    }
+
+    function renderTablet(data) {
       const authEl = document.getElementById("authCode");
-      if (authEl) authEl.textContent = "ERR";
-    }
-  }
+      if (authEl) authEl.textContent = data.authCode || "----";
 
-  window.addEventListener("DOMContentLoaded", () => {
-    loadTabletData();
-    setInterval(loadTabletData, 5000);
-  });
-</script>
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById("rack" + i);
+        if (!el) continue;
+        el.textContent = "ラック" + i;
+        el.className = "rack other";
+      }
+
+      (data.racks || []).forEach(r => {
+        const el = document.getElementById("rack" + r.rackNo);
+        if (!el) return;
+        el.textContent = buildRackText(r);
+        el.className = "rack " + getStatusClass(r.state);
+      });
+    }
+
+    async function loadTabletData() {
+      try {
+        const res = await fetch(API_URL + "?action=getScheduleTabletJson&t=" + Date.now());
+        const data = await res.json();
+        renderTablet(data);
+      } catch (err) {
+        console.error(err);
+        const authEl = document.getElementById("authCode");
+        if (authEl) authEl.textContent = "ERR";
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadTabletData();
+      setInterval(loadTabletData, 5000);
+    });
+  </script>
+
+</body>
+</html>
