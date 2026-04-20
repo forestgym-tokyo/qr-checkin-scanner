@@ -1,11 +1,22 @@
 <script>
   const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 
-  function getStatusClass(status) {
-    if (status === "free") return "free";
-    if (status === "using") return "using";
-    if (status === "reserved") return "reserved";
+  function getStatusClass(state) {
+    if (state === "free") return "free";
+    if (state === "using") return "using";
+    if (state === "reserved") return "reserved";
     return "other";
+  }
+
+  function buildRackText(r) {
+    const currentText = (r.currentText || "").trim();
+    const nextText = (r.nextText || "").trim();
+    const rackLabel = r.rackLabel || ("ラック" + r.rackNo);
+
+    if (currentText && nextText) return currentText + "\n" + nextText;
+    if (currentText) return currentText;
+    if (nextText) return nextText;
+    return rackLabel;
   }
 
   function renderTablet(data) {
@@ -15,15 +26,18 @@
     for (let i = 1; i <= 4; i++) {
       const el = document.getElementById("rack" + i);
       if (!el) continue;
-
-      const r = (data.racks && data.racks[i-1]) || {};
-
-      const text = r.text || r.label || r.title || "空き";
-      const status = r.status || r.state || "other";
-
-      el.textContent = text;
-      el.className = "rack " + getStatusClass(status);
+      el.textContent = "ラック" + i;
+      el.className = "rack other";
+      el.style.whiteSpace = "pre-line";
     }
+
+    (data.racks || []).forEach(r => {
+      const el = document.getElementById("rack" + r.rackNo);
+      if (!el) return;
+
+      el.textContent = buildRackText(r);
+      el.className = "rack " + getStatusClass(r.state);
+    });
   }
 
   async function loadTabletData() {
@@ -33,7 +47,8 @@
       renderTablet(data);
     } catch (err) {
       console.error(err);
-      document.getElementById("authCode").textContent = "ERR";
+      const authEl = document.getElementById("authCode");
+      if (authEl) authEl.textContent = "ERR";
     }
   }
 
