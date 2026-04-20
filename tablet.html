@@ -8,31 +8,83 @@
     return "other";
   }
 
+  function safeTrim(v) {
+    return String(v || "").trim();
+  }
+
+  function buildQueueLine(row) {
+    if (!row) return "";
+
+    if (row.showUseNowButton) {
+      return "すぐ利用 " + safeTrim(row.useNowStartText) + "〜" + safeTrim(row.useNowEndText);
+    }
+
+    if (row.showGapButton) {
+      return "すき間利用 " + safeTrim(row.gapStartText) + "〜" + safeTrim(row.gapEndText);
+    }
+
+    if (row.showQueueButton) {
+      return "順番待ち " + safeTrim(row.queueStartText) + "〜";
+    }
+
+    return "";
+  }
+
+  function buildRackText(r, row) {
+    const rackNo = Number(r && r.rackNo) || 0;
+    const label = "ラック№" + rackNo;
+
+    const currentText = safeTrim(r && r.currentText);
+    const nextText = safeTrim(r && r.nextText);
+    const queueLine = buildQueueLine(row);
+
+    const lines = [label];
+
+    if (currentText) lines.push(currentText);
+    if (nextText) lines.push(nextText);
+    if (queueLine) lines.push(queueLine);
+
+    if (!currentText && !nextText && !queueLine) {
+      if (r && r.state === "free") lines.push("空き");
+      else if (r && r.state === "using") lines.push("利用中");
+      else if (r && r.state === "reserved") lines.push("予約あり");
+    }
+
+    return lines.join("\n");
+  }
+
   function renderTablet(data) {
     const authEl = document.getElementById("authCode");
-    if (authEl) authEl.textContent = data.authCode || "----";
+    if (authEl) authEl.textContent = data && data.authCode ? data.authCode : "----";
+
+    const rowMap = {};
+    const queueRows = Array.isArray(data && data.queueUiRows) ? data.queueUiRows : [];
+    queueRows.forEach(function(row) {
+      const no = Number(row && row.rackNo);
+      if (no) rowMap[no] = row;
+    });
 
     for (let i = 1; i <= 4; i++) {
       const el = document.getElementById("rack" + i);
       if (!el) continue;
-
-      const r = (data.racks && data.racks[i-1]) || {};
-
-      let text = "ラック№" + i;
-
-      if (r.currentText) text += "\n" + r.currentText;
-      if (r.nextText) text += "\n" + r.nextText;
-
-      if (!r.currentText && !r.nextText) {
-        if (r.state === "free") text += "\n空き";
-        if (r.state === "using") text += "\n利用中";
-        if (r.state === "reserved") text += "\n予約あり";
-      }
-
-      el.textContent = text;
-      el.className = "rack " + getStatusClass(r.state);
+      el.textContent = "ラック№" + i;
+      el.className = "rack other";
       el.style.whiteSpace = "pre-line";
     }
+
+    const racks = Array.isArray(data && data.racks) ? data.racks : [];
+    racks.forEach(function(r) {
+      const no = Number(r && r.rackNo);
+      if (!no) return;
+
+      const el = document.getElementById("rack" + no);
+      if (!el) return;
+
+      const row = rowMap[no] || null;
+      el.textContent = buildRackText(r, row);
+      el.className = "rack " + getStatusClass(r.state);
+      el.style.whiteSpace = "pre-line";
+    });
   }
 
   async function loadTabletData() {
@@ -41,11 +93,12 @@
       const data = await res.json();
       renderTablet(data);
     } catch (err) {
-      document.getElementById("authCode").textContent = "ERR";
+      const authEl = document.getElementById("authCode");
+      if (authEl) authEl.textContent = "ERR";
     }
   }
 
-  window.addEventListener("DOMContentLoaded", () => {
+  window.addEventListener("DOMContentLoaded", function() {
     loadTabletData();
     setInterval(loadTabletData, 5000);
   });
