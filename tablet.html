@@ -14,10 +14,9 @@
       --panel2:#0d1320;
       --line:#2f9d8d;
       --mint:#8fd3b3;
-      --mint-dark:#6ea98e;
       --text:#ffffff;
       --sub:#c9d0db;
-      --muted:#98a2b3;
+      --muted:#9aa4b2;
       --whitebtn:#f2f4f7;
       --greenbtn:#32c553;
       --greenbtn2:#2ab149;
@@ -26,7 +25,6 @@
       --goldbtn:#d2a55e;
       --goldbtn2:#bc8f47;
       --shadow:0 10px 24px rgba(0,0,0,.35);
-      --radius:24px;
     }
 
     *{
@@ -352,7 +350,7 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      color:#9aa4b2;
+      color:var(--muted);
       font-size:15px;
       line-height:1.35;
       text-align:center;
@@ -499,17 +497,12 @@
   <div class="error" id="errorBox"></div>
 
   <script>
-    /********************************************************
-     * 設定
-     ********************************************************/
-    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec?action=getscheduletabletjson";
-    const QR_PAGE_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/";
+    const WEBAPP_BASE_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+    const API_URL = WEBAPP_BASE_URL + "?action=getscheduletabletjson";
+    const QR_PAGE_URL = WEBAPP_BASE_URL + "?action=scanner";
     const AUTO_REFRESH_MS = 15000;
     const FETCH_TIMEOUT_MS = 10000;
 
-    /********************************************************
-     * モック
-     ********************************************************/
     const MOCK_DATA = {
       ok: true,
       nowText: "2026/04/21 6:35",
@@ -627,7 +620,7 @@
       }, FETCH_TIMEOUT_MS);
 
       try {
-        const url = API_URL + (API_URL.includes("?") ? "&" : "?") + "t=" + Date.now();
+        const url = API_URL + "&t=" + Date.now();
         const res = await fetch(url, {
           method: "GET",
           cache: "no-store",
@@ -726,13 +719,14 @@
       const stateEn = getStateEn(rack.state);
       const currentMain = getCurrentMainText(rack);
       const nextText = getNextText(rack);
+      const rackTitle = "Rack_№" + rack.rackNo;
 
       const el = document.createElement("section");
       el.className = "rack";
 
       el.innerHTML = `
         <div class="rack-head">
-          <div class="rack-title">${escapeHtml(rack.rackLabel || ("ラック" + rack.rackNo))}</div>
+          <div class="rack-title">${escapeHtml(rackTitle)}</div>
           <div class="state-chip">
             <span class="ja">${escapeHtml(stateJa)}</span>
             <span class="en">${escapeHtml(stateEn)}</span>
@@ -772,7 +766,10 @@
             "すぐに利用",
             "USE NOW",
             buildRangeText(row.useNowStartText, row.useNowEndText),
-            "use-now"
+            "use-now",
+            function () {
+              goCheckin(rack.rackNo);
+            }
           )
         );
         added++;
@@ -785,7 +782,10 @@
             gapLabel,
             "GAP USE",
             buildRangeText(row.gapStartText, row.gapEndText),
-            "gap"
+            "gap",
+            function () {
+              goCheckin(rack.rackNo);
+            }
           )
         );
         added++;
@@ -797,7 +797,10 @@
             "順番待ち",
             "WAIT LIST",
             row.queueStartText ? ("開始 " + row.queueStartText + "〜") : "",
-            "queue"
+            "queue",
+            function () {
+              goQueue(rack.rackNo);
+            }
           )
         );
         added++;
@@ -808,7 +811,7 @@
       }
     }
 
-    function createQueueButton(ja, en, timeText, typeClass) {
+    function createQueueButton(ja, en, timeText, typeClass, onClick) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "queue-btn " + typeClass;
@@ -819,6 +822,7 @@
         <div class="time">${escapeHtml(timeText || "")}</div>
       `;
 
+      btn.addEventListener("click", onClick);
       return btn;
     }
 
@@ -827,6 +831,14 @@
       box.className = "no-actions";
       box.textContent = "現在案内中の操作はありません";
       return box;
+    }
+
+    function goCheckin(rackNo) {
+      location.href = WEBAPP_BASE_URL + "?action=checkin&rackNo=" + encodeURIComponent(rackNo);
+    }
+
+    function goQueue(rackNo) {
+      location.href = WEBAPP_BASE_URL + "?action=queue&rackNo=" + encodeURIComponent(rackNo);
     }
 
     function getStateJa(state) {
