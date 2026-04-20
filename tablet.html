@@ -1,126 +1,82 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tablet</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #111;
-      color: #fff;
-      text-align: center;
-    }
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 
-    .header {
-      padding: 20px;
-      font-size: 24px;
-      font-weight: bold;
-      background: #000;
-    }
+  function getStatusClass(state) {
+    if (state === "free") return "free";
+    if (state === "using") return "using";
+    if (state === "reserved") return "reserved";
+    return "other";
+  }
 
-    .racks {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      padding: 10px;
-    }
+  function buildRackText(r, row) {
+    const label = "ラック№" + r.rackNo;
+    const currentText = (r.currentText || "").trim();
+    const nextText = (r.nextText || "").trim();
 
-    .rack {
-      padding: 42px 20px;
-      font-size: 32px;
-      font-weight: bold;
-      border-radius: 12px;
-      min-height: 90px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      white-space: pre-line;
-      background: #222;
-    }
+    if (currentText && nextText) return label + "\n" + currentText + "\n" + nextText;
+    if (currentText) return label + "\n" + currentText;
+    if (nextText) return label + "\n" + nextText;
 
-    .free { background: #2e7d32; }
-    .using { background: #555; }
-    .reserved { background: #1565c0; }
-    .other { background: #222; }
-  </style>
-</head>
-<body>
-
-  <div class="header">
-    認証コード：<span id="authCode">----</span>
-  </div>
-
-  <div class="racks">
-    <div class="rack other" id="rack1">ラック1</div>
-    <div class="rack other" id="rack2">ラック2</div>
-    <div class="rack other" id="rack3">ラック3</div>
-    <div class="rack other" id="rack4">ラック4</div>
-  </div>
-
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-
-   function getStatusClass(state) {
-  if (state === "free") return "free";
-  if (state === "using") return "using";
-  if (state === "reserved") return "reserved";
-  return "other";
-}
-
-function buildRackText(r) {
-  const currentText = (r.currentText || "").trim();
-  const nextText = (r.nextText || "").trim();
-
-  if (currentText && nextText) return currentText + "\n" + nextText;
-  if (currentText) return currentText;
-  if (nextText) return nextText;
-
-  if (r.state === "free") return "空き";
-  if (r.state === "using") return "利用中";
-  if (r.state === "reserved") return "予約あり";
-
-  return r.rackLabel || ("ラック" + r.rackNo);
-}
-
-    function renderTablet(data) {
-      const authEl = document.getElementById("authCode");
-      if (authEl) authEl.textContent = data.authCode || "----";
-
-      for (let i = 1; i <= 4; i++) {
-        const el = document.getElementById("rack" + i);
-        if (!el) continue;
-        el.textContent = "ラック" + i;
-        el.className = "rack other";
+    if (row) {
+      if (row.showUseNowButton) {
+        return label + "\nすぐ利用 " + row.useNowStartText + "〜" + row.useNowEndText;
       }
-
-      (data.racks || []).forEach(r => {
-        const el = document.getElementById("rack" + r.rackNo);
-        if (!el) return;
-        el.textContent = buildRackText(r);
-        el.className = "rack " + getStatusClass(r.state);
-      });
-    }
-
-    async function loadTabletData() {
-      try {
-        const res = await fetch(API_URL + "?action=getScheduleTabletJson&t=" + Date.now());
-        const data = await res.json();
-        renderTablet(data);
-      } catch (err) {
-        console.error(err);
-        const authEl = document.getElementById("authCode");
-        if (authEl) authEl.textContent = "ERR";
+      if (row.showGapButton) {
+        return label + "\nすき間利用 " + row.gapStartText + "〜" + row.gapEndText;
+      }
+      if (row.showQueueButton) {
+        return label + "\n順番待ち " + row.queueStartText + "〜";
       }
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      loadTabletData();
-      setInterval(loadTabletData, 5000);
+    if (r.state === "free") return label + "\n空き";
+    if (r.state === "using") return label + "\n利用中";
+    if (r.state === "reserved") return label + "\n予約あり";
+
+    return label;
+  }
+
+  function renderTablet(data) {
+    const authEl = document.getElementById("authCode");
+    if (authEl) authEl.textContent = data.authCode || "----";
+
+    const rowMap = {};
+    (data.queueUiRows || []).forEach(function(row) {
+      rowMap[row.rackNo] = row;
     });
-  </script>
 
-</body>
-</html>
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById("rack" + i);
+      if (!el) continue;
+      el.textContent = "ラック№" + i;
+      el.className = "rack other";
+      el.style.whiteSpace = "pre-line";
+    }
+
+    (data.racks || []).forEach(function(r) {
+      const el = document.getElementById("rack" + r.rackNo);
+      if (!el) return;
+
+      const row = rowMap[r.rackNo] || null;
+      el.textContent = buildRackText(r, row);
+      el.className = "rack " + getStatusClass(r.state);
+    });
+  }
+
+  async function loadTabletData() {
+    try {
+      const res = await fetch(API_URL + "?action=getScheduleTabletJson&t=" + Date.now());
+      const data = await res.json();
+      renderTablet(data);
+    } catch (err) {
+      console.error(err);
+      const authEl = document.getElementById("authCode");
+      if (authEl) authEl.textContent = "ERR";
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", function() {
+    loadTabletData();
+    setInterval(loadTabletData, 5000);
+  });
+</script>
