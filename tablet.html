@@ -16,6 +16,7 @@
     .header {
       padding: 20px;
       font-size: 24px;
+      font-weight: bold;
     }
 
     .racks {
@@ -26,10 +27,37 @@
     }
 
     .rack {
+      padding: 42px 20px;
+      font-size: 32px;
+      font-weight: bold;
+      border-radius: 12px;
+      transition: background 0.2s ease;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
       background: #222;
-      padding: 30px;
-      font-size: 20px;
-      border-radius: 10px;
+    }
+
+    .rack.free {
+      background: #2e7d32;
+    }
+
+    .rack.using {
+      background: #555;
+    }
+
+    .rack.reserved {
+      background: #1565c0;
+    }
+
+    .rack.other {
+      background: #222;
+    }
+
+    .error {
+      color: #ff6b6b;
     }
   </style>
 </head>
@@ -40,39 +68,63 @@
   </div>
 
   <div class="racks">
-    <div class="rack" id="rack1">ラック1</div>
-    <div class="rack" id="rack2">ラック2</div>
-    <div class="rack" id="rack3">ラック3</div>
-    <div class="rack" id="rack4">ラック4</div>
+    <div class="rack other" id="rack1">ラック1</div>
+    <div class="rack other" id="rack2">ラック2</div>
+    <div class="rack other" id="rack3">ラック3</div>
+    <div class="rack other" id="rack4">ラック4</div>
   </div>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 
+    function getStatusClass(status) {
+      if (status === "free") return "free";
+      if (status === "using") return "using";
+      if (status === "reserved") return "reserved";
+      return "other";
+    }
+
     function renderTablet(data) {
       const authEl = document.getElementById("authCode");
-      if (authEl) authEl.textContent = data.authCode || "----";
+      if (authEl) {
+        authEl.textContent = data.authCode || "----";
+        authEl.classList.remove("error");
+      }
+
+      [1, 2, 3, 4].forEach(no => {
+        const el = document.getElementById("rack" + no);
+        if (!el) return;
+        el.textContent = "ラック" + no;
+        el.className = "rack other";
+      });
 
       (data.racks || []).forEach(r => {
         const el = document.getElementById("rack" + r.no);
         if (!el) return;
         el.textContent = r.text || "";
+        el.className = "rack " + getStatusClass(r.status);
       });
     }
 
     async function loadTabletData() {
       try {
-        const res = await fetch(API_URL + "?action=getScheduleTabletJson");
+        const res = await fetch(API_URL + "?action=getScheduleTabletJson&t=" + Date.now());
         const data = await res.json();
         renderTablet(data);
       } catch (err) {
         console.error(err);
         const authEl = document.getElementById("authCode");
-        if (authEl) authEl.textContent = "ERR";
+        if (authEl) {
+          authEl.textContent = "ERR";
+          authEl.classList.add("error");
+        }
       }
     }
 
-    window.addEventListener("DOMContentLoaded", loadTabletData);
+    window.addEventListener("DOMContentLoaded", () => {
+      loadTabletData();
+      setInterval(loadTabletData, 5000);
+    });
   </script>
 
 </body>
