@@ -1,105 +1,169 @@
-<script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tablet</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+    }
+    .header {
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      background: #000;
+    }
+    .racks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 10px;
+    }
+    .rack {
+      padding: 42px 20px;
+      font-size: 28px;
+      font-weight: bold;
+      border-radius: 12px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      white-space: pre-line;
+      background: #222;
+    }
+    .free { background: #2e7d32; }
+    .using { background: #555; }
+    .reserved { background: #1565c0; }
+    .other { background: #222; }
+  </style>
+</head>
+<body>
 
-  function getStatusClass(state) {
-    if (state === "free") return "free";
-    if (state === "using") return "using";
-    if (state === "reserved") return "reserved";
-    return "other";
-  }
+  <div class="header">
+    認証コード：<span id="authCode">----</span>
+  </div>
 
-  function safeTrim(v) {
-    return String(v || "").trim();
-  }
+  <div class="racks">
+    <div class="rack other" id="rack1">ラック№1</div>
+    <div class="rack other" id="rack2">ラック№2</div>
+    <div class="rack other" id="rack3">ラック№3</div>
+    <div class="rack other" id="rack4">ラック№4</div>
+  </div>
 
-  function buildQueueLine(row) {
-    if (!row) return "";
+  <script>
+    var API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 
-    if (row.showUseNowButton) {
-      return "すぐ利用 " + safeTrim(row.useNowStartText) + "〜" + safeTrim(row.useNowEndText);
+    function getStatusClass(state) {
+      if (state === "free") return "free";
+      if (state === "using") return "using";
+      if (state === "reserved") return "reserved";
+      return "other";
     }
 
-    if (row.showGapButton) {
-      return "すき間利用 " + safeTrim(row.gapStartText) + "〜" + safeTrim(row.gapEndText);
+    function trimText(v) {
+      return String(v || "").replace(/^\s+|\s+$/g, "");
     }
 
-    if (row.showQueueButton) {
-      return "順番待ち " + safeTrim(row.queueStartText) + "〜";
+    function buildQueueLine(row) {
+      if (!row) return "";
+
+      if (row.showUseNowButton) {
+        return "すぐ利用 " + trimText(row.useNowStartText) + "〜" + trimText(row.useNowEndText);
+      }
+
+      if (row.showGapButton) {
+        return "すき間利用 " + trimText(row.gapStartText) + "〜" + trimText(row.gapEndText);
+      }
+
+      if (row.showQueueButton) {
+        return "順番待ち " + trimText(row.queueStartText) + "〜";
+      }
+
+      return "";
     }
 
-    return "";
-  }
+    function buildRackText(r, row) {
+      var label = "ラック№" + r.rackNo;
+      var currentText = trimText(r.currentText);
+      var nextText = trimText(r.nextText);
+      var queueLine = buildQueueLine(row);
+      var lines = [label];
 
-  function buildRackText(r, row) {
-    const rackNo = Number(r && r.rackNo) || 0;
-    const label = "ラック№" + rackNo;
+      if (currentText) lines.push(currentText);
+      if (nextText) lines.push(nextText);
+      if (queueLine) lines.push(queueLine);
 
-    const currentText = safeTrim(r && r.currentText);
-    const nextText = safeTrim(r && r.nextText);
-    const queueLine = buildQueueLine(row);
+      if (!currentText && !nextText && !queueLine) {
+        if (r.state === "free") lines.push("空き");
+        else if (r.state === "using") lines.push("利用中");
+        else if (r.state === "reserved") lines.push("予約あり");
+      }
 
-    const lines = [label];
-
-    if (currentText) lines.push(currentText);
-    if (nextText) lines.push(nextText);
-    if (queueLine) lines.push(queueLine);
-
-    if (!currentText && !nextText && !queueLine) {
-      if (r && r.state === "free") lines.push("空き");
-      else if (r && r.state === "using") lines.push("利用中");
-      else if (r && r.state === "reserved") lines.push("予約あり");
+      return lines.join("\n");
     }
 
-    return lines.join("\n");
-  }
+    function renderTablet(data) {
+      var authEl = document.getElementById("authCode");
+      if (authEl) {
+        authEl.textContent = data && data.authCode ? data.authCode : "----";
+      }
 
-  function renderTablet(data) {
-    const authEl = document.getElementById("authCode");
-    if (authEl) authEl.textContent = data && data.authCode ? data.authCode : "----";
+      var rowMap = {};
+      var queueRows = (data && data.queueUiRows) ? data.queueUiRows : [];
+      var i;
 
-    const rowMap = {};
-    const queueRows = Array.isArray(data && data.queueUiRows) ? data.queueUiRows : [];
-    queueRows.forEach(function(row) {
-      const no = Number(row && row.rackNo);
-      if (no) rowMap[no] = row;
-    });
+      for (i = 0; i < queueRows.length; i++) {
+        if (queueRows[i] && queueRows[i].rackNo) {
+          rowMap[queueRows[i].rackNo] = queueRows[i];
+        }
+      }
 
-    for (let i = 1; i <= 4; i++) {
-      const el = document.getElementById("rack" + i);
-      if (!el) continue;
-      el.textContent = "ラック№" + i;
-      el.className = "rack other";
-      el.style.whiteSpace = "pre-line";
+      for (i = 1; i <= 4; i++) {
+        var baseEl = document.getElementById("rack" + i);
+        if (!baseEl) continue;
+        baseEl.textContent = "ラック№" + i;
+        baseEl.className = "rack other";
+      }
+
+      var racks = (data && data.racks) ? data.racks : [];
+      for (i = 0; i < racks.length; i++) {
+        var r = racks[i];
+        if (!r || !r.rackNo) continue;
+
+        var el = document.getElementById("rack" + r.rackNo);
+        if (!el) continue;
+
+        var row = rowMap[r.rackNo] || null;
+        el.textContent = buildRackText(r, row);
+        el.className = "rack " + getStatusClass(r.state);
+      }
     }
 
-    const racks = Array.isArray(data && data.racks) ? data.racks : [];
-    racks.forEach(function(r) {
-      const no = Number(r && r.rackNo);
-      if (!no) return;
-
-      const el = document.getElementById("rack" + no);
-      if (!el) return;
-
-      const row = rowMap[no] || null;
-      el.textContent = buildRackText(r, row);
-      el.className = "rack " + getStatusClass(r.state);
-      el.style.whiteSpace = "pre-line";
-    });
-  }
-
-  async function loadTabletData() {
-    try {
-      const res = await fetch(API_URL + "?action=getScheduleTabletJson&t=" + Date.now());
-      const data = await res.json();
-      renderTablet(data);
-    } catch (err) {
-      const authEl = document.getElementById("authCode");
-      if (authEl) authEl.textContent = "ERR";
+    function loadTabletData() {
+      fetch(API_URL + "?action=getScheduleTabletJson&t=" + new Date().getTime())
+        .then(function(res) {
+          return res.json();
+        })
+        .then(function(data) {
+          renderTablet(data);
+        })
+        .catch(function() {
+          var authEl = document.getElementById("authCode");
+          if (authEl) authEl.textContent = "ERR";
+        });
     }
-  }
 
-  window.addEventListener("DOMContentLoaded", function() {
-    loadTabletData();
-    setInterval(loadTabletData, 5000);
-  });
-</script>
+    window.onload = function() {
+      loadTabletData();
+      setInterval(loadTabletData, 5000);
+    };
+  </script>
+
+</body>
+</html>
