@@ -44,7 +44,7 @@ body{
   margin-top:6px;
 }
 
-/* 入力カード */
+/* カード */
 .card{
   background:rgba(255,255,255,0.05);
   border-radius:20px;
@@ -131,7 +131,7 @@ button{
 
   <div class="card">
 
-    <label class="form-label">会員番号 / Member ID</label>
+    <label class="form-label">会員番号（数字のみ6桁） / Member ID(6 digits only)</label>
     <input id="memberNo">
 
     <label class="form-label">お名前 / Name</label>
@@ -143,8 +143,13 @@ button{
     <label class="form-label">メールアドレス / Email</label>
     <input id="email" type="email">
 
-    <button class="primary" id="queueBtn" onclick="queueNow(false)">順番待ち登録</button>
-    <button class="back" onclick="back()">戻る</button>
+    <button class="primary" id="queueBtn" onclick="queueNow(false)">
+      順番待ち登録 / Join Waitlist
+    </button>
+
+    <button class="back" onclick="back()">
+      戻る / Back
+    </button>
 
   </div>
 </div>
@@ -163,7 +168,7 @@ function queueNow(forceConfirm){
   const email = document.getElementById("email").value.trim();
 
   if(!memberNo || !memberName || !displayName || !email){
-    alert("入力してください");
+    alert("入力してください / Please fill in all fields");
     return;
   }
 
@@ -184,39 +189,22 @@ function queueNow(forceConfirm){
       + "&email=" + encodeURIComponent(email)
       + "&confirmedShortSlot=" + encodeURIComponent(forceConfirm ? "true" : "false")
   })
-  .then(function(r){ return r.json(); })
-  .then(function(res){
+  .then(r => r.json())
+  .then(res=>{
     btn.disabled = false;
 
     if (!res || !res.ok) {
-      if (res && res.needsConfirm) {
-        showConfirmModal(res.message);
-        return;
-      }
-      alert(res.message || "エラー");
+      alert(res.message || "登録に失敗しました / Failed");
       return;
     }
 
-    alert("受付完了");
+    alert("受付完了 / Registered");
     location.href="tablet.html";
   })
-  .catch(function(){
+  .catch(()=>{
     btn.disabled = false;
-    alert("通信エラー");
+    alert("通信エラー / Network error");
   });
-}
-
-function showConfirmModal(message){
-  const m = document.createElement("div");
-  m.className="modal";
-  m.innerHTML = `
-    <div class="modal-box">
-      <p>${message}</p>
-      <button class="primary" onclick="queueNow(true)">はい</button>
-      <button class="secondary" onclick="this.closest('.modal').remove()">いいえ</button>
-    </div>
-  `;
-  document.body.appendChild(m);
 }
 
 function back(){
