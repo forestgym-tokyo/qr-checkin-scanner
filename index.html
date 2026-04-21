@@ -279,44 +279,48 @@ const RETURN_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/tablet.
     }
 
     async function handleQR(text) {
-      setMessage("読み取り成功\n送信中...");
-      clearTimers();
+  setMessage("読み取り成功\n送信中...");
+  clearTimers();
 
-      try {
-        const params = new URLSearchParams();
-        params.append("action", "checkinByQrText");
-        params.append("qrText", text);
+  try {
+    const params = new URLSearchParams();
+    params.append("action", "checkinByQrText");
+    params.append("qrText", text);
 
-        const res = await fetch(API_URL, {
-          method: "POST",
-          body: params
-        });
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: params
+    });
 
-        const data = await res.json();
+    const data = await res.json();
 
-        if (data && data.success) {
-          playSuccessBeep();
-          setMessage("チェックインしました");
-          setTimeout(goBack, 1200);
-        } else {
-          playErrorBeep();
-          setMessage(
-            (data && data.message ? data.message : "失敗") +
-            "\n\n再スキャンしてください"
-          );
-          setButtonDisabled(false);
-          isScanning = false;
-          isProcessing = false;
-        }
-      } catch (e) {
-        console.error(e);
-        playErrorBeep();
-        setMessage("通信エラー\n\n再スキャンしてください");
-        setButtonDisabled(false);
-        isScanning = false;
-        isProcessing = false;
-      }
+    if (data && data.success) {
+      playSuccessBeep();
+      setMessage("チェックインしました");
+
+      setTimeout(function () {
+        location.href = RETURN_URL;
+      }, 1200);
+
+    } else {
+      playErrorBeep();
+      setMessage(
+        (data && data.message ? data.message : "失敗") +
+        "\n\n再スキャンしてください"
+      );
+      setButtonDisabled(false);
+      isScanning = false;
+      isProcessing = false;
     }
+  } catch (e) {
+    console.error(e);
+    playErrorBeep();
+    setMessage("通信エラー\n\n再スキャンしてください");
+    setButtonDisabled(false);
+    isScanning = false;
+    isProcessing = false;
+  }
+}
 
     async function startScan() {
       const video = document.getElementById("video");
