@@ -137,27 +137,23 @@ function checkin(){
   }
 
   fetch(GAS_URL + "?action=checkInNow",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      rackNo,
-      memberNo,
-      memberName,
-      displayName
-    })
+  method:"POST",
+  mode:"no-cors",
+  headers:{ "Content-Type":"application/json" },
+  body:JSON.stringify({
+    rackNo,
+    memberNo,
+    memberName,
+    displayName
   })
-  .then(r=>r.json())
-  .then(res=>{
-    if(!res || !res.ok){
-      alert(res.message || "エラー");
-      return;
-    }
-    showModal();
-  })
-  .catch(()=>{
-    alert("通信エラー");
-  });
-}
+})
+.then(()=>{
+  alert("チェックイン完了");
+  location.href="tablet.html";
+})
+.catch(()=>{
+  alert("通信エラー");
+});
 
 /* 完了表示 */
 function showModal(){
