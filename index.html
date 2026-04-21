@@ -274,9 +274,9 @@ const RETURN_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/tablet.
     async function goBack() {
       await fullyStopCamera();
       setTimeout(() => {
-        window.open(RETURN_URL + "&t=" + Date.now(), "_self");
-      }, 1200);
-    }
+        window.location.href = RETURN_URL + "?t=" + Date.now();
+  }, 1200);
+}
 
     async function handleQR(text) {
   setMessage("読み取り成功\n送信中...");
