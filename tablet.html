@@ -833,12 +833,12 @@
       return box;
     }
 
-     function goCheckin(rackNo) {
-  top.location.href = WEBAPP_BASE_URL + "?action=checkin&rackNo=" + encodeURIComponent(rackNo);
+    function goCheckin(rackNo) {
+  location.href = "checkin.html?rackNo=" + encodeURIComponent(rackNo);
 }
 
-    function goQueue(rackNo) {
-  top.location.href = WEBAPP_BASE_URL + "?action=queue&rackNo=" + encodeURIComponent(rackNo);
+function goQueue(rackNo) {
+  location.href = "queue.html?rackNo=" + encodeURIComponent(rackNo);
 }
 
     function getStateJa(state) {
