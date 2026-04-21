@@ -102,8 +102,8 @@ button{
 
   <div class="card">
     <input id="memberNo" placeholder="会員番号">
-    <input id="memberName" placeholder="お名前">
-    <input id="displayName" placeholder="表示名">
+    <input id="memberName" placeholder="お名前" onclick="forceFocus(this)" onfocus="forceFocus(this)">
+    <input id="displayName" placeholder="表示名" onclick="forceFocus(this)" onfocus="forceFocus(this)">
 
     <button class="primary" onclick="checkin()">チェックイン</button>
     <button class="back" onclick="back()">戻る</button>
@@ -118,6 +118,25 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2
 const params = new URLSearchParams(location.search);
 const rackNo = params.get("rackNo") || "1";
 document.getElementById("rackLabel").innerText = "Rack №" + rackNo;
+
+// ====== キーボード強制 ======
+function forceFocus(el){
+  try{ el.focus(); }catch(e){}
+  try{
+    const v = el.value;
+    el.value = "";
+    el.value = v;
+  }catch(e){}
+}
+
+window.addEventListener("load", function(){
+  const el = document.getElementById("memberName");
+  if(el){
+    setTimeout(function(){
+      forceFocus(el);
+    }, 300);
+  }
+});
 
 // ====== チェックイン ======
 function checkin(){
