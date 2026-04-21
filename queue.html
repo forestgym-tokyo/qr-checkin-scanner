@@ -17,29 +17,38 @@ body{
   margin:0 auto;
   padding:40px 20px;
 }
-.title{
+.title-en{
   font-size:30px;
   font-weight:700;
   margin-bottom:6px;
+  letter-spacing:0.02em;
+}
+.title-ja{
+  color:#aaa;
+  font-size:16px;
+  margin-bottom:10px;
 }
 .sub{
   color:#aaa;
   margin-bottom:30px;
+}
+.lead{
+  color:#d7dbe2;
+  line-height:1.8;
+  font-size:14px;
+  margin-bottom:22px;
+}
+.lead-en{
+  color:#8f97a3;
+  line-height:1.7;
+  font-size:13px;
+  margin-top:6px;
 }
 .card{
   background:rgba(255,255,255,0.05);
   border-radius:20px;
   padding:24px;
   backdrop-filter:blur(12px);
-}
-.notice{
-  margin-bottom:16px;
-  padding:14px 16px;
-  border-radius:14px;
-  background:rgba(255,255,255,0.06);
-  color:#d7dbe2;
-  line-height:1.7;
-  font-size:14px;
 }
 input{
   width:100%;
@@ -101,15 +110,18 @@ button{
 <body>
 
 <div class="wrap">
-  <div class="title">QUEUE</div>
+  <div class="title-en">QUEUE</div>
+  <div class="title-ja">順番待ち / Queue</div>
   <div class="sub" id="rackLabel">Rack -</div>
 
-  <div class="card">
-    <div class="notice">
-      このラックの順番待ち受付です。<br>
-      順番が来たらメールで通知されます。
+  <div class="lead">
+    このラックの順番待ち受付です。順番が来たらメールで通知されます。
+    <div class="lead-en">
+      This is the waitlist registration for this rack. You will be notified by email when your turn comes.
     </div>
+  </div>
 
+  <div class="card">
     <input id="memberNo" placeholder="会員番号">
     <input id="memberName" placeholder="お名前">
     <input id="displayName" placeholder="表示名">
