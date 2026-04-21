@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CHECK IN</title>
+<title>Check In</title>
 
 <style>
 body{
   margin:0;
   background:#0f1115;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   color:#fff;
 }
 .wrap{
@@ -17,41 +17,71 @@ body{
   margin:0 auto;
   padding:40px 20px;
 }
-.title{
-  font-size:30px;
+
+/* 見出し */
+.page-title{
+  font-size:28px;
   font-weight:700;
-  margin-bottom:6px;
+  margin-bottom:8px;
 }
-.sub{
-  color:#aaa;
-  margin-bottom:30px;
+.rack-label{
+  font-size:24px;
+  font-weight:600;
+  color:#cfd6df;
+  margin-bottom:22px;
 }
+
+/* 説明 */
+.lead{
+  color:#d7dbe2;
+  line-height:1.8;
+  font-size:14px;
+  margin-bottom:22px;
+}
+.lead-en{
+  color:#8f97a3;
+  font-size:13px;
+  margin-top:6px;
+}
+
+/* カード */
 .card{
   background:rgba(255,255,255,0.05);
   border-radius:20px;
   padding:24px;
   backdrop-filter:blur(12px);
 }
+
+/* ラベル */
+.form-label{
+  display:block;
+  font-size:13px;
+  color:#9aa3ad;
+  margin-bottom:6px;
+  margin-top:14px;
+}
+
+/* 入力 */
 input{
   width:100%;
-  margin-bottom:14px;
   padding:16px;
   font-size:18px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.15);
   background:rgba(255,255,255,0.08);
   color:#fff;
+  box-sizing:border-box;
 }
-input::placeholder{
-  color:#aaa;
-}
+
+/* ボタン */
 button{
   width:100%;
   padding:16px;
   font-size:18px;
   border-radius:14px;
   border:none;
-  margin-top:10px;
+  margin-top:14px;
+  color:#fff;
 }
 .primary{
   background:#2f80ed;
@@ -59,22 +89,62 @@ button{
 .back{
   background:#444;
 }
+
+/* モーダル */
+.modal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.modal-box{
+  background:#1a1d24;
+  padding:30px;
+  border-radius:18px;
+  text-align:center;
+  width:90%;
+  max-width:420px;
+}
 </style>
 </head>
 
 <body>
 
 <div class="wrap">
-  <div class="title">CHECK IN</div>
-  <div class="sub" id="rackLabel">Rack -</div>
+  <div class="page-title">すぐに利用 / Check In</div>
+  <div class="rack-label" id="rackLabel">Rack №-</div>
+
+  <div class="lead">
+    このラックをすぐに利用できます。
+    <div class="lead-en">
+      You can start using this rack immediately.
+    </div>
+  </div>
 
   <div class="card">
-    <input id="memberNo" placeholder="会員番号">
-    <input id="memberName" placeholder="お名前">
-    <input id="displayName" placeholder="表示名">
 
-    <button class="primary" onclick="checkin()">チェックイン</button>
-    <button class="back" onclick="back()">戻る</button>
+    <label class="form-label">会員番号 / Member ID（6 digits only）</label>
+    <input id="memberNo">
+
+    <label class="form-label">お名前 / Name</label>
+    <input id="memberName">
+
+    <label class="form-label">表示名 / Display Name</label>
+    <input id="displayName">
+
+    <button class="primary" onclick="checkin()">
+      チェックイン / Check In
+    </button>
+
+    <button class="back" onclick="back()">
+      戻る / Back
+    </button>
+
   </div>
 </div>
 
@@ -91,14 +161,14 @@ function checkin(){
   const displayName = document.getElementById("displayName").value.trim();
 
   if(!memberNo || !memberName || !displayName){
-    alert("入力してください");
+    alert("入力してください / Please fill in all fields");
     return;
   }
 
   fetch(GAS_URL, {
     method: "POST",
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"
     },
     body:
       "action=checkInNow"
@@ -107,17 +177,34 @@ function checkin(){
       + "&memberName=" + encodeURIComponent(memberName)
       + "&displayName=" + encodeURIComponent(displayName)
   })
-  .then(function(){
-    alert("チェックイン完了");
-    location.href = "tablet.html";
+  .then(r => r.json())
+  .then(res=>{
+    if(!res || !res.ok){
+      alert(res.message || "エラー / Error");
+      return;
+    }
+    showModal();
   })
-  .catch(function(){
-    alert("通信エラー");
+  .catch(()=>{
+    alert("通信エラー / Network error");
   });
 }
 
+function showModal(){
+  const m = document.createElement("div");
+  m.className="modal";
+  m.innerHTML = `
+    <div class="modal-box">
+      <h2>チェックイン完了 / Check-in Complete</h2>
+      <p>ご利用ください</p>
+      <button class="primary" onclick="back()">OK</button>
+    </div>
+  `;
+  document.body.appendChild(m);
+}
+
 function back(){
-  location.href = "tablet.html";
+  location.href="tablet.html";
 }
 </script>
 
