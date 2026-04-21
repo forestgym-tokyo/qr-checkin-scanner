@@ -833,13 +833,13 @@
       return box;
     }
 
-    function goCheckin(rackNo) {
-      location.href = WEBAPP_BASE_URL + "?action=checkin&rackNo=" + encodeURIComponent(rackNo);
-    }
+     function goCheckin(rackNo) {
+  top.location.href = WEBAPP_BASE_URL + "?action=checkin&rackNo=" + encodeURIComponent(rackNo);
+}
 
     function goQueue(rackNo) {
-      location.href = WEBAPP_BASE_URL + "?action=queue&rackNo=" + encodeURIComponent(rackNo);
-    }
+  top.location.href = WEBAPP_BASE_URL + "?action=queue&rackNo=" + encodeURIComponent(rackNo);
+}
 
     function getStateJa(state) {
       if (state === "using_checkedin") return "利用中";
