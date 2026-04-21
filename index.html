@@ -299,7 +299,7 @@ const RETURN_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/tablet.
       setMessage("チェックインしました");
 
       setTimeout(function () {
-        location.href = RETURN_URL;
+        window.location.href = RETURN_URL + "?t=" + Date.now();
       }, 1200);
 
     } else {
