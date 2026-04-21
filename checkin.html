@@ -136,22 +136,24 @@ function checkin(){
     return;
   }
 
-  fetch(GAS_URL + "?action=checkInNow",{
-  method:"POST",
-  mode:"no-cors",
-  headers:{ "Content-Type":"application/json" },
-  body:JSON.stringify({
-    rackNo,
-    memberNo,
-    memberName,
-    displayName
-  })
+  fetch(GAS_URL, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  body:
+    "action=checkInNow"
+    + "&rackNo=" + encodeURIComponent(rackNo)
+    + "&memberNo=" + encodeURIComponent(memberNo)
+    + "&memberName=" + encodeURIComponent(memberName)
+    + "&displayName=" + encodeURIComponent(displayName)
 })
-.then(()=>{
+.then(r => r.text())
+.then(() => {
   alert("チェックイン完了");
-  location.href="tablet.html";
+  location.href = "tablet.html";
 })
-.catch(()=>{
+.catch(() => {
   alert("通信エラー");
 });
 
