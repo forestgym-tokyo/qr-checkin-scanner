@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WORKOUT CHECK-IN</title>
+<title>CHECK IN</title>
 
 <style>
 body{
@@ -13,73 +13,111 @@ body{
   color:#fff;
 }
 .wrap{
-  padding:30px;
-}
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:24px;
-}
-.card{
-  background:rgba(255,255,255,0.06);
-  border-radius:20px;
-  padding:24px;
+  max-width:520px;
+  margin:0 auto;
+  padding:40px 20px;
 }
 .title{
-  font-size:22px;
-  margin-bottom:16px;
+  font-size:30px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+.sub{
+  color:#aaa;
+  margin-bottom:30px;
+}
+.card{
+  background:rgba(255,255,255,0.05);
+  border-radius:20px;
+  padding:24px;
+  backdrop-filter:blur(12px);
+}
+input{
+  width:100%;
+  margin-bottom:14px;
+  padding:16px;
+  font-size:18px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.08);
+  color:#fff;
+}
+input::placeholder{
+  color:#aaa;
 }
 button{
   width:100%;
   padding:16px;
   font-size:18px;
-  border:none;
   border-radius:14px;
+  border:none;
   margin-top:10px;
 }
-.use{background:#2ecc71;}
-.queue{background:#3498db;}
+.primary{
+  background:#2f80ed;
+}
+.back{
+  background:#444;
+}
 </style>
 </head>
 
 <body>
 
 <div class="wrap">
-  <div class="grid">
+  <div class="title">CHECK IN</div>
+  <div class="sub" id="rackLabel">Rack -</div>
 
-    <div class="card">
-      <div class="title">Rack №1</div>
-      <button class="use" onclick="goCheckin(1)">すぐに利用</button>
-      <button class="queue" onclick="goQueue(1)">順番待ち</button>
-    </div>
+  <div class="card">
+    <input id="memberNo" placeholder="会員番号">
+    <input id="memberName" placeholder="お名前">
+    <input id="displayName" placeholder="表示名">
 
-    <div class="card">
-      <div class="title">Rack №2</div>
-      <button class="use" onclick="goCheckin(2)">すぐに利用</button>
-      <button class="queue" onclick="goQueue(2)">順番待ち</button>
-    </div>
-
-    <div class="card">
-      <div class="title">Rack №3</div>
-      <button class="use" onclick="goCheckin(3)">すぐに利用</button>
-      <button class="queue" onclick="goQueue(3)">順番待ち</button>
-    </div>
-
-    <div class="card">
-      <div class="title">Rack №4</div>
-      <button class="use" onclick="goCheckin(4)">すぐに利用</button>
-      <button class="queue" onclick="goQueue(4)">順番待ち</button>
-    </div>
-
+    <button class="primary" onclick="checkin()">チェックイン</button>
+    <button class="back" onclick="back()">戻る</button>
   </div>
 </div>
 
 <script>
-function goCheckin(rackNo){
-  location.href = "checkin.html?rackNo=" + rackNo;
+const GAS_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+
+const params = new URLSearchParams(location.search);
+const rackNo = params.get("rackNo") || "1";
+document.getElementById("rackLabel").innerText = "Rack №" + rackNo;
+
+function checkin(){
+  const memberNo = document.getElementById("memberNo").value.trim();
+  const memberName = document.getElementById("memberName").value.trim();
+  const displayName = document.getElementById("displayName").value.trim();
+
+  if(!memberNo || !memberName || !displayName){
+    alert("入力してください");
+    return;
+  }
+
+  fetch(GAS_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body:
+      "action=checkInNow"
+      + "&rackNo=" + encodeURIComponent(rackNo)
+      + "&memberNo=" + encodeURIComponent(memberNo)
+      + "&memberName=" + encodeURIComponent(memberName)
+      + "&displayName=" + encodeURIComponent(displayName)
+  })
+  .then(function(){
+    alert("チェックイン完了");
+    location.href = "tablet.html";
+  })
+  .catch(function(){
+    alert("通信エラー");
+  });
 }
-function goQueue(rackNo){
-  location.href = "queue.html?rackNo=" + rackNo;
+
+function back(){
+  location.href = "tablet.html";
 }
 </script>
 
