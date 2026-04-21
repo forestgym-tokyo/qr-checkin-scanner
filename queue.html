@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QUEUE</title>
+<title>Queue</title>
 
 <style>
 body{
@@ -17,21 +17,24 @@ body{
   margin:0 auto;
   padding:40px 20px;
 }
-.title-en{
-  font-size:30px;
+
+/* 見出し */
+.page-title{
+  font-size:28px;
   font-weight:700;
-  margin-bottom:6px;
-  letter-spacing:0.02em;
+  margin-bottom:8px;
+  letter-spacing:0.01em;
 }
-.title-ja{
-  color:#aaa;
-  font-size:16px;
-  margin-bottom:10px;
+
+/* ラック番号 */
+.rack-label{
+  font-size:24px;
+  font-weight:600;
+  color:#cfd6df;
+  margin-bottom:22px;
 }
-.sub{
-  color:#aaa;
-  margin-bottom:30px;
-}
+
+/* 説明 */
 .lead{
   color:#d7dbe2;
   line-height:1.8;
@@ -40,16 +43,19 @@ body{
 }
 .lead-en{
   color:#8f97a3;
-  line-height:1.7;
   font-size:13px;
   margin-top:6px;
+  line-height:1.7;
 }
+
+/* 入力カード */
 .card{
   background:rgba(255,255,255,0.05);
   border-radius:20px;
   padding:24px;
   backdrop-filter:blur(12px);
 }
+
 input{
   width:100%;
   margin-bottom:14px;
@@ -61,9 +67,11 @@ input{
   color:#fff;
   box-sizing:border-box;
 }
+
 input::placeholder{
   color:#aaa;
 }
+
 button{
   width:100%;
   padding:16px;
@@ -73,12 +81,15 @@ button{
   margin-top:10px;
   color:#fff;
 }
+
 .primary{
   background:#2f80ed;
 }
+
 .back{
   background:#444;
 }
+
 .modal{
   position:fixed;
   top:0;
@@ -90,6 +101,7 @@ button{
   align-items:center;
   justify-content:center;
 }
+
 .modal-box{
   background:#1a1d24;
   padding:30px;
@@ -98,9 +110,11 @@ button{
   width:90%;
   max-width:420px;
 }
+
 .modal-box h2{
   margin-top:0;
 }
+
 .secondary{
   background:#666;
 }
@@ -110,14 +124,13 @@ button{
 <body>
 
 <div class="wrap">
-  <div class="title-en">QUEUE</div>
-  <div class="title-ja">順番待ち / Queue</div>
-  <div class="sub" id="rackLabel">Rack -</div>
+  <div class="page-title">順番待ち / Queue</div>
+  <div class="rack-label" id="rackLabel">Rack №-</div>
 
   <div class="lead">
     このラックの順番待ち受付です。順番が来たらメールで通知されます。
     <div class="lead-en">
-      This is the waitlist registration for this rack. You will be notified by email when your turn comes.
+      This is the waitlist for this rack. You will be notified by email when your turn comes.
     </div>
   </div>
 
