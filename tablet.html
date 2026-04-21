@@ -1,932 +1,265 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
-  />
-  <title>WORKOUT CHECK-IN</title>
-  <style>
-    :root{
-      --bg:#05070c;
-      --panel:#101625;
-      --panel2:#0d1320;
-      --line:#2f9d8d;
-      --mint:#8fd3b3;
-      --text:#ffffff;
-      --sub:#c9d0db;
-      --muted:#9aa4b2;
-      --whitebtn:#f2f4f7;
-      --greenbtn:#32c553;
-      --greenbtn2:#2ab149;
-      --bluebtn:#3f6db5;
-      --bluebtn2:#355fa1;
-      --goldbtn:#d2a55e;
-      --goldbtn2:#bc8f47;
-      --shadow:0 10px 24px rgba(0,0,0,.35);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workout Check-In</title>
 
-    *{
-      box-sizing:border-box;
-      -webkit-tap-highlight-color:transparent;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(180deg, #0b0f0d, #000);
+  color: #fff;
+}
 
-    html,body{
-      margin:0;
-      width:100%;
-      height:100%;
-      overflow:hidden;
-      background:var(--bg);
-      color:var(--text);
-      font-family:
-        "Noto Sans JP",
-        "Hiragino Kaku Gothic ProN",
-        "Yu Gothic",
-        "Segoe UI",
-        sans-serif;
-    }
+/* ===== HEADER ===== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px 8px;
+}
 
-    body{
-      padding:16px;
-    }
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+}
+.logo span {
+  color: #2ecc71;
+}
 
-    .app{
-      width:100%;
-      height:100%;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
+.title {
+  text-align: right;
+}
+.title h1 {
+  margin: 0;
+  font-size: 28px;
+}
+.title p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #aaa;
+}
 
-    .top-title{
-      flex:0 0 auto;
-    }
+/* ===== TOP PANELS ===== */
+.top {
+  display: flex;
+  gap: 16px;
+  padding: 10px 24px;
+}
 
-    .title-main{
-      font-size:30px;
-      line-height:1;
-      font-weight:900;
-      letter-spacing:.02em;
-      margin:0 0 6px;
-    }
+.card {
+  flex: 1;
+  background: #111;
+  border-radius: 14px;
+  padding: 16px;
+  border: 1px solid #1c1c1c;
+}
 
-    .title-sub{
-      font-size:13px;
-      color:var(--sub);
-      margin:0;
-    }
+/* 認証コード */
+.code-number {
+  font-size: 48px;
+  color: #2ecc71;
+  font-weight: bold;
+}
 
-    .hero{
-      flex:0 0 auto;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-    }
+.sub {
+  color: #2ecc71;
+  font-size: 12px;
+}
 
-    .auth-card,
-    .qr-card{
-      border-radius:26px;
-      overflow:hidden;
-      box-shadow:var(--shadow);
-    }
+/* QR */
+.qr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
 
-    .auth-card{
-      background:linear-gradient(180deg,#101625 0%, #0d1320 100%);
-      border:1px solid rgba(143,211,179,.18);
-      padding:18px 18px 16px;
-      min-height:138px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-    }
+/* ===== UPDATE ===== */
+.update {
+  text-align: center;
+  font-size: 12px;
+  color: #aaa;
+  margin: 4px 0 10px;
+}
 
-    .auth-ja{
-      font-size:26px;
-      font-weight:900;
-      line-height:1.1;
-      margin-bottom:4px;
-    }
+/* ===== RACK GRID ===== */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 0 24px 20px;
+}
 
-    .auth-en{
-      font-size:16px;
-      color:#d8dee8;
-      letter-spacing:.04em;
-      margin-bottom:14px;
-    }
+/* ===== RACK CARD ===== */
+.rack {
+  background: #111;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid #1c1c1c;
+  display: flex;
+  gap: 16px;
+}
 
-    .auth-code{
-      font-size:60px;
-      line-height:1;
-      font-weight:900;
-      letter-spacing:.12em;
-      margin-bottom:10px;
-      font-variant-numeric:tabular-nums;
-    }
+.rack img {
+  width: 90px;
+}
 
-    .auth-date{
-      font-size:18px;
-      color:#d8dee8;
-      font-variant-numeric:tabular-nums;
-    }
+/* 情報 */
+.info {
+  flex: 1;
+}
 
-    .qr-card{
-      border:none;
-      background:linear-gradient(180deg,var(--whitebtn) 0%, #eef1f5 100%);
-      color:#111111;
-      min-height:138px;
-      position:relative;
-    }
+.status {
+  color: #2ecc71;
+  font-weight: bold;
+  font-size: 18px;
+}
 
-    .qr-button{
-      appearance:none;
-      border:none;
-      width:100%;
-      height:100%;
-      margin:0;
-      background:transparent;
-      color:#111111;
-      cursor:pointer;
-      font:inherit;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      border-radius:26px;
-      box-shadow: inset 0 -10px 0 rgba(151,163,184,.45);
-    }
+.label {
+  font-size: 11px;
+  color: #2ecc71;
+}
 
-    .qr-ja{
-      font-size:30px;
-      font-weight:900;
-      line-height:1.1;
-      margin-bottom:8px;
-    }
+.next {
+  font-size: 12px;
+  color: #aaa;
+}
 
-    .qr-en{
-      font-size:18px;
-      font-weight:700;
-      color:#444b55;
-      letter-spacing:.03em;
-    }
+/* ボタン */
+.use-btn {
+  margin-top: 12px;
+  width: 100%;
+  background: #2ecc71;
+  border: none;
+  color: #000;
+  padding: 14px;
+  border-radius: 14px;
+  font-weight: bold;
+  font-size: 16px;
+}
 
-    .updated{
-      flex:0 0 auto;
-      text-align:center;
-      color:#d0d6df;
-      font-size:14px;
-      line-height:1.2;
-      font-variant-numeric:tabular-nums;
-      margin-top:-2px;
-    }
-
-    .grid{
-      flex:1 1 auto;
-      min-height:0;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      grid-template-rows:1fr 1fr;
-      gap:18px 16px;
-    }
-
-    .rack{
-      min-height:0;
-      display:flex;
-      flex-direction:column;
-      border-radius:24px;
-      overflow:hidden;
-      background:linear-gradient(180deg,#111726 0%, #0b1120 100%);
-      border:1px solid rgba(143,211,179,.45);
-      box-shadow:var(--shadow);
-    }
-
-    .rack-head{
-      flex:0 0 auto;
-      background:var(--mint);
-      color:#091012;
-      padding:16px 18px 14px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-    }
-
-    .rack-title{
-      font-size:26px;
-      font-weight:900;
-      line-height:1.1;
-      letter-spacing:.01em;
-    }
-
-    .state-chip{
-      flex:0 0 auto;
-      min-width:128px;
-      padding:10px 14px;
-      border-radius:14px;
-      background:rgba(0,0,0,.16);
-      text-align:center;
-      line-height:1.05;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
-    }
-
-    .state-chip .ja{
-      display:block;
-      font-size:18px;
-      font-weight:900;
-      margin-bottom:4px;
-    }
-
-    .state-chip .en{
-      display:block;
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.03em;
-    }
-
-    .rack-body{
-      flex:1 1 auto;
-      min-height:0;
-      display:flex;
-      flex-direction:column;
-      padding:16px 18px 18px;
-      background:linear-gradient(180deg,#101625 0%, #0b1120 100%);
-    }
-
-    .label{
-      font-size:16px;
-      color:#e6e9ef;
-      line-height:1.2;
-      margin-bottom:6px;
-    }
-
-    .current-main{
-      font-size:28px;
-      font-weight:900;
-      line-height:1.2;
-      color:#ffffff;
-      white-space:pre-line;
-      margin-bottom:18px;
-      min-height:68px;
-    }
-
-    .next-block{
-      margin-bottom:14px;
-    }
-
-    .next-text{
-      font-size:18px;
-      line-height:1.45;
-      color:#e6e9ef;
-      white-space:pre-line;
-      min-height:54px;
-    }
-
-    .queue-area{
-      margin-top:auto;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .queue-btn{
-      width:100%;
-      min-height:78px;
-      border:none;
-      border-radius:20px;
-      color:#fff;
-      box-shadow:
-        inset 0 -4px 0 rgba(0,0,0,.12),
-        0 8px 18px rgba(0,0,0,.22);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      text-align:center;
-      padding:10px 12px;
-      font:inherit;
-      cursor:pointer;
-    }
-
-    .queue-btn.use-now{
-      background:linear-gradient(180deg,var(--greenbtn) 0%, var(--greenbtn2) 100%);
-    }
-
-    .queue-btn.gap{
-      background:linear-gradient(180deg,var(--bluebtn) 0%, var(--bluebtn2) 100%);
-    }
-
-    .queue-btn.queue{
-      background:linear-gradient(180deg,var(--goldbtn) 0%, var(--goldbtn2) 100%);
-    }
-
-    .queue-btn .ja{
-      font-size:24px;
-      font-weight:900;
-      line-height:1.1;
-      margin-bottom:5px;
-    }
-
-    .queue-btn .en{
-      font-size:14px;
-      font-weight:800;
-      line-height:1.1;
-      letter-spacing:.03em;
-      opacity:.95;
-    }
-
-    .queue-btn .time{
-      margin-top:6px;
-      font-size:13px;
-      font-weight:700;
-      line-height:1.1;
-      letter-spacing:.02em;
-      opacity:.95;
-    }
-
-    .no-actions{
-      min-height:78px;
-      border-radius:20px;
-      border:1px dashed rgba(255,255,255,.14);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:var(--muted);
-      font-size:15px;
-      line-height:1.35;
-      text-align:center;
-      padding:8px;
-    }
-
-    .error{
-      position:fixed;
-      left:16px;
-      right:16px;
-      bottom:16px;
-      z-index:50;
-      background:rgba(120,20,20,.92);
-      color:#fff;
-      padding:14px 16px;
-      border-radius:16px;
-      font-size:14px;
-      line-height:1.45;
-      display:none;
-    }
-
-    .loading{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.22);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:40;
-      pointer-events:none;
-    }
-
-    .loading-box{
-      padding:12px 18px;
-      border-radius:999px;
-      background:rgba(16,22,37,.9);
-      border:1px solid rgba(255,255,255,.1);
-      color:#fff;
-      font-size:14px;
-      letter-spacing:.04em;
-    }
-
-    @media (max-width: 900px){
-      body{
-        padding:10px;
-      }
-      .title-main{
-        font-size:22px;
-      }
-      .hero{
-        gap:10px;
-      }
-      .auth-card,.qr-card{
-        min-height:110px;
-      }
-      .auth-ja{
-        font-size:20px;
-      }
-      .auth-code{
-        font-size:46px;
-      }
-      .qr-ja{
-        font-size:24px;
-      }
-      .grid{
-        gap:12px 10px;
-      }
-      .rack-title{
-        font-size:18px;
-      }
-      .state-chip{
-        min-width:98px;
-        padding:8px 10px;
-      }
-      .state-chip .ja{
-        font-size:15px;
-      }
-      .state-chip .en{
-        font-size:10px;
-      }
-      .label{
-        font-size:13px;
-      }
-      .current-main{
-        font-size:20px;
-        min-height:54px;
-      }
-      .next-text{
-        font-size:15px;
-        min-height:44px;
-      }
-      .queue-btn{
-        min-height:64px;
-        border-radius:16px;
-      }
-      .queue-btn .ja{
-        font-size:20px;
-      }
-      .queue-btn .en{
-        font-size:12px;
-      }
-      .queue-btn .time{
-        font-size:11px;
-      }
-      .no-actions{
-        min-height:64px;
-        font-size:13px;
-      }
-    }
-  </style>
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center;
+  font-size: 11px;
+  color: #666;
+  padding-bottom: 10px;
+}
+</style>
 </head>
+
 <body>
-  <div class="app">
-    <div class="top-title">
-      <h1 class="title-main">WORKOUT CHECK-IN</h1>
-      <p class="title-sub">ラック予定一覧 / Rack Status Board</p>
-    </div>
 
-    <div class="hero">
-      <div class="auth-card">
-        <div class="auth-ja">認証コード</div>
-        <div class="auth-en">ACCESS CODE</div>
-        <div class="auth-code" id="authCode">----</div>
-        <div class="auth-date" id="todayLabel">----/--/--</div>
-      </div>
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="logo">The <span>Forest Gym</span></div>
 
-      <div class="qr-card">
-        <button type="button" class="qr-button" id="qrButton">
-          <div class="qr-ja">QRでチェックイン</div>
-          <div class="qr-en">CHECK IN WITH QR</div>
-        </button>
-      </div>
-    </div>
+  <div class="title">
+    <h1>WORKOUT CHECK-IN</h1>
+    <p>ラック予定一覧 / Rack Status Board</p>
+  </div>
+</div>
 
-    <div class="updated" id="updatedText">最終更新 / LAST UPDATED: --</div>
+<!-- ===== TOP ===== -->
+<div class="top">
 
-    <div class="grid" id="rackGrid"></div>
+  <!-- 認証コード -->
+  <div class="card">
+    <div>認証コード</div>
+    <div class="sub">ACCESS CODE</div>
+    <div class="code-number" id="authCode">----</div>
+    <div id="todayLabel">----/--/--</div>
   </div>
 
-  <div class="loading" id="loading">
-    <div class="loading-box">LOADING...</div>
+  <!-- QR -->
+  <div class="card qr" onclick="goQR()">
+    <div>
+      <div>QRでチェックイン</div>
+      <div class="sub">CHECK IN WITH QR</div>
+    </div>
   </div>
 
-  <div class="error" id="errorBox"></div>
+</div>
+
+<div class="update" id="lastUpdated">更新中...</div>
+
+<!-- ===== RACK GRID ===== -->
+<div class="grid" id="rackGrid"></div>
+
+<div class="footer">All rights reserved.</div>
 
 <script>
-  const WEBAPP_BASE_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-  const API_URL = WEBAPP_BASE_URL + "?action=getscheduletabletjson";
-  const QR_PAGE_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/index.html";
-  const AUTO_REFRESH_MS = 15000;
-  const FETCH_TIMEOUT_MS = 10000;
 
-    const MOCK_DATA = {
-      ok: true,
-      nowText: "2026/04/21 6:35",
-      todayLabel: "2026/04/21",
-      authCode: "6611",
-      racks: [
-        {
-          rackNo: 1,
-          rackLabel: "ラック1",
-          state: "free",
-          currentText: "",
-          nextText: "",
-          cannotQueue: false
-        },
-        {
-          rackNo: 2,
-          rackLabel: "ラック2",
-          state: "using_checkedin",
-          currentText: "6:00〜6:40 山田",
-          nextText: "次：7:00〜7:40 田中",
-          cannotQueue: false
-        },
-        {
-          rackNo: 3,
-          rackLabel: "ラック3",
-          state: "using_uncheckedin",
-          currentText: "6:20〜7:00 佐藤",
-          nextText: "次：7:20〜8:00",
-          cannotQueue: false
-        },
-        {
-          rackNo: 4,
-          rackLabel: "ラック4",
-          state: "reserved",
-          currentText: "",
-          nextText: "次：6:45〜7:25 鈴木",
-          cannotQueue: false
-        }
-      ],
-      queueUiRows: [
-        {
-          rackNo: 1,
-          rackLabel: "ラック1",
-          showUseNowButton: true,
-          useNowStartText: "6:35",
-          useNowEndText: "23:59",
-          showGapButton: false,
-          gapStartText: "",
-          gapEndText: "",
-          gapImmediate: false,
-          showQueueButton: false,
-          queueStartText: ""
-        },
-        {
-          rackNo: 4,
-          rackLabel: "ラック4",
-          showUseNowButton: false,
-          useNowStartText: "",
-          useNowEndText: "",
-          showGapButton: true,
-          gapStartText: "6:35",
-          gapEndText: "6:45",
-          gapImmediate: true,
-          showQueueButton: true,
-          queueStartText: "7:25"
-        }
-      ]
-    };
+const API_URL = "YOUR_GAS_URL";
 
-    const rackGrid = document.getElementById("rackGrid");
-    const authCodeEl = document.getElementById("authCode");
-    const todayLabelEl = document.getElementById("todayLabel");
-    const updatedTextEl = document.getElementById("updatedText");
-    const qrButton = document.getElementById("qrButton");
-    const loadingEl = document.getElementById("loading");
-    const errorBox = document.getElementById("errorBox");
+/* ===== データ取得 ===== */
+async function load() {
+  try {
+    const res = await fetch(API_URL + "?action=getscheduletabletjson&t=" + Date.now());
+    const data = await res.json();
 
-    let timer = null;
+    document.getElementById("authCode").textContent = data.authCode;
+    document.getElementById("todayLabel").textContent = data.todayLabel;
+    document.getElementById("lastUpdated").textContent =
+      "最終更新 / LAST UPDATED: " + new Date().toLocaleString();
 
-    init();
+    renderRacks(data.racks);
 
-    function init() {
-      qrButton.addEventListener("click", function () {
-  top.location.href = QR_PAGE_URL;
-});
-
-      loadData();
-      timer = setInterval(loadData, AUTO_REFRESH_MS);
-    }
-
-    async function loadData() {
-      showLoading(true);
-      hideError();
-
-      try {
-        const data = await fetchJson();
-        render(data);
-      } catch (e) {
-        console.error(e);
-        render(MOCK_DATA);
-        showError("API取得に失敗したためモック表示中");
-      } finally {
-        showLoading(false);
-      }
-    }
-
-    async function fetchJson() {
-      if (!API_URL) {
-        return MOCK_DATA;
-      }
-
-      const controller = new AbortController();
-      const timeoutId = setTimeout(function () {
-        controller.abort();
-      }, FETCH_TIMEOUT_MS);
-
-      try {
-        const url = API_URL + "&t=" + Date.now();
-        const res = await fetch(url, {
-          method: "GET",
-          cache: "no-store",
-          signal: controller.signal
-        });
-
-        if (!res.ok) {
-          throw new Error("HTTP " + res.status);
-        }
-
-        return await res.json();
-      } finally {
-        clearTimeout(timeoutId);
-      }
-    }
-
-    function render(raw) {
-      const data = normalizeData(raw);
-
-      authCodeEl.textContent = data.authCode || "----";
-      todayLabelEl.textContent = data.todayLabel || "----/--/--";
-      updatedTextEl.textContent =
-        "最終更新 / LAST UPDATED: " + (data.nowText || formatDateTime(new Date()));
-
-      rackGrid.innerHTML = "";
-
-      for (const rack of data.racks) {
-        const row = findQueueRow(data.queueUiRows, rack.rackNo);
-        rackGrid.appendChild(createRackCard(rack, row));
-      }
-    }
-
-    function normalizeData(raw) {
-      const src = raw || {};
-      const racks = Array.isArray(src.racks) ? src.racks.slice() : [];
-      const queueUiRows = Array.isArray(src.queueUiRows) ? src.queueUiRows.slice() : [];
-
-      const map = new Map();
-
-      for (const r of racks) {
-        const no = Number(r && r.rackNo);
-        if (!no) continue;
-
-        map.set(no, {
-          rackNo: no,
-          rackLabel: safe(r.rackLabel) || ("ラック" + no),
-          state: normalizeState(r.state),
-          currentText: safe(r.currentText),
-          nextText: safe(r.nextText),
-          cannotQueue: !!r.cannotQueue
-        });
-      }
-
-      for (let i = 1; i <= 4; i++) {
-        if (!map.has(i)) {
-          map.set(i, {
-            rackNo: i,
-            rackLabel: "ラック" + i,
-            state: "free",
-            currentText: "",
-            nextText: "",
-            cannotQueue: false
-          });
-        }
-      }
-
-      return {
-        ok: !!src.ok,
-        nowText: safe(src.nowText),
-        todayLabel: safe(src.todayLabel) || formatDate(new Date()),
-        authCode: safe(src.authCode) || "----",
-        racks: Array.from(map.values()).sort(function(a,b){ return a.rackNo - b.rackNo; }),
-        queueUiRows: queueUiRows
-      };
-    }
-
-    function normalizeState(v) {
-      const s = String(v || "").toLowerCase();
-      if (s === "using_checkedin") return "using_checkedin";
-      if (s === "using_uncheckedin") return "using_uncheckedin";
-      if (s === "reserved") return "reserved";
-      return "free";
-    }
-
-    function findQueueRow(rows, rackNo) {
-      for (const row of rows) {
-        if (Number(row && row.rackNo) === Number(rackNo)) {
-          return row;
-        }
-      }
-      return null;
-    }
-
-    function createRackCard(rack, queueRow) {
-      const stateJa = getStateJa(rack.state);
-      const stateEn = getStateEn(rack.state);
-      const currentMain = getCurrentMainText(rack);
-      const nextText = getNextText(rack);
-      const rackTitle = "Rack_№" + rack.rackNo;
-
-      const el = document.createElement("section");
-      el.className = "rack";
-
-      el.innerHTML = `
-        <div class="rack-head">
-          <div class="rack-title">${escapeHtml(rackTitle)}</div>
-          <div class="state-chip">
-            <span class="ja">${escapeHtml(stateJa)}</span>
-            <span class="en">${escapeHtml(stateEn)}</span>
-          </div>
-        </div>
-
-        <div class="rack-body">
-          <div class="label">現在 / CURRENT</div>
-          <div class="current-main">${escapeHtml(currentMain)}</div>
-
-          <div class="next-block">
-            <div class="label">次の予定 / NEXT</div>
-            <div class="next-text">${escapeHtml(nextText)}</div>
-          </div>
-
-          <div class="queue-area"></div>
-        </div>
-      `;
-
-      const queueArea = el.querySelector(".queue-area");
-      appendQueueButtons(queueArea, rack, queueRow);
-
-      return el;
-    }
-
-    function appendQueueButtons(container, rack, row) {
-      if (!row || rack.cannotQueue) {
-        container.appendChild(createNoActionsBox());
-        return;
-      }
-
-      let added = 0;
-
-      if (row.showUseNowButton) {
-        container.appendChild(
-          createQueueButton(
-            "すぐに利用",
-            "USE NOW",
-            buildRangeText(row.useNowStartText, row.useNowEndText),
-            "use-now",
-            function () {
-              goCheckin(rack.rackNo);
-            }
-          )
-        );
-        added++;
-      }
-
-      if (row.showGapButton) {
-        const gapLabel = row.gapImmediate ? "すき間利用" : "すき間予約";
-        container.appendChild(
-          createQueueButton(
-            gapLabel,
-            "GAP USE",
-            buildRangeText(row.gapStartText, row.gapEndText),
-            "gap",
-            function () {
-              goCheckin(rack.rackNo);
-            }
-          )
-        );
-        added++;
-      }
-
-      if (row.showQueueButton) {
-        container.appendChild(
-          createQueueButton(
-            "順番待ち",
-            "WAIT LIST",
-            row.queueStartText ? ("開始 " + row.queueStartText + "〜") : "",
-            "queue",
-            function () {
-              goQueue(rack.rackNo);
-            }
-          )
-        );
-        added++;
-      }
-
-      if (!added) {
-        container.appendChild(createNoActionsBox());
-      }
-    }
-
-    function createQueueButton(ja, en, timeText, typeClass, onClick) {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "queue-btn " + typeClass;
-
-      btn.innerHTML = `
-        <div class="ja">${escapeHtml(ja)}</div>
-        <div class="en">${escapeHtml(en)}</div>
-        <div class="time">${escapeHtml(timeText || "")}</div>
-      `;
-
-      btn.addEventListener("click", onClick);
-      return btn;
-    }
-
-    function createNoActionsBox() {
-      const box = document.createElement("div");
-      box.className = "no-actions";
-      box.textContent = "現在案内中の操作はありません";
-      return box;
-    }
-
-    function goCheckin(rackNo) {
-  location.href = "checkin.html?rackNo=" + encodeURIComponent(rackNo);
+  } catch(e) {
+    console.log("API ERROR", e);
+  }
 }
 
-function goQueue(rackNo) {
-  location.href = "queue.html?rackNo=" + encodeURIComponent(rackNo);
+/* ===== ラック描画 ===== */
+function renderRacks(racks) {
+
+  const grid = document.getElementById("rackGrid");
+  grid.innerHTML = "";
+
+  racks.forEach(r => {
+
+    const div = document.createElement("div");
+    div.className = "rack";
+
+    div.innerHTML = `
+      <img src="rack${r.rackNo}.png">
+      <div class="info">
+        <div class="label">現在 / CURRENT</div>
+        <div class="status">空いています<br>AVAILABLE</div>
+
+        <div class="label" style="margin-top:8px;">次の予定 / NEXT</div>
+        <div class="next">次の予定はありません<br>NO UPCOMING SCHEDULE</div>
+
+        ${r.rackNo === 4 ? `
+          <button class="use-btn" onclick="useNow(4)">
+            すぐに利用<br>USE NOW
+          </button>
+        ` : ""}
+      </div>
+    `;
+
+    grid.appendChild(div);
+  });
 }
 
-    function getStateJa(state) {
-      if (state === "using_checkedin") return "利用中";
-      if (state === "using_uncheckedin") return "予約";
-      if (state === "reserved") return "予約";
-      return "空き";
-    }
+/* ===== QR ===== */
+function goQR() {
+  location.href = "index.html";
+}
 
-    function getStateEn(state) {
-      if (state === "using_checkedin") return "IN USE";
-      if (state === "using_uncheckedin") return "RESERVED";
-      if (state === "reserved") return "RESERVED";
-      return "AVAILABLE";
-    }
+/* ===== すぐ利用 ===== */
+function useNow(no) {
+  location.href = "checkin.html?rack=" + no;
+}
 
-    function getCurrentMainText(rack) {
-      if (rack.state === "free") {
-        return rack.currentText || "空いています\nAVAILABLE";
-      }
+/* ===== 初期 ===== */
+load();
+setInterval(load, 10000);
 
-      if (rack.state === "using_checkedin") {
-        return rack.currentText || "利用中\nIN USE";
-      }
+</script>
 
-      if (rack.state === "using_uncheckedin") {
-        return rack.currentText || "予約あり\nRESERVED";
-      }
-
-      if (rack.state === "reserved") {
-        return rack.currentText || "予約あり\nRESERVED";
-      }
-
-      return rack.currentText || "";
-    }
-
-    function getNextText(rack) {
-      if (rack.nextText) {
-        return rack.nextText;
-      }
-      return "次の予定はありません\nNO UPCOMING SCHEDULE";
-    }
-
-    function buildRangeText(startText, endText) {
-      const s = safe(startText);
-      const e = safe(endText);
-      if (s && e) return s + "〜" + e;
-      if (s) return s + "〜";
-      return "";
-    }
-
-    function showLoading(show) {
-      loadingEl.style.display = show ? "flex" : "none";
-    }
-
-    function showError(msg) {
-      errorBox.textContent = msg;
-      errorBox.style.display = "block";
-    }
-
-    function hideError() {
-      errorBox.style.display = "none";
-      errorBox.textContent = "";
-    }
-
-    function safe(v) {
-      return v == null ? "" : String(v);
-    }
-
-    function formatDate(d) {
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, "0");
-      const day = String(d.getDate()).padStart(2, "0");
-      return y + "/" + m + "/" + day;
-    }
-
-    function formatDateTime(d) {
-      return formatDate(d) + " " + d.getHours() + ":" + String(d.getMinutes()).padStart(2, "0");
-    }
-
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
-  </script>
 </body>
 </html>
