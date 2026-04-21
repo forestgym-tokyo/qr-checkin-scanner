@@ -1,64 +1,182 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Check In</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHECK IN</title>
+
+<style>
+body{
+  margin:0;
+  background:#0f1115;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+  color:#fff;
+}
+
+.wrap{
+  max-width:520px;
+  margin:0 auto;
+  padding:40px 20px;
+}
+
+.title{
+  font-size:30px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+.sub{
+  color:#aaa;
+  margin-bottom:30px;
+}
+
+.card{
+  background:rgba(255,255,255,0.05);
+  border-radius:20px;
+  padding:24px;
+  backdrop-filter:blur(12px);
+}
+
+input{
+  width:100%;
+  margin-bottom:14px;
+  padding:16px;
+  font-size:18px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.08);
+  color:#fff;
+}
+
+input::placeholder{
+  color:#aaa;
+}
+
+button{
+  width:100%;
+  padding:16px;
+  font-size:18px;
+  border-radius:14px;
+  border:none;
+  margin-top:10px;
+}
+
+.primary{
+  background:#2f80ed;
+}
+
+.back{
+  background:#444;
+}
+
+/* モーダル */
+.modal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal-box{
+  background:#1a1d24;
+  padding:30px;
+  border-radius:18px;
+  text-align:center;
+}
+</style>
 </head>
+
 <body>
-  <div>CHECK IN</div>
-  <div id="rackLabel">Rack -</div>
 
-  <input id="memberNo" placeholder="会員番号">
-  <input id="memberName" placeholder="お名前">
-  <input id="displayName" placeholder="表示名">
+<div class="wrap">
+  <div class="title">CHECK IN</div>
+  <div class="sub" id="rackLabel">Rack -</div>
 
-  <button onclick="checkin()">チェックイン</button>
-  <button onclick="back()">戻る</button>
+  <div class="card">
+    <input id="memberNo" placeholder="会員番号">
+    <input id="memberName" placeholder="お名前">
+    <input id="displayName" placeholder="表示名">
 
-  <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-    const params = new URLSearchParams(location.search);
-    const rackNo = params.get("rackNo") || "1";
-    document.getElementById("rackLabel").innerText = "Rack №" + rackNo;
+    <button class="primary" onclick="checkin()">チェックイン</button>
+    <button class="back" onclick="back()">戻る</button>
+  </div>
+</div>
 
-    function checkin() {
-      const memberNo = document.getElementById("memberNo").value.trim();
-      const memberName = document.getElementById("memberName").value.trim();
-      const displayName = document.getElementById("displayName").value.trim();
+<script>
+const GAS_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 
-      if (!memberNo || !memberName || !displayName) {
-        alert("すべて入力してください");
-        return;
-      }
+const params = new URLSearchParams(location.search);
+const rackNo = params.get("rackNo") || "1";
+document.getElementById("rackLabel").innerText = "Rack №" + rackNo;
 
-      fetch(GAS_URL + "?action=checkInNow", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          rackNo,
-          memberNo,
-          memberName,
-          displayName
-        })
-      })
-      .then(r => r.json())
-      .then(res => {
-        if (!res || !res.ok) {
-          alert(res && res.message ? res.message : "エラー");
-          return;
-        }
-        alert("チェックイン完了");
-        back();
-      })
-      .catch(() => {
-        alert("通信エラー");
-      });
+/* キーボード安定用（ユーザー操作内フォーカス） */
+function forceFocus(el){
+  try{ el.focus(); }catch(e){}
+}
+
+document.addEventListener("pointerup", function(){
+  const el = document.getElementById("memberName");
+  if(el) forceFocus(el);
+}, {once:true});
+
+/* チェックイン */
+function checkin(){
+
+  const memberNo = document.getElementById("memberNo").value.trim();
+  const memberName = document.getElementById("memberName").value.trim();
+  const displayName = document.getElementById("displayName").value.trim();
+
+  if(!memberNo || !memberName || !displayName){
+    alert("入力してください");
+    return;
+  }
+
+  fetch(GAS_URL + "?action=checkInNow",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      rackNo,
+      memberNo,
+      memberName,
+      displayName
+    })
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    if(!res || !res.ok){
+      alert(res.message || "エラー");
+      return;
     }
+    showModal();
+  })
+  .catch(()=>{
+    alert("通信エラー");
+  });
+}
 
-    function back() {
-      location.href = "tablet.html";
-    }
-  </script>
+/* 完了表示 */
+function showModal(){
+  const m = document.createElement("div");
+  m.className="modal";
+  m.innerHTML = `
+    <div class="modal-box">
+      <h2>チェックイン完了</h2>
+      <p>ご利用ください</p>
+      <button onclick="back()" class="primary">OK</button>
+    </div>
+  `;
+  document.body.appendChild(m);
+}
+
+function back(){
+  location.href="tablet.html";
+}
+</script>
+
 </body>
 </html>
