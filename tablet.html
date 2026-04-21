@@ -586,8 +586,8 @@
 
     function init() {
       qrButton.addEventListener("click", function () {
-        location.href = QR_PAGE_URL;
-      });
+  top.location.href = QR_PAGE_URL;
+});
 
       loadData();
       timer = setInterval(loadData, AUTO_REFRESH_MS);
