@@ -8,1079 +8,925 @@
   />
   <title>WORKOUT CHECK-IN</title>
   <style>
-    :root {
-      --bg: #050607;
-      --panel: #0b0d10;
-      --panel-2: #0f1317;
-      --line: rgba(255,255,255,0.10);
-      --line-strong: rgba(124, 195, 56, 0.45);
-      --text: #ffffff;
-      --muted: rgba(255,255,255,0.68);
-      --muted-2: rgba(255,255,255,0.44);
-      --green: #79c338;
-      --green-2: #5ea526;
-      --orange: #d28a1f;
-      --blue: #4384c7;
-      --red: #d9534f;
-      --shadow: 0 12px 30px rgba(0,0,0,0.28);
-      --radius-xl: 24px;
-      --radius-lg: 20px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
+    :root{
+      --bg:#05070c;
+      --panel:#101625;
+      --panel2:#0d1320;
+      --line:#2f9d8d;
+      --mint:#8fd3b3;
+      --text:#ffffff;
+      --sub:#c9d0db;
+      --muted:#9aa4b2;
+      --whitebtn:#f2f4f7;
+      --greenbtn:#32c553;
+      --greenbtn2:#2ab149;
+      --bluebtn:#3f6db5;
+      --bluebtn2:#355fa1;
+      --goldbtn:#d2a55e;
+      --goldbtn2:#bc8f47;
+      --shadow:0 10px 24px rgba(0,0,0,.35);
     }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent;
     }
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100%;
-      background:
-        radial-gradient(circle at top center, rgba(121,195,56,0.08), transparent 32%),
-        linear-gradient(180deg, #07090b 0%, #030405 100%);
-      color: var(--text);
+    html,body{
+      margin:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      background:var(--bg);
+      color:var(--text);
       font-family:
         "Noto Sans JP",
         "Hiragino Kaku Gothic ProN",
         "Yu Gothic",
-        "Meiryo",
-        system-ui,
+        "Segoe UI",
         sans-serif;
     }
 
-    body {
-      overflow-x: hidden;
+    body{
+      padding:16px;
     }
 
-    .app {
-      width: 100%;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 18px 22px 14px;
+    .app{
+      width:100%;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
     }
 
-    /* ===== HEADER ===== */
-    .header {
-      display: grid;
-      grid-template-columns: 360px 1fr;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 14px;
-    }
-
-    .logo-box {
-      display: flex;
-      align-items: center;
-      min-height: 90px;
-      padding: 10px 6px 10px 4px;
-    }
-
-    .logo-box img {
-      display: block;
-      width: 100%;
-      max-width: 340px;
-      height: auto;
-      object-fit: contain;
-    }
-
-    .title-box {
-      border-left: 1px solid rgba(255,255,255,0.18);
-      padding-left: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-height: 90px;
-    }
-
-    .title-main {
-      margin: 0;
-      font-size: 56px;
-      line-height: 1;
-      font-weight: 900;
-      letter-spacing: 0.02em;
-    }
-
-    .title-sub {
-      margin-top: 10px;
-      font-size: 24px;
-      line-height: 1.15;
-      color: rgba(255,255,255,0.90);
-      font-weight: 500;
-    }
-
-    /* ===== TOP ROW ===== */
-    .top-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 10px;
-    }
-
-    .panel {
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)),
-        var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow);
-    }
-
-    .top-panel {
-      min-height: 150px;
-      padding: 18px 22px;
-      display: flex;
-      align-items: center;
-    }
-
-    .access-panel {
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .access-left {
-      min-width: 0;
-    }
-
-    .ja-title {
-      font-size: 28px;
-      font-weight: 900;
-      line-height: 1.1;
-      margin: 0 0 6px;
-      letter-spacing: 0.01em;
-    }
-
-    .en-title {
-      font-size: 18px;
-      color: var(--green);
-      line-height: 1.1;
-      font-weight: 700;
-      margin: 0 0 14px;
-      letter-spacing: 0.01em;
-    }
-
-    .access-code {
-      font-size: 88px;
-      line-height: 0.95;
-      font-weight: 900;
-      letter-spacing: 0.16em;
-      color: var(--green);
-      white-space: nowrap;
-    }
-
-    .access-date {
-      margin-top: 14px;
-      font-size: 26px;
-      color: rgba(255,255,255,0.90);
-      font-weight: 500;
-    }
-
-    .qr-panel {
-      justify-content: flex-start;
-      gap: 20px;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .qr-panel:active {
-      transform: scale(0.998);
-    }
-
-    .qr-icon {
-      width: 76px;
-      height: 76px;
-      flex: 0 0 76px;
-      color: #fff;
-      opacity: 0.96;
-    }
-
-    .qr-texts {
-      min-width: 0;
-    }
-
-    .qr-ja {
-      margin: 0;
-      font-size: 34px;
-      line-height: 1.1;
-      font-weight: 900;
-      letter-spacing: 0.01em;
-    }
-
-    .qr-en {
-      margin-top: 8px;
-      font-size: 19px;
-      line-height: 1.1;
-      font-weight: 700;
-      color: var(--green);
-      letter-spacing: 0.01em;
-    }
-
-    /* ===== UPDATE ===== */
-    .update-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-height: 34px;
-      margin-bottom: 10px;
-      color: var(--muted);
-      font-size: 20px;
-      font-weight: 500;
-      text-align: center;
-    }
-
-    .refresh-icon {
-      width: 23px;
-      height: 23px;
-      color: var(--green);
-      flex: 0 0 23px;
-    }
-
-    .error-banner {
-      display: none;
-      margin: 0 0 10px;
-      padding: 12px 16px;
-      border-radius: 14px;
-      background: rgba(217,83,79,0.12);
-      color: #ffd4d3;
-      border: 1px solid rgba(217,83,79,0.35);
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .error-banner.show {
-      display: block;
-    }
-
-    /* ===== GRID ===== */
-    .rack-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .rack-card {
-      min-height: 458px;
-      padding: 16px 16px 14px;
-      display: grid;
-      grid-template-columns: 230px 1fr;
-      gap: 16px;
-      background:
-        radial-gradient(circle at bottom left, rgba(121,195,56,0.08), transparent 28%),
-        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)),
-        var(--panel-2);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow);
-    }
-
-    .rack-card.is-free {
-      border-color: rgba(121,195,56,0.34);
-    }
-
-    .rack-card.is-reserved {
-      border-color: rgba(210,138,31,0.42);
-    }
-
-    .rack-card.is-maintenance {
-      border-color: rgba(67,132,199,0.42);
-    }
-
-    .rack-card.is-using {
-      border-color: rgba(255,255,255,0.14);
-    }
-
-    .rack-card.is-gap {
-      border-color: rgba(226, 197, 54, 0.42);
-    }
-
-    .rack-card.is-waiting {
-      border-color: rgba(121,195,56,0.34);
-    }
-
-    .rack-visual {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 0;
-    }
-
-    .rack-visual img {
-      display: block;
-      width: 100%;
-      max-width: 220px;
-      max-height: 360px;
-      object-fit: contain;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.32));
-    }
+    .top-title{
+      flex:0 0 auto;
+    }
 
-    .rack-body {
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
+    .title-main{
+      font-size:30px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:.02em;
+      margin:0 0 6px;
     }
 
-    .rack-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 10px;
+    .title-sub{
+      font-size:13px;
+      color:var(--sub);
+      margin:0;
     }
-
-    .rack-name {
-      font-size: 34px;
-      line-height: 1.05;
-      font-weight: 900;
-      white-space: nowrap;
-    }
-
-    .rack-name .rack-no {
-      color: var(--green);
-    }
-
-    .state-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 118px;
-      min-height: 50px;
-      padding: 8px 16px;
-      border-radius: 14px;
-      font-size: 18px;
-      font-weight: 800;
-      line-height: 1;
-      border: 1px solid transparent;
-      white-space: nowrap;
-    }
-
-    .state-free {
-      background: rgba(121,195,56,0.18);
-      color: #ebffd8;
-      border-color: rgba(121,195,56,0.34);
-    }
-
-    .state-using {
-      background: rgba(255,255,255,0.08);
-      color: #f0f0f0;
-      border-color: rgba(255,255,255,0.14);
-    }
-
-    .state-reserved {
-      background: rgba(210,138,31,0.18);
-      color: #ffdca6;
-      border-color: rgba(210,138,31,0.36);
-    }
-
-    .state-maintenance {
-      background: rgba(67,132,199,0.18);
-      color: #cfe6ff;
-      border-color: rgba(67,132,199,0.36);
-    }
-
-    .state-gap {
-      background: rgba(226,197,54,0.18);
-      color: #fff0a6;
-      border-color: rgba(226,197,54,0.36);
-    }
-
-    .state-waiting {
-      background: rgba(121,195,56,0.18);
-      color: #ebffd8;
-      border-color: rgba(121,195,56,0.34);
-    }
-
-    .meta-label {
-      font-size: 17px;
-      line-height: 1.1;
-      font-weight: 700;
-      margin: 12px 0 8px;
-      letter-spacing: 0.01em;
-    }
-
-    .meta-label.green {
-      color: var(--green);
-    }
-
-    .meta-label.orange {
-      color: var(--orange);
-    }
-
-    .meta-label.blue {
-      color: var(--blue);
-    }
-
-    .meta-value-main {
-      font-size: 31px;
-      line-height: 1.16;
-      font-weight: 900;
-      color: #fff;
-      word-break: keep-all;
-    }
-
-    .meta-value-sub {
-      margin-top: 7px;
-      font-size: 18px;
-      line-height: 1.28;
-      color: rgba(255,255,255,0.92);
-      font-weight: 500;
-    }
-
-    .divider {
-      height: 1px;
-      margin: 14px 0 10px;
-      background: linear-gradient(90deg, rgba(121,195,56,0.44), rgba(255,255,255,0.02));
-    }
-
-    .schedule-block + .schedule-block {
-      margin-top: 4px;
-    }
-
-    .schedule-main {
-      font-size: 22px;
-      line-height: 1.22;
-      font-weight: 800;
-      color: #fff;
-      word-break: break-word;
-    }
-
-    .schedule-sub {
-      margin-top: 3px;
-      font-size: 16px;
-      line-height: 1.3;
-      color: var(--muted);
-      font-weight: 500;
-      word-break: break-word;
-    }
-
-    .waiting-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-top: auto;
-      padding-top: 14px;
-    }
-
-    .waiting-left {
-      min-width: 0;
-      flex: 1;
-    }
-
-    .waiting-count {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 4px;
-      font-size: 22px;
-      line-height: 1.15;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .waiting-icon {
-      width: 24px;
-      height: 24px;
-      color: rgba(255,255,255,0.80);
-      flex: 0 0 24px;
-    }
-
-    .action-button {
-      appearance: none;
-      border: 0;
-      border-radius: 16px;
-      min-height: 60px;
-      padding: 12px 18px;
-      cursor: pointer;
-      font-weight: 900;
-      transition: transform 0.04s ease, opacity 0.15s ease;
-      white-space: nowrap;
-    }
-
-    .action-button:active {
-      transform: scale(0.995);
-    }
-
-    .queue-button {
-      min-width: 230px;
-      background: rgba(255,255,255,0.03);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.12);
-      font-size: 22px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-    }
-
-    .use-button {
-      width: 100%;
-      min-height: 86px;
-      margin-top: 12px;
-      background: linear-gradient(180deg, #79c338 0%, #68ad2e 100%);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.14);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.16);
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px 22px;
-    }
-
-    .use-button-text {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 3px;
-      text-align: left;
-    }
-
-    .use-button-ja {
-      font-size: 28px;
-      line-height: 1;
-      font-weight: 900;
-      color: #fff;
-    }
-
-    .use-button-en {
-      font-size: 17px;
-      line-height: 1;
-      font-weight: 800;
-      color: rgba(255,255,255,0.92);
-      letter-spacing: 0.02em;
-    }
-
-    .arrow {
-      font-size: 42px;
-      line-height: 1;
-      font-weight: 700;
-      opacity: 0.92;
-    }
-
-    .note-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.25;
-      font-weight: 500;
-    }
-
-    .note-icon {
-      width: 18px;
-      height: 18px;
-      flex: 0 0 18px;
-      color: rgba(255,255,255,0.55);
+
+    .hero{
+      flex:0 0 auto;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
     }
 
-    /* ===== FOOTER ===== */
-    .footer {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 44px;
-      padding-top: 10px;
-      color: rgba(255,255,255,0.34);
-      font-size: 18px;
-      letter-spacing: 0.04em;
-      text-align: center;
+    .auth-card,
+    .qr-card{
+      border-radius:26px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
     }
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 1180px) {
-      .header {
-        grid-template-columns: 300px 1fr;
+    .auth-card{
+      background:linear-gradient(180deg,#101625 0%, #0d1320 100%);
+      border:1px solid rgba(143,211,179,.18);
+      padding:18px 18px 16px;
+      min-height:138px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .auth-ja{
+      font-size:26px;
+      font-weight:900;
+      line-height:1.1;
+      margin-bottom:4px;
+    }
+
+    .auth-en{
+      font-size:16px;
+      color:#d8dee8;
+      letter-spacing:.04em;
+      margin-bottom:14px;
+    }
+
+    .auth-code{
+      font-size:60px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:.12em;
+      margin-bottom:10px;
+      font-variant-numeric:tabular-nums;
+    }
+
+    .auth-date{
+      font-size:18px;
+      color:#d8dee8;
+      font-variant-numeric:tabular-nums;
+    }
+
+    .qr-card{
+      border:none;
+      background:linear-gradient(180deg,var(--whitebtn) 0%, #eef1f5 100%);
+      color:#111111;
+      min-height:138px;
+      position:relative;
+    }
+
+    .qr-button{
+      appearance:none;
+      border:none;
+      width:100%;
+      height:100%;
+      margin:0;
+      background:transparent;
+      color:#111111;
+      cursor:pointer;
+      font:inherit;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      border-radius:26px;
+      box-shadow: inset 0 -10px 0 rgba(151,163,184,.45);
+    }
+
+    .qr-ja{
+      font-size:30px;
+      font-weight:900;
+      line-height:1.1;
+      margin-bottom:8px;
+    }
+
+    .qr-en{
+      font-size:18px;
+      font-weight:700;
+      color:#444b55;
+      letter-spacing:.03em;
+    }
+
+    .updated{
+      flex:0 0 auto;
+      text-align:center;
+      color:#d0d6df;
+      font-size:14px;
+      line-height:1.2;
+      font-variant-numeric:tabular-nums;
+      margin-top:-2px;
+    }
+
+    .grid{
+      flex:1 1 auto;
+      min-height:0;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      grid-template-rows:1fr 1fr;
+      gap:18px 16px;
+    }
+
+    .rack{
+      min-height:0;
+      display:flex;
+      flex-direction:column;
+      border-radius:24px;
+      overflow:hidden;
+      background:linear-gradient(180deg,#111726 0%, #0b1120 100%);
+      border:1px solid rgba(143,211,179,.45);
+      box-shadow:var(--shadow);
+    }
+
+    .rack-head{
+      flex:0 0 auto;
+      background:var(--mint);
+      color:#091012;
+      padding:16px 18px 14px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .rack-title{
+      font-size:26px;
+      font-weight:900;
+      line-height:1.1;
+      letter-spacing:.01em;
+    }
+
+    .state-chip{
+      flex:0 0 auto;
+      min-width:128px;
+      padding:10px 14px;
+      border-radius:14px;
+      background:rgba(0,0,0,.16);
+      text-align:center;
+      line-height:1.05;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .state-chip .ja{
+      display:block;
+      font-size:18px;
+      font-weight:900;
+      margin-bottom:4px;
+    }
+
+    .state-chip .en{
+      display:block;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.03em;
+    }
+
+    .rack-body{
+      flex:1 1 auto;
+      min-height:0;
+      display:flex;
+      flex-direction:column;
+      padding:16px 18px 18px;
+      background:linear-gradient(180deg,#101625 0%, #0b1120 100%);
+    }
+
+    .label{
+      font-size:16px;
+      color:#e6e9ef;
+      line-height:1.2;
+      margin-bottom:6px;
+    }
+
+    .current-main{
+      font-size:28px;
+      font-weight:900;
+      line-height:1.2;
+      color:#ffffff;
+      white-space:pre-line;
+      margin-bottom:18px;
+      min-height:68px;
+    }
+
+    .next-block{
+      margin-bottom:14px;
+    }
+
+    .next-text{
+      font-size:18px;
+      line-height:1.45;
+      color:#e6e9ef;
+      white-space:pre-line;
+      min-height:54px;
+    }
+
+    .queue-area{
+      margin-top:auto;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .queue-btn{
+      width:100%;
+      min-height:78px;
+      border:none;
+      border-radius:20px;
+      color:#fff;
+      box-shadow:
+        inset 0 -4px 0 rgba(0,0,0,.12),
+        0 8px 18px rgba(0,0,0,.22);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      text-align:center;
+      padding:10px 12px;
+      font:inherit;
+      cursor:pointer;
+    }
+
+    .queue-btn.use-now{
+      background:linear-gradient(180deg,var(--greenbtn) 0%, var(--greenbtn2) 100%);
+    }
+
+    .queue-btn.gap{
+      background:linear-gradient(180deg,var(--bluebtn) 0%, var(--bluebtn2) 100%);
+    }
+
+    .queue-btn.queue{
+      background:linear-gradient(180deg,var(--goldbtn) 0%, var(--goldbtn2) 100%);
+    }
+
+    .queue-btn .ja{
+      font-size:24px;
+      font-weight:900;
+      line-height:1.1;
+      margin-bottom:5px;
+    }
+
+    .queue-btn .en{
+      font-size:14px;
+      font-weight:800;
+      line-height:1.1;
+      letter-spacing:.03em;
+      opacity:.95;
+    }
+
+    .queue-btn .time{
+      margin-top:6px;
+      font-size:13px;
+      font-weight:700;
+      line-height:1.1;
+      letter-spacing:.02em;
+      opacity:.95;
+    }
+
+    .no-actions{
+      min-height:78px;
+      border-radius:20px;
+      border:1px dashed rgba(255,255,255,.14);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.35;
+      text-align:center;
+      padding:8px;
+    }
+
+    .error{
+      position:fixed;
+      left:16px;
+      right:16px;
+      bottom:16px;
+      z-index:50;
+      background:rgba(120,20,20,.92);
+      color:#fff;
+      padding:14px 16px;
+      border-radius:16px;
+      font-size:14px;
+      line-height:1.45;
+      display:none;
+    }
+
+    .loading{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.22);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:40;
+      pointer-events:none;
+    }
+
+    .loading-box{
+      padding:12px 18px;
+      border-radius:999px;
+      background:rgba(16,22,37,.9);
+      border:1px solid rgba(255,255,255,.1);
+      color:#fff;
+      font-size:14px;
+      letter-spacing:.04em;
+    }
+
+    @media (max-width: 900px){
+      body{
+        padding:10px;
       }
-
-      .title-main {
-        font-size: 46px;
+      .title-main{
+        font-size:22px;
       }
-
-      .title-sub {
-        font-size: 20px;
+      .hero{
+        gap:10px;
       }
-
-      .top-panel {
-        min-height: 136px;
+      .auth-card,.qr-card{
+        min-height:110px;
       }
-
-      .access-code {
-        font-size: 72px;
+      .auth-ja{
+        font-size:20px;
       }
-
-      .rack-card {
-        grid-template-columns: 180px 1fr;
+      .auth-code{
+        font-size:46px;
       }
-
-      .rack-name {
-        font-size: 30px;
+      .qr-ja{
+        font-size:24px;
       }
-
-      .meta-value-main {
-        font-size: 28px;
+      .grid{
+        gap:12px 10px;
       }
-    }
-
-    @media (max-width: 980px) {
-      .app {
-        padding: 14px;
+      .rack-title{
+        font-size:18px;
       }
-
-      .header,
-      .top-row,
-      .rack-grid {
-        grid-template-columns: 1fr;
+      .state-chip{
+        min-width:98px;
+        padding:8px 10px;
       }
-
-      .title-box {
-        border-left: 0;
-        border-top: 1px solid rgba(255,255,255,0.18);
-        padding-left: 0;
-        padding-top: 14px;
+      .state-chip .ja{
+        font-size:15px;
       }
-
-      .rack-card {
-        min-height: 0;
+      .state-chip .en{
+        font-size:10px;
+      }
+      .label{
+        font-size:13px;
+      }
+      .current-main{
+        font-size:20px;
+        min-height:54px;
+      }
+      .next-text{
+        font-size:15px;
+        min-height:44px;
+      }
+      .queue-btn{
+        min-height:64px;
+        border-radius:16px;
+      }
+      .queue-btn .ja{
+        font-size:20px;
+      }
+      .queue-btn .en{
+        font-size:12px;
+      }
+      .queue-btn .time{
+        font-size:11px;
+      }
+      .no-actions{
+        min-height:64px;
+        font-size:13px;
       }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <header class="header">
-      <div class="logo-box">
-        <img src="logo.png" alt="The Forest Gym" />
-      </div>
-
-      <div class="title-box">
-        <h1 class="title-main">WORKOUT CHECK-IN</h1>
-        <div class="title-sub">ラック予定一覧 / Rack Status Board</div>
-      </div>
-    </header>
-
-    <section class="top-row">
-      <div class="panel top-panel access-panel">
-        <div class="access-left">
-          <div class="ja-title">認証コード</div>
-          <div class="en-title">ACCESS CODE</div>
-          <div class="access-code" id="authCode">----</div>
-          <div class="access-date" id="todayLabel">----/--/--</div>
-        </div>
-      </div>
-
-      <div class="panel top-panel qr-panel" id="qrPanel" role="button" tabindex="0" aria-label="QRでチェックイン">
-        <svg class="qr-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-          <path d="M9 23V11a2 2 0 0 1 2-2h12" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-          <path d="M55 23V11a2 2 0 0 0-2-2H41" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-          <path d="M9 41v12a2 2 0 0 0 2 2h12" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-          <path d="M55 41v12a2 2 0 0 1-2 2H41" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-          <rect x="18" y="18" width="10" height="10" stroke="currentColor" stroke-width="4"/>
-          <rect x="36" y="18" width="10" height="10" stroke="currentColor" stroke-width="4"/>
-          <rect x="18" y="36" width="10" height="10" stroke="currentColor" stroke-width="4"/>
-          <path d="M38 36h8v8h-4m-8-4h4v8" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-
-        <div class="qr-texts">
-          <div class="qr-ja">QRでチェックイン</div>
-          <div class="qr-en">CHECK IN WITH QR</div>
-        </div>
-      </div>
-    </section>
-
-    <div class="update-row" id="updateRow">
-      <svg class="refresh-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M20 7v5h-5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M4 17v-5h5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M6.8 9.2A8 8 0 0 1 20 12" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
-        <path d="M17.2 14.8A8 8 0 0 1 4 12" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
-      </svg>
-      <div id="lastUpdated">最終更新 / LAST UPDATED: --</div>
+    <div class="top-title">
+      <h1 class="title-main">WORKOUT CHECK-IN</h1>
+      <p class="title-sub">ラック予定一覧 / Rack Status Board</p>
     </div>
 
-    <div id="errorBanner" class="error-banner"></div>
+    <div class="hero">
+      <div class="auth-card">
+        <div class="auth-ja">認証コード</div>
+        <div class="auth-en">ACCESS CODE</div>
+        <div class="auth-code" id="authCode">----</div>
+        <div class="auth-date" id="todayLabel">----/--/--</div>
+      </div>
 
-    <section class="rack-grid" id="rackGrid"></section>
+      <div class="qr-card">
+        <button type="button" class="qr-button" id="qrButton">
+          <div class="qr-ja">QRでチェックイン</div>
+          <div class="qr-en">CHECK IN WITH QR</div>
+        </button>
+      </div>
+    </div>
 
-    <footer class="footer">All rights reserved.</footer>
+    <div class="updated" id="updatedText">最終更新 / LAST UPDATED: --</div>
+
+    <div class="grid" id="rackGrid"></div>
   </div>
 
-  <script>
-    const API_URL = "YOUR_GAS_WEBAPP_URL";
-    const QR_PAGE_URL = "index.html";
-    const CHECKIN_PAGE_URL = "checkin.html";
-    const QUEUE_PAGE_URL = "queue.html";
-    const REFRESH_MS = 15000;
+  <div class="loading" id="loading">
+    <div class="loading-box">LOADING...</div>
+  </div>
 
-    let refreshTimer = null;
+  <div class="error" id="errorBox"></div>
 
-    const stateMeta = {
-      free: {
-        badgeClass: "state-free",
-        defaultBadgeText: "空き",
-        cardClass: "is-free",
-        currentLabelClass: "green",
-        nextLabelClass: "green",
-        afterNextLabelClass: "green",
-        waitingLabelClass: "green"
-      },
-      using: {
-        badgeClass: "state-using",
-        defaultBadgeText: "利用中",
-        cardClass: "is-using",
-        currentLabelClass: "green",
-        nextLabelClass: "green",
-        afterNextLabelClass: "green",
-        waitingLabelClass: "green"
-      },
-      reserved: {
-        badgeClass: "state-reserved",
-        defaultBadgeText: "予約あり",
-        cardClass: "is-reserved",
-        currentLabelClass: "green",
-        nextLabelClass: "orange",
-        afterNextLabelClass: "orange",
-        waitingLabelClass: "orange"
-      },
-      maintenance: {
-        badgeClass: "state-maintenance",
-        defaultBadgeText: "メンテナンス中",
-        cardClass: "is-maintenance",
-        currentLabelClass: "blue",
-        nextLabelClass: "blue",
-        afterNextLabelClass: "blue",
-        waitingLabelClass: "blue"
-      },
-      gap: {
-        badgeClass: "state-gap",
-        defaultBadgeText: "すき間利用可",
-        cardClass: "is-gap",
-        currentLabelClass: "green",
-        nextLabelClass: "orange",
-        afterNextLabelClass: "orange",
-        waitingLabelClass: "green"
-      },
-      waiting: {
-        badgeClass: "state-waiting",
-        defaultBadgeText: "順番待ち",
-        cardClass: "is-waiting",
-        currentLabelClass: "green",
-        nextLabelClass: "green",
-        afterNextLabelClass: "green",
-        waitingLabelClass: "green"
-      }
+<script>
+  const WEBAPP_BASE_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+  const API_URL = WEBAPP_BASE_URL + "?action=getscheduletabletjson";
+  const QR_PAGE_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/index.html";
+  const AUTO_REFRESH_MS = 15000;
+  const FETCH_TIMEOUT_MS = 10000;
+
+    const MOCK_DATA = {
+      ok: true,
+      nowText: "2026/04/21 6:35",
+      todayLabel: "2026/04/21",
+      authCode: "6611",
+      racks: [
+        {
+          rackNo: 1,
+          rackLabel: "ラック1",
+          state: "free",
+          currentText: "",
+          nextText: "",
+          cannotQueue: false
+        },
+        {
+          rackNo: 2,
+          rackLabel: "ラック2",
+          state: "using_checkedin",
+          currentText: "6:00〜6:40 山田",
+          nextText: "次：7:00〜7:40 田中",
+          cannotQueue: false
+        },
+        {
+          rackNo: 3,
+          rackLabel: "ラック3",
+          state: "using_uncheckedin",
+          currentText: "6:20〜7:00 佐藤",
+          nextText: "次：7:20〜8:00",
+          cannotQueue: false
+        },
+        {
+          rackNo: 4,
+          rackLabel: "ラック4",
+          state: "reserved",
+          currentText: "",
+          nextText: "次：6:45〜7:25 鈴木",
+          cannotQueue: false
+        }
+      ],
+      queueUiRows: [
+        {
+          rackNo: 1,
+          rackLabel: "ラック1",
+          showUseNowButton: true,
+          useNowStartText: "6:35",
+          useNowEndText: "23:59",
+          showGapButton: false,
+          gapStartText: "",
+          gapEndText: "",
+          gapImmediate: false,
+          showQueueButton: false,
+          queueStartText: ""
+        },
+        {
+          rackNo: 4,
+          rackLabel: "ラック4",
+          showUseNowButton: false,
+          useNowStartText: "",
+          useNowEndText: "",
+          showGapButton: true,
+          gapStartText: "6:35",
+          gapEndText: "6:45",
+          gapImmediate: true,
+          showQueueButton: true,
+          queueStartText: "7:25"
+        }
+      ]
     };
 
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
-    }
+    const rackGrid = document.getElementById("rackGrid");
+    const authCodeEl = document.getElementById("authCode");
+    const todayLabelEl = document.getElementById("todayLabel");
+    const updatedTextEl = document.getElementById("updatedText");
+    const qrButton = document.getElementById("qrButton");
+    const loadingEl = document.getElementById("loading");
+    const errorBox = document.getElementById("errorBox");
 
-    function nl2br(value) {
-      return escapeHtml(value).replace(/\n/g, "<br>");
-    }
+    let timer = null;
 
-    function toText(value, fallback = "—") {
-      const s = (value ?? "").toString().trim();
-      return s ? s : fallback;
-    }
+    init();
 
-    function showError(message) {
-      const el = document.getElementById("errorBanner");
-      el.textContent = message;
-      el.classList.add("show");
-    }
+    function init() {
+      qrButton.addEventListener("click", function () {
+  top.location.href = QR_PAGE_URL;
+});
 
-    function hideError() {
-      const el = document.getElementById("errorBanner");
-      el.textContent = "";
-      el.classList.remove("show");
-    }
-
-    function formatLastUpdated(rawValue) {
-      const s = (rawValue ?? "").toString().trim();
-      if (s) return s;
-      const d = new Date();
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth() + 1).padStart(2, "0");
-      const dd = String(d.getDate()).padStart(2, "0");
-      const hh = String(d.getHours()).padStart(2, "0");
-      const mi = String(d.getMinutes()).padStart(2, "0");
-      return `${yyyy}/${mm}/${dd} ${hh}:${mi}`;
-    }
-
-    function getRackImagePath(rackNo) {
-      return `rack${Number(rackNo)}.png`;
-    }
-
-    function normalizeRack(raw) {
-      const state = (raw.state || "free").toString().trim().toLowerCase();
-      const meta = stateMeta[state] || stateMeta.free;
-
-      return {
-        rackNo: Number(raw.rackNo) || 0,
-        state,
-        meta,
-        badgeText: toText(raw.badgeText, meta.defaultBadgeText),
-
-        currentText: toText(raw.currentText),
-        currentSubText: toText(raw.currentSubText, ""),
-        nextText: toText(raw.nextText),
-        nextSubText: toText(raw.nextSubText, ""),
-        afterNextText: toText(raw.afterNextText, ""),
-        afterNextSubText: toText(raw.afterNextSubText, ""),
-
-        waitingCount: Number.isFinite(Number(raw.waitingCount))
-          ? Number(raw.waitingCount)
-          : 0,
-
-        noteText: toText(raw.noteText, ""),
-
-        showUseNowButton: Boolean(raw.showUseNowButton),
-        useNowLabelJa: toText(raw.useNowLabelJa, "すぐに利用"),
-        useNowLabelEn: toText(raw.useNowLabelEn, "USE NOW"),
-
-        showQueueButton: Boolean(raw.showQueueButton),
-        queueButtonText: toText(raw.queueButtonText, "順番待ち一覧"),
-
-        checkinUrl: toText(raw.checkinUrl, ""),
-        queueUrl: toText(raw.queueUrl, ""),
-
-        currentLabelJa: toText(raw.currentLabelJa, "現在"),
-        currentLabelEn: toText(raw.currentLabelEn, "CURRENT"),
-        nextLabelJa: toText(raw.nextLabelJa, "次の予定"),
-        nextLabelEn: toText(raw.nextLabelEn, "NEXT"),
-        afterNextLabelJa: toText(raw.afterNextLabelJa, "その次"),
-        afterNextLabelEn: toText(raw.afterNextLabelEn, "AFTER NEXT"),
-        waitingLabelJa: toText(raw.waitingLabelJa, "順番待ち"),
-        waitingLabelEn: toText(raw.waitingLabelEn, "WAITING")
-      };
-    }
-
-    function createNoteRow(noteText) {
-      if (!noteText) return "";
-      return `
-        <div class="note-row">
-          <svg class="note-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
-            <path d="M12 10v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            <circle cx="12" cy="7" r="1.2" fill="currentColor"/>
-          </svg>
-          <div>${nl2br(noteText)}</div>
-        </div>
-      `;
-    }
-
-    function createScheduleBlock(labelClass, labelJa, labelEn, mainText, subText) {
-      const hasMain = mainText && mainText !== "—";
-      const hasSub = !!subText;
-
-      if (!hasMain && !hasSub) return "";
-
-      return `
-        <div class="schedule-block">
-          <div class="meta-label ${labelClass}">
-            ${escapeHtml(labelJa)} / ${escapeHtml(labelEn)}
-          </div>
-          <div class="schedule-main">${nl2br(mainText || "—")}</div>
-          ${hasSub ? `<div class="schedule-sub">${nl2br(subText)}</div>` : ""}
-        </div>
-      `;
-    }
-
-    function renderRackCard(rawRack) {
-      const rack = normalizeRack(rawRack);
-
-      const canUseNow = rack.showUseNowButton && rack.state !== "maintenance";
-      const canQueue = rack.showQueueButton && rack.state !== "maintenance";
-
-      const useNowUrl = rack.checkinUrl || `${CHECKIN_PAGE_URL}?rackNo=${encodeURIComponent(rack.rackNo)}`;
-      const queueUrl = rack.queueUrl || `${QUEUE_PAGE_URL}?rackNo=${encodeURIComponent(rack.rackNo)}`;
-
-      const currentSub = rack.currentSubText;
-      const nextText = rack.nextText === "—" ? "" : rack.nextText;
-      const nextSub = rack.nextSubText;
-      const afterNextText = rack.afterNextText;
-      const afterNextSub = rack.afterNextSubText;
-      const noteText = rack.noteText;
-
-      return `
-        <article class="panel rack-card ${rack.meta.cardClass}">
-          <div class="rack-visual">
-            <img
-              src="${escapeHtml(getRackImagePath(rack.rackNo))}"
-              alt="Rack ${escapeHtml(rack.rackNo)}"
-              loading="eager"
-            />
-          </div>
-
-          <div class="rack-body">
-            <div class="rack-head">
-              <div class="rack-name">ラック <span class="rack-no">No.${escapeHtml(rack.rackNo)}</span></div>
-              <div class="state-badge ${rack.meta.badgeClass}">${escapeHtml(rack.badgeText)}</div>
-            </div>
-
-            <div class="meta-label ${rack.meta.currentLabelClass}">
-              ${escapeHtml(rack.currentLabelJa)} / ${escapeHtml(rack.currentLabelEn)}
-            </div>
-            <div class="meta-value-main">${nl2br(rack.currentText)}</div>
-            ${currentSub ? `<div class="meta-value-sub">${nl2br(currentSub)}</div>` : ""}
-
-            <div class="divider"></div>
-
-            ${createScheduleBlock(
-              rack.meta.nextLabelClass,
-              rack.nextLabelJa,
-              rack.nextLabelEn,
-              nextText,
-              nextSub
-            )}
-
-            ${createScheduleBlock(
-              rack.meta.afterNextLabelClass,
-              rack.afterNextLabelJa,
-              rack.afterNextLabelEn,
-              afterNextText,
-              afterNextSub
-            )}
-
-            ${
-              canUseNow
-                ? `
-                  <button class="action-button use-button" type="button" data-action="use-now" data-url="${escapeHtml(useNowUrl)}">
-                    <span class="use-button-text">
-                      <span class="use-button-ja">${escapeHtml(rack.useNowLabelJa)}</span>
-                      <span class="use-button-en">${escapeHtml(rack.useNowLabelEn)}</span>
-                    </span>
-                    <span class="arrow">›</span>
-                  </button>
-                `
-                : ""
-            }
-
-            <div class="waiting-row">
-              <div class="waiting-left">
-                <div class="meta-label ${rack.meta.waitingLabelClass}">
-                  ${escapeHtml(rack.waitingLabelJa)} / ${escapeHtml(rack.waitingLabelEn)}
-                </div>
-                <div class="waiting-count">
-                  <svg class="waiting-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-4.14 0-7.5 2.46-7.5 5.5A1.5 1.5 0 0 0 6 21h12a1.5 1.5 0 0 0 1.5-1.5C19.5 16.46 16.14 14 12 14Z"/>
-                  </svg>
-                  <span>${escapeHtml(rack.waitingCount)}名</span>
-                </div>
-              </div>
-
-              ${
-                canQueue
-                  ? `
-                    <button class="action-button queue-button" type="button" data-action="queue" data-url="${escapeHtml(queueUrl)}">
-                      <span>${escapeHtml(rack.queueButtonText)}</span>
-                      <span>›</span>
-                    </button>
-                  `
-                  : ""
-              }
-            </div>
-
-            ${createNoteRow(noteText)}
-          </div>
-        </article>
-      `;
-    }
-
-    function renderAll(data) {
-      document.getElementById("authCode").textContent = toText(data.authCode, "----");
-      document.getElementById("todayLabel").textContent = toText(data.todayLabel, "----/--/--");
-      document.getElementById("lastUpdated").textContent =
-        `最終更新 / LAST UPDATED: ${formatLastUpdated(data.lastUpdatedText)}`;
-
-      const racks = Array.isArray(data.racks) ? data.racks : [];
-      const sortedRacks = [...racks].sort((a, b) => (Number(a.rackNo) || 0) - (Number(b.rackNo) || 0));
-
-      const html = sortedRacks.map(renderRackCard).join("");
-      document.getElementById("rackGrid").innerHTML = html;
-    }
-
-    async function fetchScheduleJson() {
-      const url = `${API_URL}?action=getscheduletabletjson&t=${Date.now()}`;
-      const res = await fetch(url, {
-        method: "GET",
-        cache: "no-store"
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
-
-      const data = await res.json();
-      if (!data || typeof data !== "object") {
-        throw new Error("JSONが不正です");
-      }
-
-      return data;
+      loadData();
+      timer = setInterval(loadData, AUTO_REFRESH_MS);
     }
 
     async function loadData() {
+      showLoading(true);
+      hideError();
+
       try {
-        hideError();
-        const data = await fetchScheduleJson();
-        renderAll(data);
-      } catch (err) {
-        console.error(err);
-        showError("データ取得失敗。通信状態またはGASレスポンスをご確認ください。");
+        const data = await fetchJson();
+        render(data);
+      } catch (e) {
+        console.error(e);
+        render(MOCK_DATA);
+        showError("API取得に失敗したためモック表示中");
+      } finally {
+        showLoading(false);
       }
     }
 
-    function goToQrPage() {
-      window.location.href = QR_PAGE_URL;
-    }
+    async function fetchJson() {
+      if (!API_URL) {
+        return MOCK_DATA;
+      }
 
-    function setupEvents() {
-      const qrPanel = document.getElementById("qrPanel");
+      const controller = new AbortController();
+      const timeoutId = setTimeout(function () {
+        controller.abort();
+      }, FETCH_TIMEOUT_MS);
 
-      qrPanel.addEventListener("click", goToQrPage);
-      qrPanel.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          goToQrPage();
+      try {
+        const url = API_URL + "&t=" + Date.now();
+        const res = await fetch(url, {
+          method: "GET",
+          cache: "no-store",
+          signal: controller.signal
+        });
+
+        if (!res.ok) {
+          throw new Error("HTTP " + res.status);
         }
-      });
 
-      document.addEventListener("click", (e) => {
-        const btn = e.target.closest("[data-action]");
-        if (!btn) return;
+        return await res.json();
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
 
-        const url = btn.getAttribute("data-url");
-        if (!url) return;
+    function render(raw) {
+      const data = normalizeData(raw);
 
-        if (btn.dataset.action === "use-now" || btn.dataset.action === "queue") {
-          window.location.href = url;
+      authCodeEl.textContent = data.authCode || "----";
+      todayLabelEl.textContent = data.todayLabel || "----/--/--";
+      updatedTextEl.textContent =
+        "最終更新 / LAST UPDATED: " + (data.nowText || formatDateTime(new Date()));
+
+      rackGrid.innerHTML = "";
+
+      for (const rack of data.racks) {
+        const row = findQueueRow(data.queueUiRows, rack.rackNo);
+        rackGrid.appendChild(createRackCard(rack, row));
+      }
+    }
+
+    function normalizeData(raw) {
+      const src = raw || {};
+      const racks = Array.isArray(src.racks) ? src.racks.slice() : [];
+      const queueUiRows = Array.isArray(src.queueUiRows) ? src.queueUiRows.slice() : [];
+
+      const map = new Map();
+
+      for (const r of racks) {
+        const no = Number(r && r.rackNo);
+        if (!no) continue;
+
+        map.set(no, {
+          rackNo: no,
+          rackLabel: safe(r.rackLabel) || ("ラック" + no),
+          state: normalizeState(r.state),
+          currentText: safe(r.currentText),
+          nextText: safe(r.nextText),
+          cannotQueue: !!r.cannotQueue
+        });
+      }
+
+      for (let i = 1; i <= 4; i++) {
+        if (!map.has(i)) {
+          map.set(i, {
+            rackNo: i,
+            rackLabel: "ラック" + i,
+            state: "free",
+            currentText: "",
+            nextText: "",
+            cannotQueue: false
+          });
         }
-      });
+      }
+
+      return {
+        ok: !!src.ok,
+        nowText: safe(src.nowText),
+        todayLabel: safe(src.todayLabel) || formatDate(new Date()),
+        authCode: safe(src.authCode) || "----",
+        racks: Array.from(map.values()).sort(function(a,b){ return a.rackNo - b.rackNo; }),
+        queueUiRows: queueUiRows
+      };
     }
 
-    async function init() {
-      setupEvents();
-      await loadData();
-
-      if (refreshTimer) clearInterval(refreshTimer);
-      refreshTimer = setInterval(loadData, REFRESH_MS);
+    function normalizeState(v) {
+      const s = String(v || "").toLowerCase();
+      if (s === "using_checkedin") return "using_checkedin";
+      if (s === "using_uncheckedin") return "using_uncheckedin";
+      if (s === "reserved") return "reserved";
+      return "free";
     }
 
-    init();
+    function findQueueRow(rows, rackNo) {
+      for (const row of rows) {
+        if (Number(row && row.rackNo) === Number(rackNo)) {
+          return row;
+        }
+      }
+      return null;
+    }
+
+    function createRackCard(rack, queueRow) {
+      const stateJa = getStateJa(rack.state);
+      const stateEn = getStateEn(rack.state);
+      const currentMain = getCurrentMainText(rack);
+      const nextText = getNextText(rack);
+      const rackTitle = "Rack_№" + rack.rackNo;
+
+      const el = document.createElement("section");
+      el.className = "rack";
+
+      el.innerHTML = `
+        <div class="rack-head">
+          <div class="rack-title">${escapeHtml(rackTitle)}</div>
+          <div class="state-chip">
+            <span class="ja">${escapeHtml(stateJa)}</span>
+            <span class="en">${escapeHtml(stateEn)}</span>
+          </div>
+        </div>
+
+        <div class="rack-body">
+          <div class="label">現在 / CURRENT</div>
+          <div class="current-main">${escapeHtml(currentMain)}</div>
+
+          <div class="next-block">
+            <div class="label">次の予定 / NEXT</div>
+            <div class="next-text">${escapeHtml(nextText)}</div>
+          </div>
+
+          <div class="queue-area"></div>
+        </div>
+      `;
+
+      const queueArea = el.querySelector(".queue-area");
+      appendQueueButtons(queueArea, rack, queueRow);
+
+      return el;
+    }
+
+    function appendQueueButtons(container, rack, row) {
+      if (!row || rack.cannotQueue) {
+        container.appendChild(createNoActionsBox());
+        return;
+      }
+
+      let added = 0;
+
+      if (row.showUseNowButton) {
+        container.appendChild(
+          createQueueButton(
+            "すぐに利用",
+            "USE NOW",
+            buildRangeText(row.useNowStartText, row.useNowEndText),
+            "use-now",
+            function () {
+              goCheckin(rack.rackNo);
+            }
+          )
+        );
+        added++;
+      }
+
+      if (row.showGapButton) {
+        const gapLabel = row.gapImmediate ? "すき間利用" : "すき間予約";
+        container.appendChild(
+          createQueueButton(
+            gapLabel,
+            "GAP USE",
+            buildRangeText(row.gapStartText, row.gapEndText),
+            "gap",
+            function () {
+              goCheckin(rack.rackNo);
+            }
+          )
+        );
+        added++;
+      }
+
+      if (row.showQueueButton) {
+        container.appendChild(
+          createQueueButton(
+            "順番待ち",
+            "WAIT LIST",
+            row.queueStartText ? ("開始 " + row.queueStartText + "〜") : "",
+            "queue",
+            function () {
+              goQueue(rack.rackNo);
+            }
+          )
+        );
+        added++;
+      }
+
+      if (!added) {
+        container.appendChild(createNoActionsBox());
+      }
+    }
+
+    function createQueueButton(ja, en, timeText, typeClass, onClick) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "queue-btn " + typeClass;
+
+      btn.innerHTML = `
+        <div class="ja">${escapeHtml(ja)}</div>
+        <div class="en">${escapeHtml(en)}</div>
+        <div class="time">${escapeHtml(timeText || "")}</div>
+      `;
+
+      btn.addEventListener("click", onClick);
+      return btn;
+    }
+
+    function createNoActionsBox() {
+      const box = document.createElement("div");
+      box.className = "no-actions";
+      box.textContent = "現在案内中の操作はありません";
+      return box;
+    }
+
+    function goCheckin(rackNo) {
+  location.href = "checkin.html?rackNo=" + encodeURIComponent(rackNo);
+}
+
+function goQueue(rackNo) {
+  location.href = "queue.html?rackNo=" + encodeURIComponent(rackNo);
+}
+
+    function getStateJa(state) {
+      if (state === "using_checkedin") return "利用中";
+      if (state === "using_uncheckedin") return "予約";
+      if (state === "reserved") return "予約";
+      return "空き";
+    }
+
+    function getStateEn(state) {
+      if (state === "using_checkedin") return "IN USE";
+      if (state === "using_uncheckedin") return "RESERVED";
+      if (state === "reserved") return "RESERVED";
+      return "AVAILABLE";
+    }
+
+    function getCurrentMainText(rack) {
+      if (rack.state === "free") {
+        return rack.currentText || "空いています\nAVAILABLE";
+      }
+
+      if (rack.state === "using_checkedin") {
+        return rack.currentText || "利用中\nIN USE";
+      }
+
+      if (rack.state === "using_uncheckedin") {
+        return rack.currentText || "予約あり\nRESERVED";
+      }
+
+      if (rack.state === "reserved") {
+        return rack.currentText || "予約あり\nRESERVED";
+      }
+
+      return rack.currentText || "";
+    }
+
+    function getNextText(rack) {
+      if (rack.nextText) {
+        return rack.nextText;
+      }
+      return "次の予定はありません\nNO UPCOMING SCHEDULE";
+    }
+
+    function buildRangeText(startText, endText) {
+      const s = safe(startText);
+      const e = safe(endText);
+      if (s && e) return s + "〜" + e;
+      if (s) return s + "〜";
+      return "";
+    }
+
+    function showLoading(show) {
+      loadingEl.style.display = show ? "flex" : "none";
+    }
+
+    function showError(msg) {
+      errorBox.textContent = msg;
+      errorBox.style.display = "block";
+    }
+
+    function hideError() {
+      errorBox.style.display = "none";
+      errorBox.textContent = "";
+    }
+
+    function safe(v) {
+      return v == null ? "" : String(v);
+    }
+
+    function formatDate(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return y + "/" + m + "/" + day;
+    }
+
+    function formatDateTime(d) {
+      return formatDate(d) + " " + d.getHours() + ":" + String(d.getMinutes()).padStart(2, "0");
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
   </script>
 </body>
 </html>
