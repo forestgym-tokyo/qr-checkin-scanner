@@ -23,10 +23,7 @@ body{
   font-size:28px;
   font-weight:700;
   margin-bottom:8px;
-  letter-spacing:0.01em;
 }
-
-/* ラック番号 */
 .rack-label{
   font-size:24px;
   font-weight:600;
@@ -45,7 +42,6 @@ body{
   color:#8f97a3;
   font-size:13px;
   margin-top:6px;
-  line-height:1.7;
 }
 
 /* 入力カード */
@@ -56,9 +52,18 @@ body{
   backdrop-filter:blur(12px);
 }
 
+/* ラベル */
+.form-label{
+  display:block;
+  font-size:13px;
+  color:#9aa3ad;
+  margin-bottom:6px;
+  margin-top:14px;
+}
+
+/* 入力 */
 input{
   width:100%;
-  margin-bottom:14px;
   padding:16px;
   font-size:18px;
   border-radius:12px;
@@ -68,28 +73,24 @@ input{
   box-sizing:border-box;
 }
 
-input::placeholder{
-  color:#aaa;
-}
-
+/* ボタン */
 button{
   width:100%;
   padding:16px;
   font-size:18px;
   border-radius:14px;
   border:none;
-  margin-top:10px;
+  margin-top:14px;
   color:#fff;
 }
-
 .primary{
   background:#2f80ed;
 }
-
 .back{
   background:#444;
 }
 
+/* モーダル */
 .modal{
   position:fixed;
   top:0;
@@ -101,7 +102,6 @@ button{
   align-items:center;
   justify-content:center;
 }
-
 .modal-box{
   background:#1a1d24;
   padding:30px;
@@ -110,11 +110,6 @@ button{
   width:90%;
   max-width:420px;
 }
-
-.modal-box h2{
-  margin-top:0;
-}
-
 .secondary{
   background:#666;
 }
@@ -135,13 +130,22 @@ button{
   </div>
 
   <div class="card">
-    <input id="memberNo" placeholder="会員番号">
-    <input id="memberName" placeholder="お名前">
-    <input id="displayName" placeholder="表示名">
-    <input id="email" type="email" placeholder="メールアドレス">
+
+    <label class="form-label">会員番号 / Member ID</label>
+    <input id="memberNo">
+
+    <label class="form-label">お名前 / Name</label>
+    <input id="memberName">
+
+    <label class="form-label">表示名 / Display Name</label>
+    <input id="displayName">
+
+    <label class="form-label">メールアドレス / Email</label>
+    <input id="email" type="email">
 
     <button class="primary" id="queueBtn" onclick="queueNow(false)">順番待ち登録</button>
     <button class="back" onclick="back()">戻る</button>
+
   </div>
 </div>
 
@@ -180,101 +184,43 @@ function queueNow(forceConfirm){
       + "&email=" + encodeURIComponent(email)
       + "&confirmedShortSlot=" + encodeURIComponent(forceConfirm ? "true" : "false")
   })
-  .then(function(r){
-    return r.json();
-  })
+  .then(function(r){ return r.json(); })
   .then(function(res){
     btn.disabled = false;
 
     if (!res || !res.ok) {
       if (res && res.needsConfirm) {
-        showConfirmModal(res.message || "短い空き枠になります。受付しますか？");
+        showConfirmModal(res.message);
         return;
       }
-      alert((res && res.message) ? res.message : "順番待ち登録に失敗しました。");
+      alert(res.message || "エラー");
       return;
     }
 
-    showSuccessModal(res);
+    alert("受付完了");
+    location.href="tablet.html";
   })
-  .catch(function(err){
-    console.error(err);
+  .catch(function(){
     btn.disabled = false;
     alert("通信エラー");
   });
 }
 
 function showConfirmModal(message){
-  removeModalIfExists();
-
   const m = document.createElement("div");
-  m.className = "modal";
-  m.id = "confirmModal";
+  m.className="modal";
   m.innerHTML = `
     <div class="modal-box">
-      <h2>確認</h2>
-      <p>${escapeHtml(message).replace(/\n/g, "<br>")}</p>
-      <button class="primary" onclick="confirmYes()">はい</button>
-      <button class="secondary" onclick="removeModalIfExists()">いいえ</button>
+      <p>${message}</p>
+      <button class="primary" onclick="queueNow(true)">はい</button>
+      <button class="secondary" onclick="this.closest('.modal').remove()">いいえ</button>
     </div>
   `;
   document.body.appendChild(m);
-}
-
-function confirmYes(){
-  removeModalIfExists();
-  queueNow(true);
-}
-
-function showSuccessModal(res){
-  removeModalIfExists();
-
-  const availableTime = res && res.availableTime ? res.availableTime : "";
-  const endTime = res && res.endTime ? res.endTime : "";
-  const securedMinutes = res && res.securedMinutes ? String(res.securedMinutes) : "";
-
-  let text = "順番待ち登録が完了しました。";
-  if (availableTime) {
-    text += "<br><br>空き見込み：" + escapeHtml(availableTime);
-  }
-  if (endTime) {
-    text += "<br>終了目安：" + escapeHtml(endTime);
-  }
-  if (securedMinutes) {
-    text += "<br>確保時間：" + escapeHtml(securedMinutes) + "分";
-  }
-
-  const m = document.createElement("div");
-  m.className = "modal";
-  m.id = "successModal";
-  m.innerHTML = `
-    <div class="modal-box">
-      <h2>受付完了</h2>
-      <p>${text}</p>
-      <button class="primary" onclick="back()">OK</button>
-    </div>
-  `;
-  document.body.appendChild(m);
-}
-
-function removeModalIfExists(){
-  const a = document.getElementById("confirmModal");
-  if (a) a.remove();
-  const b = document.getElementById("successModal");
-  if (b) b.remove();
-}
-
-function escapeHtml(str){
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }
 
 function back(){
-  location.href = "tablet.html";
+  location.href="tablet.html";
 }
 </script>
 
