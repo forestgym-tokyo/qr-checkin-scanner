@@ -496,12 +496,21 @@
 
   <div class="error" id="errorBox"></div>
 
-  <script>
-    const WEBAPP_BASE_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-    const API_URL = WEBAPP_BASE_URL + "?action=getscheduletabletjson";
-    const QR_PAGE_URL = WEBAPP_BASE_URL + "?action=scanner";
-    const AUTO_REFRESH_MS = 15000;
-    const FETCH_TIMEOUT_MS = 10000;
+ <script>
+  const WEBAPP_BASE_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+
+  // スケジュール取得はそのままGAS
+  const API_URL = WEBAPP_BASE_URL + "?action=getscheduletabletjson";
+
+  // ❌ GAS → 削除
+  // const QR_PAGE_URL = WEBAPP_BASE_URL + "?action=scanner";
+
+  // ✅ GitHubに変更（これが本命）
+  const QR_PAGE_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/index.html";
+
+  const AUTO_REFRESH_MS = 15000;
+  const FETCH_TIMEOUT_MS = 10000;
+</script>
 
     const MOCK_DATA = {
       ok: true,
