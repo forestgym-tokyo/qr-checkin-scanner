@@ -876,38 +876,68 @@
     }
 
     function renderAll(data) {
-      document.getElementById("authCode").textContent = txt(data.authCode, "----");
-      document.getElementById("todayLabel").textContent = txt(data.todayLabel, "----/--/--");
-      document.getElementById("lastUpdated").textContent =
-        `最終更新 / LAST UPDATED: ${txt(data.lastUpdatedText, "--")}`;
+  const authCodeEl = document.getElementById("authCode");
+  const todayLabelEl = document.getElementById("todayLabel");
+  const lastUpdatedEl = document.getElementById("lastUpdated");
+  const rackGridEl = document.getElementById("rackGrid");
 
-      const racks = Array.isArray(data.racks) ? data.racks.slice() : [];
-      racks.sort((a, b) => (Number(a.rackNo) || 0) - (Number(b.rackNo) || 0));
+  if (authCodeEl) {
+    authCodeEl.textContent = txt(data && data.authCode, "----");
+  }
 
-      document.getElementById("rackGrid").innerHTML = racks.map(renderRack).join("");
-    }
+  if (todayLabelEl) {
+    todayLabelEl.textContent = txt(data && data.todayLabel, "----/--/--");
+  }
 
-    async function fetchData() {
-      const res = await fetch(`${API_URL}?action=getscheduletabletjson&t=${Date.now()}`, {
-        method: "GET",
-        cache: "no-store"
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      if (!data || typeof data !== "object") throw new Error("invalid json");
-      return data;
-    }
+  if (lastUpdatedEl) {
+    const updatedText =
+      data?.lastUpdatedText ||
+      data?.lastUpdated ||
+      data?.updatedAt ||
+      "--";
+    lastUpdatedEl.textContent = `最終更新 / LAST UPDATED: ${txt(updatedText, "--")}`;
+  }
 
-    async function loadData() {
-      try {
-        hideError();
-        const data = await fetchData();
-        renderAll(data);
-      } catch (e) {
-        console.error(e);
-        showError("データ取得失敗。GASレスポンスまたは通信状態をご確認ください。");
-      }
-    }
+  const racks = Array.isArray(data?.racks) ? data.racks.slice() : [];
+  racks.sort((a, b) => (Number(a?.rackNo) || 0) - (Number(b?.rackNo) || 0));
+
+  if (rackGridEl) {
+    rackGridEl.innerHTML = racks.map(renderRack).join("");
+  }
+}
+
+async function fetchData() {
+  const url = `${API_URL}?action=getscheduletabletjson&t=${Date.now()}`;
+
+  const res = await fetch(url, {
+    method: "GET",
+    cache: "no-store"
+  });
+
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+
+  const data = await res.json();
+
+  if (!data || typeof data !== "object") {
+    throw new Error("invalid json");
+  }
+
+  return data;
+}
+
+async function loadData() {
+  try {
+    hideError();
+    const data = await fetchData();
+    console.log("schedule data:", data);
+    renderAll(data);
+  } catch (e) {
+    console.error(e);
+    showError("データ取得失敗。GASレスポンスまたは通信状態をご確認ください。");
+  }
+}
 
     function setupEvents() {
       const qrCard = document.getElementById("qrCard");
