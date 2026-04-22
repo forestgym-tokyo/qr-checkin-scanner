@@ -2,10 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Workout Check-in</title>
   <style>
     :root{
@@ -14,20 +11,18 @@
       --panel2:#101827;
       --line:#6ee600;
       --line-soft:rgba(110,230,0,.55);
-      --line-softer:rgba(110,230,0,.22);
+      --line-softer:rgba(110,230,0,.18);
       --text:#ffffff;
-      --muted:#c8d0d8;
+      --muted:#cfd6dd;
       --green:#83f500;
-      --green-dark:#3f6f21;
-      --green-dark-2:#2e5417;
+      --green-dark:#416f23;
+      --green-dark-2:#2f5318;
       --orange:#ffb03b;
       --orange-dark:#7a5826;
       --orange-dark-2:#5a4019;
-      --blue-dark:#1b2435;
-      --blue-dark-2:#151d2d;
-      --shadow:0 0 0 1px rgba(255,255,255,.06) inset;
-      --radius:22px;
-      --footer-h:18px;
+      --btn-dark:#1a2334;
+      --btn-dark-2:#141c2b;
+      --shadow:0 0 0 1px rgba(255,255,255,.05) inset;
     }
 
     *{
@@ -40,11 +35,10 @@
       padding:0;
       width:100%;
       height:100%;
+      overflow:hidden;
       background:#000;
       color:var(--text);
-      font-family:
-        "Segoe UI","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
-      overflow:hidden;
+      font-family:"Segoe UI","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
     }
 
     body{
@@ -55,18 +49,18 @@
     .app{
       width:100%;
       height:100%;
-      padding:12px 14px 8px;
+      padding:10px 12px 6px;
       display:grid;
       grid-template-rows:auto auto auto 1fr auto;
-      gap:8px;
+      gap:7px;
     }
 
-    /* ===== Header ===== */
+    /* ===== header ===== */
     .header{
       display:grid;
-      grid-template-columns:170px 1fr 170px;
+      grid-template-columns:160px 1fr 160px;
       align-items:center;
-      min-height:66px;
+      min-height:58px;
     }
 
     .logo-wrap{
@@ -83,133 +77,134 @@
     .logo-top{
       display:flex;
       align-items:flex-start;
-      gap:4px;
+      gap:3px;
     }
 
     .leaf{
-      color:#8ff000;
-      font-size:28px;
+      font-size:25px;
       line-height:1;
+      color:#8ef000;
       transform:translateY(1px);
     }
 
     .the{
-      font-size:18px;
+      font-size:17px;
       font-weight:900;
       color:#fff;
       line-height:1.05;
     }
 
     .forest-row{
-      margin-top:2px;
-      line-height:1;
+      margin-top:1px;
       white-space:nowrap;
+      line-height:1;
     }
 
     .forest{
-      font-size:24px;
+      font-size:23px;
       font-weight:900;
-      color:#7df000;
+      color:#79f000;
     }
 
     .gym{
-      font-size:24px;
+      font-size:23px;
       font-weight:900;
       color:#fff;
-      margin-left:3px;
+      margin-left:2px;
     }
 
     .logo-sub{
       margin-top:3px;
-      margin-left:22px;
-      font-size:11px;
+      margin-left:20px;
+      font-size:10px;
       font-weight:800;
-      color:#dbe1e6;
+      color:#dbe2e8;
     }
 
     .title-wrap{
-      text-align:center;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
+      text-align:center;
     }
 
     .title{
       margin:0;
-      font-size:26px;
-      line-height:1.08;
-      font-weight:900;
-      letter-spacing:.4px;
       width:100%;
       text-align:center;
+      font-size:24px;
+      line-height:1.05;
+      font-weight:900;
+      letter-spacing:.4px;
     }
 
     .subtitle{
-      margin-top:3px;
-      font-size:13px;
-      font-weight:800;
-      color:#e5ebef;
+      margin-top:2px;
       width:100%;
       text-align:center;
+      font-size:12px;
+      line-height:1.1;
+      font-weight:800;
+      color:#e6ebef;
     }
 
     .header-spacer{
       min-height:1px;
     }
 
-    /* ===== Top boxes ===== */
+    /* ===== top boxes ===== */
     .hero{
       display:grid;
       grid-template-columns:1fr 1fr;
-      gap:10px;
+      gap:9px;
     }
 
     .hero-box{
+      min-height:92px;
+      padding:12px 14px;
       background:linear-gradient(180deg, rgba(15,23,36,.97), rgba(9,13,21,.97));
-      border:1.4px solid rgba(255,255,255,.12);
-      border-radius:22px;
-      min-height:102px;
-      padding:14px 16px;
+      border:1.3px solid rgba(255,255,255,.11);
+      border-radius:20px;
       box-shadow:var(--shadow);
     }
 
     .hero-title{
       display:flex;
       align-items:center;
-      gap:7px;
-      font-size:15px;
+      gap:6px;
+      font-size:14px;
       font-weight:900;
-      margin-bottom:8px;
+      margin-bottom:7px;
     }
 
     .hero-title .en{
-      color:var(--green);
-      font-size:12px;
+      font-size:11px;
       font-weight:900;
+      color:var(--green);
     }
 
     .code-value{
       color:var(--green);
-      font-size:50px;
+      font-size:44px;
       line-height:1;
       font-weight:900;
       letter-spacing:2px;
-      margin:6px 0 4px;
+      margin:4px 0 4px;
     }
 
     .date{
-      color:#f5f7f8;
-      font-size:15px;
-      font-weight:800;
+      font-size:14px;
       line-height:1;
+      font-weight:800;
+      color:#f5f7f8;
     }
 
     .qr-btn{
       width:100%;
       height:100%;
-      background:none;
       border:none;
+      background:none;
       color:#fff;
       padding:0;
       margin:0;
@@ -217,111 +212,111 @@
     }
 
     .qr-inner{
-      width:100%;
-      min-height:72px;
+      min-height:66px;
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:16px;
+      gap:14px;
     }
 
     .qr-icon{
-      font-size:34px;
+      font-size:30px;
       line-height:1;
     }
 
     .qr-ja{
-      font-size:22px;
+      font-size:20px;
+      line-height:1.05;
       font-weight:900;
-      line-height:1.06;
       text-align:left;
     }
 
     .qr-en{
-      margin-top:4px;
-      font-size:12px;
+      margin-top:3px;
+      font-size:11px;
+      line-height:1.05;
       font-weight:900;
       color:var(--green);
       text-align:left;
     }
 
     .updated{
+      min-height:18px;
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:7px;
-      min-height:20px;
-      font-size:13px;
+      gap:6px;
+      text-align:center;
+      font-size:12px;
+      line-height:1;
       font-weight:900;
       color:#dce2e7;
-      text-align:center;
     }
 
     .updated .icon{
       color:var(--green);
-      font-size:15px;
+      font-size:14px;
       line-height:1;
     }
 
-    /* ===== Rack grid ===== */
+    /* ===== grid ===== */
     .rack-grid{
       min-height:0;
       display:grid;
-      grid-template-columns:1fr 1fr;
-      grid-template-rows:1fr 1fr;
-      gap:10px;
+      grid-template-columns:1fr 1fr;   /* 常に2列 */
+      grid-template-rows:1fr 1fr;      /* 常に2行 */
+      gap:9px;
       align-content:stretch;
     }
 
     .rack-card{
       min-height:0;
       background:linear-gradient(180deg, rgba(8,14,22,.98), rgba(7,11,18,.98));
-      border:1.8px solid var(--line-soft);
-      border-radius:26px;
-      padding:14px 14px 12px;
+      border:1.7px solid var(--line-soft);
+      border-radius:24px;
+      padding:12px 12px 10px;
       box-shadow:
         0 0 0 1px var(--line-softer) inset,
-        0 6px 18px rgba(0,0,0,.28);
+        0 6px 16px rgba(0,0,0,.28);
       display:grid;
       grid-template-rows:1fr auto;
-      gap:10px;
+      gap:8px;
       overflow:hidden;
     }
 
     .rack-main{
       min-height:0;
       display:grid;
-      grid-template-columns:118px 1fr;
-      gap:14px;
+      grid-template-columns:108px 1fr;
+      gap:12px;
       align-items:start;
     }
 
-    /* ここで中心線を合わせる */
+    /* 依頼の②：中心線を合わせる */
     .rack-left{
-      width:118px;
+      width:108px;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:flex-start;
-      gap:12px;
+      gap:10px;
       min-height:0;
     }
 
-    /* 画像依存をやめたラックアイコン */
     .rack-badge{
-      width:104px;
-      height:104px;
-      border-radius:20px;
+      width:96px;
+      height:96px;
+      border-radius:18px;
       position:relative;
       overflow:hidden;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03)),
-        radial-gradient(circle at 50% 22%, rgba(255,255,255,.14), rgba(255,255,255,0) 45%),
-        linear-gradient(180deg, #111722, #070b12);
-      border:2px solid rgba(255,255,255,.22);
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.03)),
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,.12), rgba(255,255,255,0) 42%),
+        linear-gradient(180deg, #121824, #080c13);
+      border:2px solid rgba(255,255,255,.20);
       box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.06),
-        0 6px 14px rgba(0,0,0,.35);
+        inset 0 0 0 1px rgba(255,255,255,.05),
+        0 5px 12px rgba(0,0,0,.35);
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -332,73 +327,75 @@
     .rack-badge::after{
       content:"";
       position:absolute;
-      top:14px;
-      width:16px;
-      height:54px;
-      border:2px solid rgba(255,255,255,.22);
+      top:13px;
+      width:14px;
+      height:50px;
+      border:2px solid rgba(255,255,255,.18);
       border-bottom:none;
       border-radius:4px 4px 0 0;
     }
 
-    .rack-badge::before{ left:11px; }
-    .rack-badge::after{ right:11px; }
+    .rack-badge::before{ left:10px; }
+    .rack-badge::after{ right:10px; }
 
     .rack-top-bar{
       position:absolute;
-      top:12px;
-      left:20px;
-      right:20px;
+      top:11px;
+      left:18px;
+      right:18px;
       height:5px;
       border-radius:999px;
-      background:rgba(255,255,255,.14);
+      background:rgba(255,255,255,.12);
     }
 
     .rack-no{
-      font-size:58px;
+      font-size:54px;
       line-height:1;
       font-weight:1000;
       letter-spacing:-1px;
-      text-shadow:0 3px 10px rgba(0,0,0,.35);
+      text-shadow:0 3px 8px rgba(0,0,0,.35);
       transform:translateY(1px);
     }
 
     .rack-label{
       position:absolute;
-      bottom:8px;
+      bottom:7px;
       left:0;
       right:0;
       text-align:center;
-      font-size:11px;
+      font-size:10px;
+      line-height:1;
       font-weight:900;
-      letter-spacing:4px;
-      color:#ffffff;
+      letter-spacing:3px;
+      color:#fff;
       opacity:.96;
     }
 
     .status-pill{
-      width:102px;
-      min-height:50px;
-      border-radius:15px;
+      width:96px;
+      min-height:44px;
+      margin:0 auto;
+      border-radius:14px;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
       text-align:center;
-      font-weight:900;
-      line-height:1.04;
-      padding:6px 6px 5px;
-      margin:0 auto;
+      line-height:1.03;
+      padding:5px 5px 4px;
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
     }
 
     .status-pill .ja{
-      font-size:14px;
+      font-size:13px;
+      font-weight:900;
       margin-bottom:2px;
     }
 
     .status-pill .en{
-      font-size:9px;
-      letter-spacing:.25px;
+      font-size:8px;
+      font-weight:900;
+      letter-spacing:.2px;
       opacity:.98;
     }
 
@@ -408,7 +405,7 @@
     }
 
     .status-using{
-      background:linear-gradient(180deg, #355f25, #26461a);
+      background:linear-gradient(180deg, #355f25, #27461b);
       color:#fff;
     }
 
@@ -422,20 +419,20 @@
       display:grid;
       grid-template-rows:auto auto auto auto auto auto auto auto auto auto;
       align-content:start;
-      row-gap:2px;
+      row-gap:1px;
     }
 
     .section-label{
-      font-size:13px;
+      font-size:12px;
+      line-height:1.08;
       font-weight:900;
-      line-height:1.15;
     }
 
     .section-label.green{ color:var(--green); }
     .section-label.orange{ color:var(--orange); }
 
     .big-status{
-      font-size:21px;
+      font-size:18px;
       line-height:1.08;
       font-weight:900;
       margin-bottom:1px;
@@ -443,52 +440,51 @@
     }
 
     .substatus{
-      font-size:13px;
-      line-height:1.2;
+      font-size:12px;
+      line-height:1.16;
       font-weight:800;
-      color:#f0f3f5;
-      margin-bottom:8px;
+      color:#f1f3f5;
+      margin-bottom:6px;
       word-break:break-word;
     }
 
     .next-main{
-      font-size:16px;
-      line-height:1.14;
+      font-size:15px;
+      line-height:1.12;
       font-weight:900;
       margin-bottom:1px;
       word-break:break-word;
     }
 
     .next-sub{
-      font-size:13px;
-      line-height:1.2;
+      font-size:12px;
+      line-height:1.16;
       font-weight:900;
-      margin-bottom:8px;
+      margin-bottom:6px;
       word-break:break-word;
     }
 
     .waiting-row{
       display:flex;
       align-items:center;
-      gap:6px;
-      margin-top:1px;
-      margin-bottom:3px;
+      gap:5px;
+      margin:1px 0 2px;
     }
 
     .waiting-icon{
-      font-size:15px;
+      font-size:14px;
       line-height:1;
     }
 
     .waiting-count{
-      font-size:19px;
+      font-size:17px;
       line-height:1;
       font-weight:1000;
     }
 
     .note{
-      font-size:12px;
-      line-height:1.18;
+      font-size:11px;
+      line-height:1.14;
       color:#d9dee4;
       opacity:.95;
       word-break:break-word;
@@ -500,18 +496,18 @@
 
     .action-btn{
       width:100%;
-      min-height:48px;
+      min-height:42px;
       border:none;
-      border-radius:17px;
+      border-radius:15px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
-      padding:0 18px 0 18px;
+      gap:8px;
+      padding:0 16px 0 16px;
       cursor:pointer;
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,.10),
-        0 5px 14px rgba(0,0,0,.26);
+        0 5px 12px rgba(0,0,0,.24);
     }
 
     .btn-green{
@@ -520,7 +516,7 @@
     }
 
     .btn-dark{
-      background:linear-gradient(180deg, var(--blue-dark), var(--blue-dark-2));
+      background:linear-gradient(180deg, var(--btn-dark), var(--btn-dark-2));
       color:#fff;
     }
 
@@ -530,34 +526,35 @@
     }
 
     .btn-ja{
-      font-size:16px;
+      font-size:15px;
+      line-height:1.02;
       font-weight:900;
-      line-height:1.05;
     }
 
     .btn-en{
-      margin-top:3px;
-      font-size:10px;
+      margin-top:2px;
+      font-size:9px;
+      line-height:1;
       font-weight:900;
       opacity:.96;
     }
 
     .btn-arrow{
-      font-size:24px;
-      font-weight:900;
+      font-size:22px;
       line-height:1;
+      font-weight:900;
       opacity:.95;
       flex:0 0 auto;
     }
 
     .footer{
-      min-height:var(--footer-h);
+      min-height:14px;
       text-align:center;
-      font-size:12px;
+      font-size:11px;
       line-height:1;
-      color:#dce1e6;
-      opacity:.9;
       font-weight:700;
+      color:#dce1e6;
+      opacity:.92;
       padding-top:1px;
     }
 
@@ -569,24 +566,25 @@
       justify-content:center;
       text-align:center;
       gap:6px;
-      background:linear-gradient(180deg, rgba(20,18,24,.97), rgba(14,12,18,.97));
-      border:1.6px solid rgba(255,255,255,.10);
-      border-radius:24px;
+      border-radius:22px;
       padding:20px;
+      background:linear-gradient(180deg, rgba(20,18,24,.97), rgba(14,12,18,.97));
+      border:1.5px solid rgba(255,255,255,.10);
     }
 
     .error-card .ja{
-      font-size:21px;
+      font-size:20px;
       font-weight:900;
     }
 
     .error-card .en{
-      font-size:14px;
+      font-size:13px;
       font-weight:800;
       color:#d6dce2;
     }
 
-    @media (max-width: 820px){
+    /* スマホだけ1列 */
+    @media (max-width: 560px){
       html,body{
         overflow:auto;
       }
@@ -617,7 +615,7 @@
       }
 
       .rack-card{
-        min-height:260px;
+        min-height:250px;
       }
     }
   </style>
@@ -694,6 +692,11 @@
         .replace(/'/g, "&#39;");
     }
 
+    function pickDisplayText(value, fallback = "") {
+      const text = String(value ?? "").trim();
+      return text || fallback;
+    }
+
     function goQrPage() {
       window.location.href = QR_URL + "?t=" + Date.now();
     }
@@ -708,19 +711,20 @@
 
     function normalizeRackState(rack) {
       const rawState = String(rack.state || "").toLowerCase();
-      const currentText = String(rack.currentText || "");
-      const currentSubText = String(rack.currentSubText || "");
-      const nextText = String(rack.nextText || "");
-      const nextSubText = String(rack.nextSubText || "");
+      const joined = [
+        rack.currentText || "",
+        rack.currentSubText || "",
+        rack.nextText || "",
+        rack.nextSubText || "",
+        rack.bottomNote || ""
+      ].join(" ");
 
       if (rawState.includes("using")) return "using";
       if (rawState.includes("reserved")) return "reserved";
       if (rawState.includes("free")) return "free";
 
-      const joined = [currentText, currentSubText, nextText, nextSubText].join(" ");
-
       if (/利用中|使用中|in use/i.test(joined)) return "using";
-      if (/予定があります|reserved|personal|見学|開始|後から|分後|available until/i.test(joined)) return "reserved";
+      if (/予定があります|reserved|personal|見学|開始|分後|available until/i.test(joined)) return "reserved";
       return "free";
     }
 
@@ -797,16 +801,10 @@
       `;
     }
 
-    function pickDisplayText(value, fallback = "") {
-      const text = String(value ?? "").trim();
-      return text || fallback;
-    }
-
     function renderRackCard(rack) {
       const rackNo = pickDisplayText(rack.rackNo, "-");
       const state = normalizeRackState(rack);
-      const isReserved = state === "reserved";
-      const labelColor = isReserved ? "orange" : "green";
+      const labelColor = state === "reserved" ? "orange" : "green";
 
       const currentText = pickDisplayText(rack.currentText, state === "reserved" ? "予定があります" : "空いています");
       const currentSubText = pickDisplayText(rack.currentSubText, state === "reserved" ? "" : "本日の後続予定なし");
@@ -853,8 +851,7 @@
     }
 
     function renderError(messageJa, messageEn) {
-      const grid = document.getElementById("rackGrid");
-      grid.innerHTML = `
+      document.getElementById("rackGrid").innerHTML = `
         <section class="error-card">
           <div class="ja">${escapeHtml(messageJa)}</div>
           <div class="en">${escapeHtml(messageEn)}</div>
@@ -867,29 +864,22 @@
       document.getElementById("todayLabel").textContent = pickDisplayText(data.todayLabel, "----/--/--");
 
       const updated = pickDisplayText(data.lastUpdated || data.updatedAt, "----/--/-- --:--");
-      document.getElementById("updatedText").textContent =
-        "最終更新 / LAST UPDATED: " + updated;
+      document.getElementById("updatedText").textContent = "最終更新 / LAST UPDATED: " + updated;
 
-      const racks = Array.isArray(data.racks) ? data.racks : [];
-
+      const racks = Array.isArray(data.racks) ? [...data.racks] : [];
       if (!racks.length) {
         renderError("表示データがありません", "No rack data available.");
         return;
       }
 
-      const sortedRacks = [...racks].sort((a, b) => Number(a.rackNo || 0) - Number(b.rackNo || 0));
-      document.getElementById("rackGrid").innerHTML = sortedRacks.map(renderRackCard).join("");
+      racks.sort((a, b) => Number(a.rackNo || 0) - Number(b.rackNo || 0));
+      document.getElementById("rackGrid").innerHTML = racks.map(renderRackCard).join("");
     }
 
     async function fetchSchedule() {
       try {
-        const url = API_URL + "?action=getscheduletabletjson&t=" + Date.now();
-        const res = await fetch(url, { cache: "no-store" });
-
-        if (!res.ok) {
-          throw new Error("HTTP " + res.status);
-        }
-
+        const res = await fetch(API_URL + "?action=getscheduletabletjson&t=" + Date.now(), { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
         const data = await res.json();
         renderScreen(data);
       } catch (error) {
