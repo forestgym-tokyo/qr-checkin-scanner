@@ -202,7 +202,7 @@
       min-height:0;
       padding:22px 24px;
       display:grid;
-      grid-template-columns: 1fr 320px;
+      grid-template-columns: minmax(0, 1fr) 380px;
       gap:26px;
       align-items:stretch;
       border-top:3px solid var(--accent);
@@ -295,18 +295,21 @@
 
     .time-value{
       margin-top:20px;
-      font-size:84px;
+      font-size:64px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .time-sub{
       margin-top:14px;
-      font-size:22px;
-      line-height:1.2;
+      font-size:18px;
+      line-height:1.25;
       font-weight:800;
-      white-space:nowrap;
+      white-space:pre-line;
+      word-break:break-word;
     }
 
     .checkout-btn{
@@ -458,7 +461,8 @@
             <div class="time-label-ja" id="timeLabelJa">次の予定</div>
             <div class="time-label-en" id="timeLabelEn">NEXT RESERVATION</div>
             <div class="time-value" id="timeValue">10:00</div>
-            <div class="time-sub" id="timeSub">～10:40 まで　UNTIL 10:40</div>
+            <div class="time-sub" id="timeSub">～10:40 まで
+UNTIL 10:40</div>
             <button class="checkout-btn hidden" id="checkoutBtn">チェックアウトする<br><span style="font-size:22px;">CHECK OUT</span></button>
           </div>
         </section>
@@ -559,9 +563,8 @@
       return `${esc(m[1])} <span class="updated-time">${esc(m[2])}</span>`;
     }
 
-    function findRack(data, rackNo) {
-      const racks = Array.isArray(data.racks) ? data.racks : [];
-      return racks.find(r => Number(r.rackNo) === Number(rackNo)) || null;
+    function normalizeRackData(raw) {
+      return raw || {};
     }
 
     function normalizeState(r) {
@@ -569,9 +572,10 @@
 
       if (raw === "using_checked_in") return "using_checked_in";
       if (raw === "using_not_checked_in") return "using_not_checked_in";
+      if (raw === "using_checkedin") return "using_checked_in";
+      if (raw === "using_uncheckedin") return "using_not_checked_in";
 
       if (raw === "using") {
-        // 旧JSON互換。必要ならここをGAS側で using_checked_in / using_not_checked_in に分ける
         return "using_checked_in";
       }
 
@@ -583,14 +587,15 @@
     }
 
     function applyStateUI(r) {
-      const stateKey = normalizeState(r);
+      const rack = normalizeRackData(r);
+      const stateKey = normalizeState(rack);
       const cfg = STATE_MAP[stateKey];
       const panel = document.getElementById("statusPanel");
 
       panel.className = `status-panel ${cfg.panelClass}`;
 
-      document.getElementById("rackNoBig").textContent = r.rackNo;
-      document.getElementById("rackNoJa").textContent = r.rackNo;
+      document.getElementById("rackNoBig").textContent = rack.rackNo || rackNo;
+      document.getElementById("rackNoJa").textContent = rack.rackNo || rackNo;
       document.getElementById("statusJa").textContent = cfg.statusJa;
       document.getElementById("statusEn").textContent = cfg.statusEn;
       document.getElementById("statusMsgJa").textContent = cfg.msgJa;
@@ -600,11 +605,11 @@
       document.getElementById("timeLabelEn").textContent = cfg.timeLabelEn;
 
       if (stateKey === "reserved") {
-        document.getElementById("timeValue").textContent = r.nextText || "";
-        document.getElementById("timeSub").textContent = r.nextSubText || "";
+        document.getElementById("timeValue").textContent = rack.nextText || "";
+        document.getElementById("timeSub").textContent = rack.nextSubText || "";
       } else if (stateKey === "using_checked_in" || stateKey === "using_not_checked_in") {
-        document.getElementById("timeValue").textContent = extractRemainValue_(r.currentSubText);
-        document.getElementById("timeSub").textContent = buildUntilText_(r.currentText);
+        document.getElementById("timeValue").textContent = extractRemainValue_(rack.currentSubText);
+        document.getElementById("timeSub").textContent = buildUntilText_(rack.currentText);
       } else {
         document.getElementById("timeValue").textContent = "";
         document.getElementById("timeSub").textContent = "";
@@ -617,8 +622,8 @@
         checkoutBtn.classList.add("hidden");
       }
 
-      if (r.messageBoardText) {
-        document.getElementById("messageMarquee").innerHTML = esc(r.messageBoardText);
+      if (rack.messageBoardText) {
+        document.getElementById("messageMarquee").textContent = rack.messageBoardText;
       }
     }
 
@@ -632,11 +637,11 @@
       const s = String(currentText || "");
       const m = s.match(/(\d{2}:\d{2})まで/);
       if (!m) return "";
-      return `～ ${m[1]} まで　UNTIL ${m[1]}`;
+      return `～ ${m[1]} まで\nUNTIL ${m[1]}`;
     }
 
     async function fetchData() {
-      const res = await fetch(`${API_URL}?action=getscheduletabletjson&t=${Date.now()}`, {
+      const res = await fetch(`${API_URL}?action=getracktabletjson&rackNo=${encodeURIComponent(rackNo)}&t=${Date.now()}`, {
         method: "GET",
         cache: "no-store"
       });
@@ -646,11 +651,9 @@
 
     async function loadData() {
       try {
-        const data = await fetchData();
-        document.getElementById("lastUpdated").innerHTML = formatLastUpdated(data.lastUpdatedText);
-
-        const rack = findRack(data, rackNo);
-        if (!rack) throw new Error("rack not found");
+        const rack = await fetchData();
+        document.getElementById("lastUpdated").innerHTML =
+          formatLastUpdated(rack.lastUpdatedText || new Date().toLocaleString('ja-JP'));
 
         applyStateUI(rack);
       } catch (e) {
