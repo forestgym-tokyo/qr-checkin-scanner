@@ -38,57 +38,50 @@
     .app{
       width:100%;
       height:100%;
-      padding:12px 16px 10px;
+      padding:10px 12px 8px;
       display:flex;
       flex-direction:column;
-      gap:10px;
+      gap:8px;
       overflow:hidden;
     }
 
-    /* HEADER */
     .header{
       display:grid;
-      grid-template-columns:260px 1fr 120px;
+      grid-template-columns:190px 1fr 94px;
+      gap:10px;
       align-items:center;
-      gap:14px;
-      min-height:66px;
-      padding-bottom:10px;
+      min-height:56px;
+      padding-bottom:8px;
       border-bottom:1px solid rgba(255,255,255,.14);
     }
 
     .brand{
       display:flex;
       align-items:center;
-      gap:10px;
+      gap:8px;
       min-width:0;
     }
 
     .brand-logo{
-      width:46px;
-      height:46px;
+      width:38px;
+      height:38px;
       object-fit:contain;
-      flex:0 0 46px;
-    }
-
-    .brand-text{
-      min-width:0;
+      flex:0 0 38px;
     }
 
     .brand-main{
-      font-size:20px;
+      font-size:15px;
       line-height:1;
       font-weight:900;
-      letter-spacing:.02em;
       white-space:nowrap;
     }
 
     .brand-sub{
-      margin-top:5px;
-      font-size:12px;
+      margin-top:4px;
+      font-size:10px;
       line-height:1;
       color:var(--green);
       font-weight:800;
-      letter-spacing:.03em;
       white-space:nowrap;
     }
 
@@ -96,35 +89,30 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:12px;
+      gap:10px;
       min-width:0;
     }
 
     .updated-line{
       width:1px;
-      height:38px;
+      height:30px;
       background:rgba(255,255,255,.18);
       flex:0 0 1px;
     }
 
-    .updated-text{
-      min-width:0;
-    }
-
     .updated-label{
-      font-size:10px;
+      font-size:9px;
       line-height:1;
       color:rgba(255,255,255,.88);
       font-weight:700;
-      letter-spacing:.03em;
+      white-space:nowrap;
     }
 
     .updated-value{
-      margin-top:6px;
-      font-size:20px;
+      margin-top:5px;
+      font-size:16px;
       line-height:1;
       font-weight:900;
-      letter-spacing:.01em;
       white-space:nowrap;
     }
 
@@ -137,21 +125,20 @@
       border:2px solid rgba(141,255,0,.72);
       background:transparent;
       color:var(--green);
-      border-radius:12px;
-      min-height:50px;
-      font-size:15px;
+      border-radius:10px;
+      min-height:42px;
+      font-size:12px;
       font-weight:900;
-      cursor:pointer;
       line-height:1.05;
-      padding:4px 8px;
+      padding:4px 6px;
+      cursor:pointer;
     }
 
-    /* MAIN */
     .main{
       flex:1;
       display:grid;
-      grid-template-columns:180px minmax(0,1fr);
-      gap:14px;
+      grid-template-columns:132px 1fr;
+      gap:10px;
       min-height:0;
       overflow:hidden;
     }
@@ -165,10 +152,9 @@
     }
 
     .rack-title{
-      font-size:52px;
+      font-size:40px;
       line-height:.92;
       font-weight:900;
-      letter-spacing:.01em;
       white-space:nowrap;
     }
 
@@ -177,14 +163,14 @@
     }
 
     .rack-divider{
-      margin:10px 0 12px;
+      margin:8px 0 10px;
       height:3px;
       width:100%;
       background:var(--green);
     }
 
     .rack-sub{
-      font-size:20px;
+      font-size:16px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
@@ -193,75 +179,101 @@
     .content{
       display:flex;
       flex-direction:column;
-      gap:10px;
+      gap:8px;
       min-height:0;
       overflow:hidden;
     }
 
-    /* STATUS AREA */
     .status-panel{
       flex:1;
       min-height:0;
-      padding:14px 14px;
-      display:grid;
-      grid-template-columns:minmax(0,1fr) 180px;
-      gap:14px;
-      align-items:stretch;
+      padding:10px 12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
       border-top:3px solid var(--accent);
       border-bottom:3px solid var(--accent);
-      color:var(--text);
       overflow:hidden;
     }
 
+    .status-top{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 190px;
+      gap:12px;
+      align-items:start;
+      min-width:0;
+    }
+
     .status-main{
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
       min-width:0;
       overflow:hidden;
     }
 
-    .status-heading{
+    .status-heading-row{
       display:flex;
-      flex-direction:column;
-      align-items:flex-start;
-      gap:6px;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      min-width:0;
+    }
+
+    .status-heading-left{
       min-width:0;
       overflow:hidden;
     }
 
     .status-ja{
-      font-size:34px;
+      font-size:28px;
       line-height:1;
       font-weight:900;
       color:var(--accent);
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
-      max-width:100%;
     }
 
     .status-en{
-      font-size:17px;
+      margin-top:4px;
+      font-size:14px;
       line-height:1;
       font-weight:900;
       color:var(--accent);
       white-space:nowrap;
-      letter-spacing:.02em;
       overflow:hidden;
       text-overflow:ellipsis;
-      max-width:100%;
+    }
+
+    .status-inline{
+      flex:0 0 auto;
+      text-align:right;
+      padding-bottom:2px;
+      white-space:nowrap;
+    }
+
+    .status-inline-ja{
+      font-size:14px;
+      line-height:1;
+      font-weight:900;
+      color:#fff;
+    }
+
+    .status-inline-en{
+      margin-top:4px;
+      font-size:11px;
+      line-height:1;
+      font-weight:800;
+      color:var(--accent);
     }
 
     .status-sep{
-      margin:10px 0 10px;
+      margin:8px 0 8px;
       height:2px;
       background:var(--accent);
       opacity:.95;
     }
 
     .status-msg-ja{
-      font-size:16px;
+      font-size:14px;
       line-height:1.25;
       font-weight:800;
       white-space:nowrap;
@@ -270,9 +282,9 @@
     }
 
     .status-msg-en{
-      margin-top:6px;
-      font-size:13px;
-      line-height:1.25;
+      margin-top:4px;
+      font-size:11px;
+      line-height:1.2;
       color:var(--accent);
       font-weight:700;
       white-space:nowrap;
@@ -280,46 +292,81 @@
       text-overflow:ellipsis;
     }
 
-    .status-side{
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      padding-left:12px;
-      border-left:2px solid var(--accent);
+    .detail-grid{
+      margin-top:6px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px 14px;
       min-width:0;
-      overflow:hidden;
     }
 
-    .time-label-ja{
-      font-size:16px;
+    .detail-box{
+      min-width:0;
+    }
+
+    .detail-label-ja{
+      font-size:11px;
       line-height:1;
       font-weight:900;
+      color:rgba(255,255,255,.82);
       white-space:nowrap;
     }
 
-    .time-label-en{
-      margin-top:5px;
-      font-size:12px;
+    .detail-label-en{
+      margin-top:3px;
+      font-size:9px;
       line-height:1;
-      color:var(--accent);
       font-weight:800;
-      letter-spacing:.02em;
+      color:var(--accent);
       white-space:nowrap;
     }
 
-    .time-value{
-      margin-top:10px;
-      font-size:42px;
-      line-height:1;
+    .detail-value{
+      margin-top:6px;
+      font-size:18px;
+      line-height:1.15;
       font-weight:900;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
 
-    .time-sub{
+    .status-side{
+      min-width:0;
+      border-left:2px solid var(--accent);
+      padding-left:12px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+    }
+
+    .time-label-ja{
+      font-size:13px;
+      line-height:1;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .time-label-en{
+      margin-top:4px;
+      font-size:10px;
+      line-height:1;
+      color:var(--accent);
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .time-value{
       margin-top:8px;
-      font-size:14px;
+      font-size:36px;
+      line-height:1;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .time-sub{
+      margin-top:6px;
+      font-size:12px;
       line-height:1.2;
       font-weight:800;
       white-space:nowrap;
@@ -333,22 +380,21 @@
       width:100%;
       min-height:58px;
       border:2px solid var(--accent);
-      background:transparent;
-      color:var(--accent);
+      background:var(--accent);
+      color:#0b0b0b;
       border-radius:12px;
       font-size:18px;
       font-weight:900;
+      line-height:1;
+      padding:8px 10px;
       cursor:pointer;
-      letter-spacing:.01em;
-      line-height:1.05;
-      padding:6px 8px;
+      box-shadow:0 0 0 2px rgba(255,255,255,.08) inset;
     }
 
-    /* MESSAGE BOARD */
     .message-board{
-      min-height:86px;
+      min-height:74px;
       border:2px solid rgba(141,255,0,.65);
-      border-radius:14px;
+      border-radius:12px;
       display:flex;
       flex-direction:column;
       overflow:hidden;
@@ -358,25 +404,24 @@
     .message-head{
       display:flex;
       align-items:center;
-      gap:10px;
-      min-height:36px;
-      padding:0 12px;
+      gap:8px;
+      min-height:30px;
+      padding:0 10px;
       border-bottom:1px solid rgba(141,255,0,.18);
     }
 
     .message-head-ja{
-      font-size:14px;
+      font-size:12px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
     }
 
     .message-head-en{
-      font-size:11px;
+      font-size:10px;
       line-height:1;
       font-weight:800;
       color:var(--green);
-      letter-spacing:.03em;
       white-space:nowrap;
     }
 
@@ -386,7 +431,7 @@
       align-items:center;
       overflow:hidden;
       position:relative;
-      padding:0 12px;
+      padding:0 10px;
     }
 
     .marquee{
@@ -394,20 +439,20 @@
       display:inline-block;
       padding-left:100%;
       animation: marquee 22s linear infinite;
-      font-size:20px;
+      font-size:16px;
       line-height:1;
       font-weight:900;
     }
 
     .marquee-en{
       color:var(--green);
-      font-size:13px;
+      font-size:11px;
       font-weight:700;
-      margin-left:16px;
+      margin-left:12px;
     }
 
     @keyframes marquee {
-      0%   { transform: translateX(0); }
+      0% { transform: translateX(0); }
       100% { transform: translateX(-100%); }
     }
 
@@ -415,21 +460,11 @@
       display:none !important;
     }
 
-    .state-free{
-      --accent: var(--cyan);
-    }
-    .state-reserved{
-      --accent: var(--yellow);
-    }
-    .state-using-not{
-      --accent: var(--orange);
-    }
-    .state-using-checked{
-      --accent: var(--green);
-    }
-    .state-maintenance{
-      --accent: var(--red);
-    }
+    .state-free{ --accent: var(--cyan); }
+    .state-reserved{ --accent: var(--yellow); }
+    .state-using-not{ --accent: var(--orange); }
+    .state-using-checked{ --accent: var(--green); }
+    .state-maintenance{ --accent: var(--red); }
   </style>
 </head>
 <body>
@@ -437,21 +472,21 @@
     <header class="header">
       <div class="brand">
         <img class="brand-logo" src="logo.png" alt="logo">
-        <div class="brand-text">
-          <div class="brand-main">WORK SPACE</div>
-          <div class="brand-sub">RESERVATION SYSTEM</div>
+        <div>
+          <div class="brand-main">The Forest Gym</div>
+          <div class="brand-sub">BOOKING SYSTEM</div>
         </div>
       </div>
 
       <div class="updated">
         <div class="updated-line"></div>
-        <div class="updated-text">
+        <div>
           <div class="updated-label">LAST UPDATED</div>
           <div class="updated-value" id="lastUpdated">-- <span class="updated-time">--</span></div>
         </div>
       </div>
 
-      <button class="refresh-btn" id="refreshBtn">更新<br><span style="font-size:11px;">REFRESH</span></button>
+      <button class="refresh-btn" id="refreshBtn">更新<br><span style="font-size:10px;">REFRESH</span></button>
     </header>
 
     <main class="main">
@@ -463,22 +498,52 @@
 
       <section class="content">
         <section class="status-panel state-reserved" id="statusPanel">
-          <div class="status-main">
-            <div class="status-heading">
-              <div class="status-ja" id="statusJa">予定があります</div>
-              <div class="status-en" id="statusEn">RESERVED SOON</div>
-            </div>
-            <div class="status-sep"></div>
-            <div class="status-msg-ja" id="statusMsgJa">次の予定までご自由にご利用いただけます</div>
-            <div class="status-msg-en" id="statusMsgEn">Available until the next reservation</div>
-          </div>
+          <div class="status-top">
+            <div class="status-main">
+              <div class="status-heading-row">
+                <div class="status-heading-left">
+                  <div class="status-ja" id="statusJa">予定があります</div>
+                  <div class="status-en" id="statusEn">RESERVED SOON</div>
+                </div>
+                <div class="status-inline" id="inUseInline">
+                  <div class="status-inline-ja" id="inlineJa"></div>
+                  <div class="status-inline-en" id="inlineEn"></div>
+                </div>
+              </div>
 
-          <div class="status-side">
-            <div class="time-label-ja" id="timeLabelJa">次の予定</div>
-            <div class="time-label-en" id="timeLabelEn">NEXT RESERVATION</div>
-            <div class="time-value" id="timeValue">10:00</div>
-            <div class="time-sub" id="timeSub">～10:40 まで　UNTIL 10:40</div>
-            <button class="checkout-btn hidden" id="checkoutBtn">チェックアウトする<br><span style="font-size:14px;">CHECK OUT</span></button>
+              <div class="status-sep"></div>
+
+              <div>
+                <div class="status-msg-ja" id="statusMsgJa">次の予定までご自由にご利用いただけます</div>
+                <div class="status-msg-en" id="statusMsgEn">Available until the next reservation</div>
+              </div>
+
+              <div class="detail-grid">
+                <div class="detail-box">
+                  <div class="detail-label-ja">利用者</div>
+                  <div class="detail-label-en">CURRENT USER</div>
+                  <div class="detail-value" id="currentUserName">—</div>
+                </div>
+                <div class="detail-box">
+                  <div class="detail-label-ja">次の予定</div>
+                  <div class="detail-label-en">NEXT RESERVATION</div>
+                  <div class="detail-value" id="nextReservationTime">—</div>
+                </div>
+                <div class="detail-box">
+                  <div class="detail-label-ja">次の利用者</div>
+                  <div class="detail-label-en">NEXT USER</div>
+                  <div class="detail-value" id="nextUserName">—</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="status-side">
+              <div class="time-label-ja" id="timeLabelJa">次の予定</div>
+              <div class="time-label-en" id="timeLabelEn">NEXT RESERVATION</div>
+              <div class="time-value" id="timeValue">10:00</div>
+              <div class="time-sub" id="timeSub">～10:40 まで　UNTIL 10:40</div>
+              <button class="checkout-btn hidden" id="checkoutBtn">チェックアウトする / CHECK OUT</button>
+            </div>
           </div>
         </section>
 
@@ -514,6 +579,8 @@
         msgEn: "Please check in from the store tablet.",
         timeLabelJa: "",
         timeLabelEn: "",
+        inlineJa: "",
+        inlineEn: "",
         showCheckout: false
       },
       reserved: {
@@ -524,6 +591,8 @@
         msgEn: "Available until the next reservation",
         timeLabelJa: "次の予定",
         timeLabelEn: "NEXT RESERVATION",
+        inlineJa: "",
+        inlineEn: "",
         showCheckout: false
       },
       using_not_checked_in: {
@@ -534,16 +603,20 @@
         msgEn: "This reservation will be automatically cancelled if check-in is not completed within 5 minutes.",
         timeLabelJa: "残り時間",
         timeLabelEn: "TIME REMAINING",
+        inlineJa: "",
+        inlineEn: "",
         showCheckout: false
       },
       using_checked_in: {
         panelClass: "state-using-checked",
         statusJa: "チェックイン済",
         statusEn: "CHECKED IN",
-        msgJa: "ご利用中です",
-        msgEn: "IN USE",
+        msgJa: "",
+        msgEn: "",
         timeLabelJa: "残り時間",
         timeLabelEn: "TIME REMAINING",
+        inlineJa: "ご利用中です",
+        inlineEn: "IN USE",
         showCheckout: true
       },
       maintenance: {
@@ -554,36 +627,27 @@
         msgEn: "This rack is temporarily unavailable.",
         timeLabelJa: "",
         timeLabelEn: "",
+        inlineJa: "",
+        inlineEn: "",
         showCheckout: false
       }
     };
 
-    function esc(str) {
-      return String(str ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
-    }
-
     function formatLastUpdated(text) {
       const s = String(text || "");
       const m = s.match(/^(\d{4}\/\d{2}\/\d{2})\s+(\d{2}:\d{2})$/);
-      if (!m) return esc(s);
-      return `${esc(m[1])} <span class="updated-time">${esc(m[2])}</span>`;
+      if (!m) return s;
+      return `${m[1]} <span class="updated-time">${m[2]}</span>`;
     }
 
     function normalizeState(r) {
       const raw = String(r.state || "").toLowerCase();
-
       if (raw === "using_checked_in") return "using_checked_in";
       if (raw === "using_not_checked_in") return "using_not_checked_in";
       if (raw === "using") return "using_checked_in";
       if (raw === "reserved") return "reserved";
       if (raw === "free") return "free";
       if (raw === "maintenance") return "maintenance";
-
       return "free";
     }
 
@@ -600,6 +664,12 @@
       return `～ ${m[1]} まで　UNTIL ${m[1]}`;
     }
 
+    function extractName_(text) {
+      const s = String(text || "").trim();
+      if (!s) return "—";
+      return s.replace(/^受付:\s*/, "");
+    }
+
     function applyStateUI(r) {
       const stateKey = normalizeState(r);
       const cfg = STATE_MAP[stateKey];
@@ -609,13 +679,18 @@
 
       document.getElementById("rackNoBig").textContent = r.rackNo || rackNo;
       document.getElementById("rackNoJa").textContent = r.rackNo || rackNo;
+
       document.getElementById("statusJa").textContent = cfg.statusJa;
       document.getElementById("statusEn").textContent = cfg.statusEn;
-      document.getElementById("statusMsgJa").textContent = cfg.msgJa;
-      document.getElementById("statusMsgEn").textContent = cfg.msgEn;
+
+      document.getElementById("statusMsgJa").textContent = cfg.msgJa || "";
+      document.getElementById("statusMsgEn").textContent = cfg.msgEn || "";
 
       document.getElementById("timeLabelJa").textContent = cfg.timeLabelJa || "";
       document.getElementById("timeLabelEn").textContent = cfg.timeLabelEn || "";
+
+      document.getElementById("inlineJa").textContent = cfg.inlineJa || "";
+      document.getElementById("inlineEn").textContent = cfg.inlineEn || "";
 
       if (stateKey === "reserved") {
         document.getElementById("timeValue").textContent = r.nextText || "";
@@ -628,6 +703,14 @@
         document.getElementById("timeSub").textContent = "";
       }
 
+      document.getElementById("currentUserName").textContent =
+        stateKey === "using_checked_in" || stateKey === "using_not_checked_in"
+          ? extractName_(r.currentUserName || r.currentUser || "")
+          : "—";
+
+      document.getElementById("nextReservationTime").textContent = r.nextText || "—";
+      document.getElementById("nextUserName").textContent = extractName_(r.nextSubText || "");
+
       const checkoutBtn = document.getElementById("checkoutBtn");
       if (cfg.showCheckout) {
         checkoutBtn.classList.remove("hidden");
@@ -636,7 +719,7 @@
       }
 
       if (r.messageBoardText) {
-        document.getElementById("messageMarquee").innerHTML = esc(r.messageBoardText);
+        document.getElementById("messageMarquee").textContent = r.messageBoardText;
       }
     }
 
@@ -660,7 +743,6 @@
     }
 
     document.getElementById("refreshBtn").addEventListener("click", loadData);
-
     document.getElementById("checkoutBtn").addEventListener("click", async () => {
       alert("ここにチェックアウト処理を接続");
     });
