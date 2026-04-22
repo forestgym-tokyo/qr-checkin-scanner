@@ -80,12 +80,12 @@
       align-items:center;
       height:78px;
       min-width:0;
-      padding:0 10px;
+      padding:0 40px 0 0;
     }
 
     .title-main{
       margin:0;
-      font-size:38px;
+      font-size:36px;
       line-height:1;
       font-weight:900;
       letter-spacing:.01em;
@@ -95,7 +95,7 @@
 
     .title-sub{
       margin-top:6px;
-      font-size:16px;
+      font-size:15px;
       line-height:1.1;
       color:rgba(255,255,255,.78);
       font-weight:600;
@@ -124,20 +124,39 @@
     }
 
     .access-card{
-      justify-content:space-between;
-      gap:14px;
+      justify-content:flex-start;
+    }
+
+    .access-box{
+      width:100%;
+      max-width:360px;
+      min-height:80px;
+      padding:10px 14px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      background:rgba(255,255,255,.02);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .access-label-row{
+      display:flex;
+      align-items:baseline;
+      gap:8px;
+      white-space:nowrap;
     }
 
     .card-ja{
-      font-size:24px;
-      line-height:1.05;
+      font-size:23px;
+      line-height:1;
       font-weight:900;
-      margin:0 0 4px;
+      margin:0;
     }
 
     .card-en{
-      font-size:15px;
-      line-height:1.05;
+      font-size:14px;
+      line-height:1;
       color:var(--green);
       font-weight:800;
       margin:0;
@@ -146,18 +165,18 @@
 
     .access-code{
       margin-top:8px;
-      font-size:60px;
+      font-size:52px;
       line-height:1;
       font-weight:900;
-      letter-spacing:.18em;
+      letter-spacing:.14em;
       color:var(--green);
       white-space:nowrap;
     }
 
     .access-date{
-      margin-top:8px;
-      font-size:21px;
-      line-height:1.05;
+      margin-top:6px;
+      font-size:18px;
+      line-height:1;
       font-weight:600;
       color:rgba(255,255,255,.90);
     }
@@ -247,11 +266,11 @@
       border:1px solid var(--line);
       border-radius:24px;
       box-shadow:var(--shadow);
-      min-height:372px;
+      height:370px;
+      min-height:370px;
       padding:14px;
-      display:grid;
-      grid-template-columns:190px 1fr;
-      gap:14px;
+      display:flex;
+      flex-direction:column;
     }
 
     .rack-card.state-free{ border-color:rgba(120,197,58,.28); }
@@ -261,72 +280,64 @@
     .rack-card.state-gap{ border-color:rgba(214,180,40,.34); }
     .rack-card.state-waiting{ border-color:rgba(120,197,58,.28); }
 
-    .rack-left{
+    .rack-top{
+      display:grid;
+      grid-template-columns:170px 1fr;
+      gap:14px;
+      align-items:start;
+      min-height:0;
+    }
+
+    .rack-visual{
       display:flex;
       flex-direction:column;
-      align-items:center;
+      align-items:flex-start;
       justify-content:flex-start;
       min-width:0;
     }
 
-    .rack-no-top{
+    .rack-no-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-height:96px;
+    }
+
+    .rack-no{
       font-size:34px;
       line-height:1;
       font-weight:900;
-      color:#fff;
-      margin:2px 0 10px;
-      text-align:center;
       white-space:nowrap;
     }
 
-    .rack-no-top .no{
+    .rack-no .no{
       color:var(--green);
     }
 
-    .rack-image-wrap{
-      width:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex:1;
-      min-height:0;
-    }
-
-    .rack-left img{
-      display:block;
-      width:100%;
-      max-width:160px;
-      max-height:220px;
+    .rack-no-row img{
+      width:88px;
+      height:88px;
       object-fit:contain;
+      flex:0 0 88px;
     }
 
     .badge-under{
       width:100%;
-      margin-top:12px;
+      margin-top:10px;
       display:flex;
-      justify-content:center;
-    }
-
-    .rack-right{
-      display:flex;
-      flex-direction:column;
-      min-width:0;
-    }
-
-    .rack-head{
-      display:none;
+      justify-content:flex-start;
     }
 
     .badge{
-      min-width:118px;
-      min-height:52px;
+      min-width:122px;
+      min-height:54px;
       padding:8px 12px;
       border-radius:14px;
       display:inline-flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      gap:3px;
+      gap:4px;
       font-size:15px;
       line-height:1.05;
       font-weight:900;
@@ -380,15 +391,18 @@
       border-color:rgba(120,197,58,.3);
     }
 
-    .section{
-      margin-top:8px;
+    .rack-info{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
     }
 
     .label{
       font-size:14px;
       line-height:1.05;
       font-weight:800;
-      margin-bottom:6px;
+      margin:0 0 6px;
       letter-spacing:.01em;
     }
 
@@ -398,32 +412,60 @@
     .label.yellow{ color:var(--yellow); }
     .label.white{ color:var(--whiteBadge); }
 
-    .main-line{
-      font-size:25px;
+    .status-main{
+      font-size:24px;
       line-height:1.14;
       font-weight:900;
       color:#fff;
-      word-break:break-word;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
-    .sub-line{
-      margin-top:4px;
+    .status-sub{
+      margin-top:6px;
       font-size:15px;
-      line-height:1.3;
-      font-weight:600;
+      line-height:1.2;
+      font-weight:700;
       color:rgba(255,255,255,.86);
-      word-break:break-word;
-      white-space:pre-line;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .divider{
       height:1px;
       background:linear-gradient(90deg, rgba(120,197,58,.38), rgba(255,255,255,.02));
-      margin:10px 0 8px;
+      margin:10px 0 10px;
+    }
+
+    .schedule-block{
+      margin-top:0;
+    }
+
+    .schedule-main{
+      font-size:22px;
+      line-height:1.18;
+      font-weight:900;
+      color:#fff;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .schedule-sub{
+      margin-top:4px;
+      font-size:15px;
+      line-height:1.2;
+      font-weight:600;
+      color:rgba(255,255,255,.86);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .waiting-row{
-      margin-top:auto;
+      margin-top:10px;
     }
 
     .waiting-count{
@@ -448,15 +490,18 @@
       margin-top:8px;
       padding-top:8px;
       border-top:1px solid rgba(255,255,255,.08);
-      font-size:14px;
-      line-height:1.28;
+      font-size:13px;
+      line-height:1.25;
       font-weight:600;
       color:var(--muted);
-      white-space:pre-line;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
-    .actions{
-      margin-top:10px;
+    .bottom-actions{
+      margin-top:auto;
+      padding-top:12px;
     }
 
     .btn{
@@ -474,7 +519,7 @@
 
     .btn-use{
       width:100%;
-      min-height:70px;
+      min-height:66px;
       padding:10px 18px;
       background:linear-gradient(180deg,var(--green) 0%, var(--green2) 100%);
       color:#fff;
@@ -486,7 +531,7 @@
     }
 
     .btn-use-ja{
-      font-size:24px;
+      font-size:22px;
       line-height:1;
       font-weight:900;
       text-align:left;
@@ -494,7 +539,7 @@
 
     .btn-use-en{
       margin-top:3px;
-      font-size:14px;
+      font-size:13px;
       line-height:1;
       font-weight:800;
       color:rgba(255,255,255,.92);
@@ -513,7 +558,6 @@
       width:100%;
       min-height:54px;
       padding:10px 14px;
-      margin-top:8px;
       background:rgba(255,255,255,.03);
       color:#fff;
       border:1px solid rgba(255,255,255,.12);
@@ -537,9 +581,6 @@
     }
 
     @media (max-width:1200px){
-      .app{
-        max-width:100%;
-      }
       .header{
         grid-template-columns:280px 1fr;
       }
@@ -549,14 +590,22 @@
       .title-sub{
         font-size:14px;
       }
-      .rack-card{
-        grid-template-columns:170px 1fr;
+      .rack-top{
+        grid-template-columns:150px 1fr;
       }
-      .main-line{
+      .rack-no{
+        font-size:30px;
+      }
+      .rack-no-row img{
+        width:76px;
+        height:76px;
+        flex-basis:76px;
+      }
+      .status-main{
         font-size:22px;
       }
-      .rack-no-top{
-        font-size:30px;
+      .schedule-main{
+        font-size:20px;
       }
     }
   </style>
@@ -575,9 +624,11 @@
 
     <section class="top-row">
       <div class="top-card access-card">
-        <div>
-          <div class="card-ja">認証コード</div>
-          <div class="card-en">ACCESS CODE</div>
+        <div class="access-box">
+          <div class="access-label-row">
+            <div class="card-ja">認証コード</div>
+            <div class="card-en">/ ACCESS CODE</div>
+          </div>
           <div class="access-code" id="authCode">----</div>
           <div class="access-date" id="todayLabel">----/--/--</div>
         </div>
@@ -633,7 +684,6 @@
         cardClass: "state-free",
         currentLabelClass: "green",
         nextLabelClass: "green",
-        afterNextLabelClass: "green",
         waitingLabelClass: "green"
       },
       using: {
@@ -643,7 +693,6 @@
         cardClass: "state-using",
         currentLabelClass: "white",
         nextLabelClass: "green",
-        afterNextLabelClass: "green",
         waitingLabelClass: "white"
       },
       reserved: {
@@ -653,7 +702,6 @@
         cardClass: "state-reserved",
         currentLabelClass: "orange",
         nextLabelClass: "orange",
-        afterNextLabelClass: "orange",
         waitingLabelClass: "orange"
       },
       maintenance: {
@@ -663,7 +711,6 @@
         cardClass: "state-maintenance",
         currentLabelClass: "blue",
         nextLabelClass: "blue",
-        afterNextLabelClass: "blue",
         waitingLabelClass: "blue"
       },
       gap: {
@@ -673,7 +720,6 @@
         cardClass: "state-gap",
         currentLabelClass: "yellow",
         nextLabelClass: "orange",
-        afterNextLabelClass: "orange",
         waitingLabelClass: "yellow"
       },
       waiting: {
@@ -683,7 +729,6 @@
         cardClass: "state-waiting",
         currentLabelClass: "green",
         nextLabelClass: "green",
-        afterNextLabelClass: "green",
         waitingLabelClass: "green"
       }
     };
@@ -739,11 +784,6 @@
         nextText: txt(raw.nextText, ""),
         nextSubText: txt(raw.nextSubText, ""),
 
-        afterNextLabelJa: txt(raw.afterNextLabelJa, "その次"),
-        afterNextLabelEn: txt(raw.afterNextLabelEn, "AFTER NEXT"),
-        afterNextText: txt(raw.afterNextText, ""),
-        afterNextSubText: txt(raw.afterNextSubText, ""),
-
         waitingLabelJa: txt(raw.waitingLabelJa, "順番待ち"),
         waitingLabelEn: txt(raw.waitingLabelEn, "WAITING"),
         waitingCount: Number.isFinite(Number(raw.waitingCount)) ? Number(raw.waitingCount) : 0,
@@ -760,20 +800,6 @@
         checkinUrl: txt(raw.checkinUrl, ""),
         queueUrl: txt(raw.queueUrl, "")
       };
-    }
-
-    function scheduleBlock(labelClass, labelJa, labelEn, mainText, subText) {
-      const hasMain = !!String(mainText || "").trim();
-      const hasSub = !!String(subText || "").trim();
-      if (!hasMain && !hasSub) return "";
-
-      return `
-        <div class="section">
-          <div class="label ${labelClass}">${esc(labelJa)} / ${esc(labelEn)}</div>
-          ${hasMain ? `<div class="main-line">${withBr(mainText)}</div>` : ""}
-          ${hasSub ? `<div class="sub-line">${withBr(subText)}</div>` : ""}
-        </div>
-      `;
     }
 
     function renderBadge(r) {
@@ -793,15 +819,13 @@
 
       const useButton = (r.showUseNowButton && r.state !== "maintenance")
         ? `
-          <div class="actions">
-            <button class="btn btn-use" data-url="${esc(checkinUrl)}" data-kind="use">
-              <div>
-                <div class="btn-use-ja">${esc(r.useNowLabelJa)}</div>
-                <div class="btn-use-en">${esc(r.useNowLabelEn)}</div>
-              </div>
-              <div class="btn-arrow">›</div>
-            </button>
-          </div>
+          <button class="btn btn-use" data-url="${esc(checkinUrl)}" data-kind="use">
+            <div>
+              <div class="btn-use-ja">${esc(r.useNowLabelJa)}</div>
+              <div class="btn-use-en">${esc(r.useNowLabelEn)}</div>
+            </div>
+            <div class="btn-arrow">›</div>
+          </button>
         `
         : "";
 
@@ -816,45 +840,35 @@
 
       return `
         <article class="rack-card ${r.ui.cardClass}">
-          <div class="rack-left">
-            <div class="rack-no-top">№<span class="no">${r.rackNo}</span></div>
-            <div class="rack-image-wrap">
-              <img src="rack${r.rackNo}.png?t=1" alt="Rack ${r.rackNo}">
+          <div class="rack-top">
+            <div class="rack-visual">
+              <div class="rack-no-row">
+                <div class="rack-no">№<span class="no">${r.rackNo}</span></div>
+                <img src="rack${r.rackNo}.png?t=1" alt="Rack ${r.rackNo}">
+              </div>
+              <div class="badge-under">
+                ${renderBadge(r)}
+              </div>
             </div>
-            <div class="badge-under">
-              ${renderBadge(r)}
-            </div>
-          </div>
 
-          <div class="rack-right">
-            <div class="section" style="margin-top:2px;">
+            <div class="rack-info">
               <div class="label ${r.ui.currentLabelClass}">
                 ${esc(r.currentLabelJa)} / ${esc(r.currentLabelEn)}
               </div>
-              <div class="main-line">${withBr(r.currentText)}</div>
-              ${r.currentSubText ? `<div class="sub-line">${withBr(r.currentSubText)}</div>` : ""}
-            </div>
+              <div class="status-main">${withBr(r.currentText)}</div>
+              ${r.currentSubText ? `<div class="status-sub">${withBr(r.currentSubText)}</div>` : ""}
 
-            <div class="divider"></div>
+              <div class="divider"></div>
 
-            ${scheduleBlock(
-              r.ui.nextLabelClass,
-              r.nextLabelJa,
-              r.nextLabelEn,
-              r.nextText,
-              r.nextSubText
-            )}
+              <div class="schedule-block">
+                <div class="label ${r.ui.nextLabelClass}">
+                  ${esc(r.nextLabelJa)} / ${esc(r.nextLabelEn)}
+                </div>
+                <div class="schedule-main">${withBr(r.nextText || "予定なし")}</div>
+                ${r.nextSubText ? `<div class="schedule-sub">${withBr(r.nextSubText)}</div>` : ""}
+              </div>
 
-            ${scheduleBlock(
-              r.ui.afterNextLabelClass,
-              r.afterNextLabelJa,
-              r.afterNextLabelEn,
-              r.afterNextText,
-              r.afterNextSubText
-            )}
-
-            <div class="waiting-row">
-              <div class="section">
+              <div class="waiting-row">
                 <div class="label ${r.ui.waitingLabelClass}">
                   ${esc(r.waitingLabelJa)} / ${esc(r.waitingLabelEn)}
                 </div>
@@ -866,12 +880,12 @@
                 </div>
               </div>
 
-              ${queueButton ? `<div class="actions">${queueButton}</div>` : ""}
+              ${r.noteText ? `<div class="note">${withBr(r.noteText)}</div>` : ""}
             </div>
+          </div>
 
-            ${r.noteText ? `<div class="note">${withBr(r.noteText)}</div>` : ""}
-
-            ${useButton}
+          <div class="bottom-actions">
+            ${useButton || queueButton || '<div style="height:54px;"></div>'}
           </div>
         </article>
       `;
