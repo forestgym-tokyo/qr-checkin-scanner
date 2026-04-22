@@ -52,7 +52,7 @@
     /* ===== HEADER ===== */
     .header{
       display:grid;
-      grid-template-columns: 360px 1fr;
+      grid-template-columns: 320px 1fr;
       gap:18px;
       align-items:center;
       margin-bottom:10px;
@@ -77,25 +77,30 @@
       display:flex;
       flex-direction:column;
       justify-content:center;
-      border-left:1px solid rgba(255,255,255,.12);
-      padding-left:22px;
+      align-items:center;
       height:78px;
+      min-width:0;
+      padding:0 10px;
     }
 
     .title-main{
       margin:0;
-      font-size:46px;
+      font-size:38px;
       line-height:1;
       font-weight:900;
-      letter-spacing:.02em;
+      letter-spacing:.01em;
+      text-align:center;
+      white-space:nowrap;
     }
 
     .title-sub{
       margin-top:6px;
-      font-size:20px;
+      font-size:16px;
       line-height:1.1;
       color:rgba(255,255,255,.78);
       font-weight:600;
+      text-align:center;
+      white-space:nowrap;
     }
 
     /* ===== TOP ===== */
@@ -245,7 +250,7 @@
       min-height:372px;
       padding:14px;
       display:grid;
-      grid-template-columns:170px 1fr;
+      grid-template-columns:190px 1fr;
       gap:14px;
     }
 
@@ -258,17 +263,48 @@
 
     .rack-left{
       display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      min-width:0;
+    }
+
+    .rack-no-top{
+      font-size:34px;
+      line-height:1;
+      font-weight:900;
+      color:#fff;
+      margin:2px 0 10px;
+      text-align:center;
+      white-space:nowrap;
+    }
+
+    .rack-no-top .no{
+      color:var(--green);
+    }
+
+    .rack-image-wrap{
+      width:100%;
+      display:flex;
       align-items:center;
       justify-content:center;
-      min-width:0;
+      flex:1;
+      min-height:0;
     }
 
     .rack-left img{
       display:block;
       width:100%;
       max-width:160px;
-      max-height:320px;
+      max-height:220px;
       object-fit:contain;
+    }
+
+    .badge-under{
+      width:100%;
+      margin-top:12px;
+      display:flex;
+      justify-content:center;
     }
 
     .rack-right{
@@ -278,37 +314,39 @@
     }
 
     .rack-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:8px;
-    }
-
-    .rack-title{
-      font-size:28px;
-      line-height:1.05;
-      font-weight:900;
-      white-space:nowrap;
-    }
-
-    .rack-title .no{
-      color:var(--green);
+      display:none;
     }
 
     .badge{
-      min-width:108px;
-      min-height:42px;
+      min-width:118px;
+      min-height:52px;
       padding:8px 12px;
-      border-radius:12px;
+      border-radius:14px;
       display:inline-flex;
+      flex-direction:column;
       align-items:center;
       justify-content:center;
+      gap:3px;
+      font-size:15px;
+      line-height:1.05;
+      font-weight:900;
+      border:1px solid transparent;
+      text-align:center;
+      white-space:nowrap;
+    }
+
+    .badge-ja{
       font-size:16px;
       line-height:1;
       font-weight:900;
-      border:1px solid transparent;
-      white-space:nowrap;
+    }
+
+    .badge-en{
+      font-size:11px;
+      line-height:1;
+      font-weight:800;
+      letter-spacing:.02em;
+      opacity:.95;
     }
 
     .badge.free{
@@ -503,16 +541,22 @@
         max-width:100%;
       }
       .header{
-        grid-template-columns:300px 1fr;
+        grid-template-columns:280px 1fr;
       }
       .title-main{
-        font-size:40px;
+        font-size:32px;
+      }
+      .title-sub{
+        font-size:14px;
       }
       .rack-card{
-        grid-template-columns:145px 1fr;
+        grid-template-columns:170px 1fr;
       }
       .main-line{
         font-size:22px;
+      }
+      .rack-no-top{
+        font-size:30px;
       }
     }
   </style>
@@ -584,7 +628,8 @@
     const STATE_UI = {
       free: {
         badgeClass: "free",
-        badgeText: "空き",
+        badgeTextJa: "空き",
+        badgeTextEn: "AVAILABLE",
         cardClass: "state-free",
         currentLabelClass: "green",
         nextLabelClass: "green",
@@ -593,7 +638,8 @@
       },
       using: {
         badgeClass: "using",
-        badgeText: "利用中",
+        badgeTextJa: "利用中",
+        badgeTextEn: "IN USE",
         cardClass: "state-using",
         currentLabelClass: "white",
         nextLabelClass: "green",
@@ -602,7 +648,8 @@
       },
       reserved: {
         badgeClass: "reserved",
-        badgeText: "予約あり",
+        badgeTextJa: "予約あり",
+        badgeTextEn: "RESERVED",
         cardClass: "state-reserved",
         currentLabelClass: "orange",
         nextLabelClass: "orange",
@@ -611,7 +658,8 @@
       },
       maintenance: {
         badgeClass: "maintenance",
-        badgeText: "メンテ中",
+        badgeTextJa: "メンテ中",
+        badgeTextEn: "MAINTENANCE",
         cardClass: "state-maintenance",
         currentLabelClass: "blue",
         nextLabelClass: "blue",
@@ -620,7 +668,8 @@
       },
       gap: {
         badgeClass: "gap",
-        badgeText: "すき間利用可",
+        badgeTextJa: "すき間利用可",
+        badgeTextEn: "SHORT USE",
         cardClass: "state-gap",
         currentLabelClass: "yellow",
         nextLabelClass: "orange",
@@ -629,7 +678,8 @@
       },
       waiting: {
         badgeClass: "waiting",
-        badgeText: "順番待ち",
+        badgeTextJa: "順番待ち",
+        badgeTextEn: "WAITING",
         cardClass: "state-waiting",
         currentLabelClass: "green",
         nextLabelClass: "green",
@@ -676,7 +726,8 @@
         rackNo: Number(raw.rackNo) || 0,
         state,
         ui,
-        badgeText: txt(raw.badgeText, ui.badgeText),
+        badgeTextJa: txt(raw.badgeTextJa, raw.badgeText, ui.badgeTextJa),
+        badgeTextEn: txt(raw.badgeTextEn, ui.badgeTextEn),
 
         currentLabelJa: txt(raw.currentLabelJa, "現在"),
         currentLabelEn: txt(raw.currentLabelEn, "CURRENT"),
@@ -725,6 +776,15 @@
       `;
     }
 
+    function renderBadge(r) {
+      return `
+        <div class="badge ${r.ui.badgeClass}">
+          <div class="badge-ja">${esc(r.badgeTextJa)}</div>
+          <div class="badge-en">${esc(r.badgeTextEn)}</div>
+        </div>
+      `;
+    }
+
     function renderRack(raw) {
       const r = normalizeRack(raw);
 
@@ -757,16 +817,17 @@
       return `
         <article class="rack-card ${r.ui.cardClass}">
           <div class="rack-left">
-            <img src="rack${r.rackNo}.png?t=1" alt="Rack ${r.rackNo}">
+            <div class="rack-no-top">№<span class="no">${r.rackNo}</span></div>
+            <div class="rack-image-wrap">
+              <img src="rack${r.rackNo}.png?t=1" alt="Rack ${r.rackNo}">
+            </div>
+            <div class="badge-under">
+              ${renderBadge(r)}
+            </div>
           </div>
 
           <div class="rack-right">
-            <div class="rack-head">
-              <div class="rack-title">№<span class="no">${r.rackNo}</span></div>
-              <div class="badge ${r.ui.badgeClass}">${esc(r.badgeText)}</div>
-            </div>
-
-            <div class="section">
+            <div class="section" style="margin-top:2px;">
               <div class="label ${r.ui.currentLabelClass}">
                 ${esc(r.currentLabelJa)} / ${esc(r.currentLabelEn)}
               </div>
