@@ -137,7 +137,7 @@
     .main{
       flex:1;
       display:grid;
-      grid-template-columns:120px 1fr;
+      grid-template-columns:118px 1fr;
       gap:10px;
       min-height:0;
       overflow:hidden;
@@ -196,21 +196,34 @@
       overflow:hidden;
     }
 
-    .status-top{
+    .status-head{
       display:grid;
-      grid-template-columns:240px 1fr 190px;
+      grid-template-columns:minmax(0,1fr) 180px;
       gap:14px;
       align-items:start;
       min-width:0;
     }
 
-    .status-block{
+    .status-main{
+      min-width:0;
+      overflow:hidden;
+    }
+
+    .status-title-row{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      min-width:0;
+    }
+
+    .status-title-left{
       min-width:0;
       overflow:hidden;
     }
 
     .status-ja{
-      font-size:30px;
+      font-size:38px;
       line-height:1;
       font-weight:900;
       color:var(--accent);
@@ -219,17 +232,9 @@
       text-overflow:ellipsis;
     }
 
-    .status-head-row{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:8px;
-      margin-top:6px;
-      min-width:0;
-    }
-
     .status-en{
-      font-size:15px;
+      margin-top:5px;
+      font-size:18px;
       line-height:1;
       font-weight:900;
       color:var(--accent);
@@ -242,10 +247,11 @@
       text-align:right;
       white-space:nowrap;
       flex:0 0 auto;
+      padding-bottom:4px;
     }
 
     .inline-use-ja{
-      font-size:14px;
+      font-size:16px;
       line-height:1;
       font-weight:900;
       color:#fff;
@@ -253,21 +259,21 @@
 
     .inline-use-en{
       margin-top:4px;
-      font-size:11px;
+      font-size:12px;
       line-height:1;
       font-weight:800;
       color:var(--accent);
     }
 
     .status-sep{
-      margin:8px 0 8px;
+      margin:10px 0 8px;
       height:2px;
       background:var(--accent);
       opacity:.95;
     }
 
     .status-msg-ja{
-      font-size:14px;
+      font-size:15px;
       line-height:1.25;
       font-weight:800;
       white-space:nowrap;
@@ -281,46 +287,6 @@
       line-height:1.2;
       color:var(--accent);
       font-weight:700;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .info-grid{
-      min-width:0;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px 16px;
-      align-content:start;
-      padding-top:4px;
-    }
-
-    .info-box{
-      min-width:0;
-    }
-
-    .info-label-ja{
-      font-size:11px;
-      line-height:1;
-      font-weight:900;
-      color:rgba(255,255,255,.84);
-      white-space:nowrap;
-    }
-
-    .info-label-en{
-      margin-top:3px;
-      font-size:9px;
-      line-height:1;
-      font-weight:800;
-      color:var(--accent);
-      white-space:nowrap;
-    }
-
-    .info-value{
-      margin-top:7px;
-      font-size:24px;
-      line-height:1.08;
-      font-weight:900;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -353,7 +319,7 @@
 
     .time-value{
       margin-top:8px;
-      font-size:42px;
+      font-size:46px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
@@ -373,7 +339,7 @@
       appearance:none;
       margin-top:12px;
       width:100%;
-      min-height:68px;
+      min-height:72px;
       border:2px solid var(--accent);
       background:var(--accent);
       color:#0b0b0b;
@@ -388,8 +354,48 @@
         0 0 18px rgba(141,255,0,.18);
     }
 
+    .info-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px 16px;
+      min-width:0;
+      align-content:start;
+    }
+
+    .info-box{
+      min-width:0;
+      overflow:hidden;
+    }
+
+    .info-label-ja{
+      font-size:11px;
+      line-height:1;
+      font-weight:900;
+      color:rgba(255,255,255,.84);
+      white-space:nowrap;
+    }
+
+    .info-label-en{
+      margin-top:3px;
+      font-size:9px;
+      line-height:1;
+      font-weight:800;
+      color:var(--accent);
+      white-space:nowrap;
+    }
+
+    .info-value{
+      margin-top:7px;
+      font-size:28px;
+      line-height:1.08;
+      font-weight:900;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
     .message-board{
-      min-height:74px;
+      min-height:112px;
       border:2px solid rgba(141,255,0,.65);
       border-radius:12px;
       display:flex;
@@ -402,13 +408,13 @@
       display:flex;
       align-items:center;
       gap:8px;
-      min-height:30px;
+      min-height:34px;
       padding:0 10px;
       border-bottom:1px solid rgba(141,255,0,.18);
     }
 
     .message-head-ja{
-      font-size:12px;
+      font-size:13px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
@@ -436,16 +442,16 @@
       display:inline-block;
       padding-left:100%;
       animation: marquee 22s linear infinite;
-      font-size:16px;
+      font-size:22px;
       line-height:1;
       font-weight:900;
     }
 
     .marquee-en{
       color:var(--green);
-      font-size:11px;
+      font-size:13px;
       font-weight:700;
-      margin-left:12px;
+      margin-left:14px;
     }
 
     @keyframes marquee {
@@ -489,18 +495,19 @@
     <main class="main">
       <section class="rack-side">
         <div class="rack-title">RACK <span class="num" id="rackNoBig">1</span></div>
-        <div class="rack-divider"></div>
+        <div class="rack-divider" id="rackDivider"></div>
         <div class="rack-sub">ラック<span id="rackNoJa">1</span></div>
       </section>
 
       <section class="content">
         <section class="status-panel state-reserved" id="statusPanel">
-          <div class="status-top">
-            <div class="status-block">
-              <div class="status-ja" id="statusJa">予定があります</div>
-
-              <div class="status-head-row">
-                <div class="status-en" id="statusEn">RESERVED SOON</div>
+          <div class="status-head">
+            <div class="status-main">
+              <div class="status-title-row">
+                <div class="status-title-left">
+                  <div class="status-ja" id="statusJa">予定があります</div>
+                  <div class="status-en" id="statusEn">RESERVED SOON</div>
+                </div>
                 <div class="inline-use" id="inlineUse">
                   <div class="inline-use-ja" id="inlineJa"></div>
                   <div class="inline-use-en" id="inlineEn"></div>
@@ -513,32 +520,38 @@
               <div class="status-msg-en" id="statusMsgEn">Available until the next reservation</div>
             </div>
 
-            <div class="info-grid">
-              <div class="info-box">
-                <div class="info-label-ja">現在の利用者</div>
-                <div class="info-label-en">CURRENT USER</div>
-                <div class="info-value" id="currentUserName">—</div>
-              </div>
-
-              <div class="info-box">
-                <div class="info-label-ja">次の予定</div>
-                <div class="info-label-en">NEXT RESERVATION</div>
-                <div class="info-value" id="nextReservationTime">—</div>
-              </div>
-
-              <div class="info-box" style="grid-column:1 / span 2;">
-                <div class="info-label-ja">次の利用者</div>
-                <div class="info-label-en">NEXT USER</div>
-                <div class="info-value" id="nextUserName">—</div>
-              </div>
-            </div>
-
             <div class="time-side">
               <div class="time-label-ja" id="timeLabelJa">残り時間</div>
               <div class="time-label-en" id="timeLabelEn">TIME REMAINING</div>
               <div class="time-value" id="timeValue">36</div>
               <div class="time-sub" id="timeSub">～19:59 まで　UNTIL 19:59</div>
               <button class="checkout-btn hidden" id="checkoutBtn">チェックアウトする / CHECK OUT</button>
+            </div>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-box">
+              <div class="info-label-ja">現在の利用者</div>
+              <div class="info-label-en">CURRENT USER</div>
+              <div class="info-value" id="currentUserName">—</div>
+            </div>
+
+            <div class="info-box">
+              <div class="info-label-ja">現在の予定</div>
+              <div class="info-label-en">CURRENT RESERVATION</div>
+              <div class="info-value" id="currentReservationTime">—</div>
+            </div>
+
+            <div class="info-box">
+              <div class="info-label-ja">次の利用者</div>
+              <div class="info-label-en">NEXT USER</div>
+              <div class="info-value" id="nextUserName">—</div>
+            </div>
+
+            <div class="info-box">
+              <div class="info-label-ja">次の予定</div>
+              <div class="info-label-en">NEXT RESERVATION</div>
+              <div class="info-value" id="nextReservationTime">—</div>
             </div>
           </div>
         </section>
@@ -569,6 +582,7 @@
     const STATE_MAP = {
       free: {
         panelClass: "state-free",
+        accent: "#00C8FF",
         statusJa: "空いています",
         statusEn: "AVAILABLE",
         msgJa: "店舗タブレットよりチェックインしてください",
@@ -581,6 +595,7 @@
       },
       reserved: {
         panelClass: "state-reserved",
+        accent: "#FFD400",
         statusJa: "予定があります",
         statusEn: "RESERVED SOON",
         msgJa: "次の予定までご自由にご利用いただけます",
@@ -593,6 +608,7 @@
       },
       using_not_checked_in: {
         panelClass: "state-using-not",
+        accent: "#FF8A00",
         statusJa: "利用中（未チェックイン）",
         statusEn: "IN USE (NOT CHECKED IN)",
         msgJa: "5分以内にチェックインがない場合、自動キャンセルになります。",
@@ -605,6 +621,7 @@
       },
       using_checked_in: {
         panelClass: "state-using-checked",
+        accent: "#8DFF00",
         statusJa: "チェックイン済",
         statusEn: "CHECKED IN",
         msgJa: "",
@@ -617,6 +634,7 @@
       },
       maintenance: {
         panelClass: "state-maintenance",
+        accent: "#FF4D4D",
         statusJa: "利用停止中",
         statusEn: "OUT OF SERVICE",
         msgJa: "現在ご利用いただけません",
@@ -678,7 +696,6 @@
 
       document.getElementById("rackNoBig").textContent = r.rackNo || rackNo;
       document.getElementById("rackNoJa").textContent = r.rackNo || rackNo;
-
       document.getElementById("statusJa").textContent = cfg.statusJa;
       document.getElementById("statusEn").textContent = cfg.statusEn;
       document.getElementById("statusMsgJa").textContent = cfg.msgJa || "";
@@ -687,6 +704,9 @@
       document.getElementById("timeLabelEn").textContent = cfg.timeLabelEn || "";
       document.getElementById("inlineJa").textContent = cfg.inlineJa || "";
       document.getElementById("inlineEn").textContent = cfg.inlineEn || "";
+
+      document.querySelector(".rack-title .num").style.color = cfg.accent;
+      document.getElementById("rackDivider").style.background = cfg.accent;
 
       if (stateKey === "reserved") {
         document.getElementById("timeValue").textContent = r.nextText || "";
@@ -700,10 +720,16 @@
       }
 
       document.getElementById("currentUserName").textContent =
-        extractName_(r.currentUserName || r.currentUser || "");
+        extractName_(r.currentUserName || r.currentUser || r.currentSubText || "");
 
-      document.getElementById("nextReservationTime").textContent = r.nextText || "—";
-      document.getElementById("nextUserName").textContent = extractName_(r.nextSubText || "");
+      document.getElementById("currentReservationTime").textContent =
+        r.currentReservationText || r.currentText || "—";
+
+      document.getElementById("nextUserName").textContent =
+        extractName_(r.nextUserName || r.nextSubText || "");
+
+      document.getElementById("nextReservationTime").textContent =
+        r.nextText || "—";
 
       const checkoutBtn = document.getElementById("checkoutBtn");
       if (cfg.showCheckout) {
