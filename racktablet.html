@@ -7,10 +7,7 @@
   <style>
     :root{
       --bg:#050607;
-      --panel:#0a0b0d;
-      --line:rgba(255,255,255,.10);
       --text:#ffffff;
-      --muted:rgba(255,255,255,.72);
       --green:#8DFF00;
       --cyan:#00C8FF;
       --yellow:#FFD400;
@@ -27,7 +24,7 @@
       margin:0;
       padding:0;
       width:100%;
-      min-height:100%;
+      height:100%;
       background:#000;
       color:var(--text);
       font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",system-ui,sans-serif;
@@ -39,21 +36,22 @@
     }
 
     .app{
-      width:100vw;
-      height:100vh;
-      padding:12px 18px 10px;
+      width:100%;
+      height:100%;
+      padding:12px 16px 10px;
       display:flex;
       flex-direction:column;
       gap:10px;
+      overflow:hidden;
     }
 
     /* HEADER */
     .header{
       display:grid;
-      grid-template-columns:300px 1fr 140px;
+      grid-template-columns:260px 1fr 120px;
       align-items:center;
-      gap:16px;
-      min-height:70px;
+      gap:14px;
+      min-height:66px;
       padding-bottom:10px;
       border-bottom:1px solid rgba(255,255,255,.14);
     }
@@ -61,15 +59,15 @@
     .brand{
       display:flex;
       align-items:center;
-      gap:12px;
+      gap:10px;
       min-width:0;
     }
 
     .brand-logo{
-      width:52px;
-      height:52px;
+      width:46px;
+      height:46px;
       object-fit:contain;
-      flex:0 0 52px;
+      flex:0 0 46px;
     }
 
     .brand-text{
@@ -77,7 +75,7 @@
     }
 
     .brand-main{
-      font-size:22px;
+      font-size:20px;
       line-height:1;
       font-weight:900;
       letter-spacing:.02em;
@@ -85,8 +83,8 @@
     }
 
     .brand-sub{
-      margin-top:6px;
-      font-size:13px;
+      margin-top:5px;
+      font-size:12px;
       line-height:1;
       color:var(--green);
       font-weight:800;
@@ -98,13 +96,13 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:14px;
+      gap:12px;
       min-width:0;
     }
 
     .updated-line{
       width:1px;
-      height:42px;
+      height:38px;
       background:rgba(255,255,255,.18);
       flex:0 0 1px;
     }
@@ -114,7 +112,7 @@
     }
 
     .updated-label{
-      font-size:11px;
+      font-size:10px;
       line-height:1;
       color:rgba(255,255,255,.88);
       font-weight:700;
@@ -123,7 +121,7 @@
 
     .updated-value{
       margin-top:6px;
-      font-size:22px;
+      font-size:20px;
       line-height:1;
       font-weight:900;
       letter-spacing:.01em;
@@ -140,20 +138,22 @@
       background:transparent;
       color:var(--green);
       border-radius:12px;
-      min-height:54px;
-      font-size:16px;
+      min-height:50px;
+      font-size:15px;
       font-weight:900;
       cursor:pointer;
-      line-height:1.1;
+      line-height:1.05;
+      padding:4px 8px;
     }
 
     /* MAIN */
     .main{
       flex:1;
       display:grid;
-      grid-template-columns:220px 1fr;
-      gap:16px;
+      grid-template-columns:180px minmax(0,1fr);
+      gap:14px;
       min-height:0;
+      overflow:hidden;
     }
 
     .rack-side{
@@ -161,10 +161,11 @@
       flex-direction:column;
       justify-content:center;
       min-width:0;
+      overflow:hidden;
     }
 
     .rack-title{
-      font-size:58px;
+      font-size:52px;
       line-height:.92;
       font-weight:900;
       letter-spacing:.01em;
@@ -183,7 +184,7 @@
     }
 
     .rack-sub{
-      font-size:22px;
+      font-size:20px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
@@ -194,20 +195,22 @@
       flex-direction:column;
       gap:10px;
       min-height:0;
+      overflow:hidden;
     }
 
     /* STATUS AREA */
     .status-panel{
       flex:1;
       min-height:0;
-      padding:14px 16px;
+      padding:14px 14px;
       display:grid;
-      grid-template-columns:1fr 220px;
-      gap:16px;
+      grid-template-columns:minmax(0,1fr) 180px;
+      gap:14px;
       align-items:stretch;
       border-top:3px solid var(--accent);
       border-bottom:3px solid var(--accent);
       color:var(--text);
+      overflow:hidden;
     }
 
     .status-main{
@@ -215,42 +218,50 @@
       flex-direction:column;
       justify-content:center;
       min-width:0;
+      overflow:hidden;
     }
 
     .status-heading{
       display:flex;
-      align-items:flex-end;
-      gap:12px;
-      flex-wrap:wrap;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:6px;
       min-width:0;
+      overflow:hidden;
     }
 
     .status-ja{
-      font-size:42px;
+      font-size:34px;
       line-height:1;
       font-weight:900;
       color:var(--accent);
       white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:100%;
     }
 
     .status-en{
-      font-size:20px;
+      font-size:17px;
       line-height:1;
       font-weight:900;
       color:var(--accent);
       white-space:nowrap;
       letter-spacing:.02em;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:100%;
     }
 
     .status-sep{
-      margin:10px 0 12px;
+      margin:10px 0 10px;
       height:2px;
       background:var(--accent);
       opacity:.95;
     }
 
     .status-msg-ja{
-      font-size:18px;
+      font-size:16px;
       line-height:1.25;
       font-weight:800;
       white-space:nowrap;
@@ -260,7 +271,7 @@
 
     .status-msg-en{
       margin-top:6px;
-      font-size:15px;
+      font-size:13px;
       line-height:1.25;
       color:var(--accent);
       font-weight:700;
@@ -273,61 +284,69 @@
       display:flex;
       flex-direction:column;
       justify-content:center;
-      padding-left:16px;
+      padding-left:12px;
       border-left:2px solid var(--accent);
       min-width:0;
+      overflow:hidden;
     }
 
     .time-label-ja{
-      font-size:18px;
+      font-size:16px;
       line-height:1;
       font-weight:900;
+      white-space:nowrap;
     }
 
     .time-label-en{
-      margin-top:6px;
-      font-size:13px;
+      margin-top:5px;
+      font-size:12px;
       line-height:1;
       color:var(--accent);
       font-weight:800;
       letter-spacing:.02em;
+      white-space:nowrap;
     }
 
     .time-value{
-      margin-top:12px;
-      font-size:54px;
+      margin-top:10px;
+      font-size:42px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .time-sub{
       margin-top:8px;
-      font-size:16px;
+      font-size:14px;
       line-height:1.2;
       font-weight:800;
       white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .checkout-btn{
       appearance:none;
-      margin-top:14px;
+      margin-top:12px;
       width:100%;
-      min-height:68px;
+      min-height:58px;
       border:2px solid var(--accent);
       background:transparent;
       color:var(--accent);
-      border-radius:14px;
-      font-size:20px;
+      border-radius:12px;
+      font-size:18px;
       font-weight:900;
       cursor:pointer;
       letter-spacing:.01em;
-      line-height:1.1;
+      line-height:1.05;
+      padding:6px 8px;
     }
 
     /* MESSAGE BOARD */
     .message-board{
-      min-height:96px;
+      min-height:86px;
       border:2px solid rgba(141,255,0,.65);
       border-radius:14px;
       display:flex;
@@ -340,20 +359,20 @@
       display:flex;
       align-items:center;
       gap:10px;
-      min-height:40px;
-      padding:0 14px;
+      min-height:36px;
+      padding:0 12px;
       border-bottom:1px solid rgba(141,255,0,.18);
     }
 
     .message-head-ja{
-      font-size:16px;
+      font-size:14px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
     }
 
     .message-head-en{
-      font-size:12px;
+      font-size:11px;
       line-height:1;
       font-weight:800;
       color:var(--green);
@@ -367,7 +386,7 @@
       align-items:center;
       overflow:hidden;
       position:relative;
-      padding:0 14px;
+      padding:0 12px;
     }
 
     .marquee{
@@ -375,16 +394,16 @@
       display:inline-block;
       padding-left:100%;
       animation: marquee 22s linear infinite;
-      font-size:24px;
+      font-size:20px;
       line-height:1;
       font-weight:900;
     }
 
     .marquee-en{
       color:var(--green);
-      font-size:15px;
+      font-size:13px;
       font-weight:700;
-      margin-left:18px;
+      margin-left:16px;
     }
 
     @keyframes marquee {
@@ -396,7 +415,6 @@
       display:none !important;
     }
 
-    /* STATE COLORS */
     .state-free{
       --accent: var(--cyan);
     }
@@ -411,12 +429,6 @@
     }
     .state-maintenance{
       --accent: var(--red);
-    }
-
-    @media (max-height: 800px){
-      body{
-        overflow:auto;
-      }
     }
   </style>
 </head>
@@ -439,7 +451,7 @@
         </div>
       </div>
 
-      <button class="refresh-btn" id="refreshBtn">更新<br><span style="font-size:12px;">REFRESH</span></button>
+      <button class="refresh-btn" id="refreshBtn">更新<br><span style="font-size:11px;">REFRESH</span></button>
     </header>
 
     <main class="main">
@@ -466,7 +478,7 @@
             <div class="time-label-en" id="timeLabelEn">NEXT RESERVATION</div>
             <div class="time-value" id="timeValue">10:00</div>
             <div class="time-sub" id="timeSub">～10:40 まで　UNTIL 10:40</div>
-            <button class="checkout-btn hidden" id="checkoutBtn">チェックアウトする<br><span style="font-size:16px;">CHECK OUT</span></button>
+            <button class="checkout-btn hidden" id="checkoutBtn">チェックアウトする<br><span style="font-size:14px;">CHECK OUT</span></button>
           </div>
         </section>
 
@@ -502,8 +514,6 @@
         msgEn: "Please check in from the store tablet.",
         timeLabelJa: "",
         timeLabelEn: "",
-        timeValue: "",
-        timeSub: "",
         showCheckout: false
       },
       reserved: {
@@ -544,8 +554,6 @@
         msgEn: "This rack is temporarily unavailable.",
         timeLabelJa: "",
         timeLabelEn: "",
-        timeValue: "",
-        timeSub: "",
         showCheckout: false
       }
     };
@@ -566,26 +574,30 @@
       return `${esc(m[1])} <span class="updated-time">${esc(m[2])}</span>`;
     }
 
-    function findRack(data, rackNo) {
-      const racks = Array.isArray(data.racks) ? data.racks : [];
-      return racks.find(r => Number(r.rackNo) === Number(rackNo)) || null;
-    }
-
     function normalizeState(r) {
       const raw = String(r.state || "").toLowerCase();
 
       if (raw === "using_checked_in") return "using_checked_in";
       if (raw === "using_not_checked_in") return "using_not_checked_in";
-
-      if (raw === "using") {
-        return "using_checked_in";
-      }
-
+      if (raw === "using") return "using_checked_in";
       if (raw === "reserved") return "reserved";
       if (raw === "free") return "free";
       if (raw === "maintenance") return "maintenance";
 
       return "free";
+    }
+
+    function extractRemainValue_(subText) {
+      const s = String(subText || "");
+      const m = s.match(/残り\s*([0-9]+)\s*分/);
+      return m ? m[1] : "";
+    }
+
+    function buildUntilText_(currentText) {
+      const s = String(currentText || "");
+      const m = s.match(/(\d{2}:\d{2})まで/);
+      if (!m) return "";
+      return `～ ${m[1]} まで　UNTIL ${m[1]}`;
     }
 
     function applyStateUI(r) {
@@ -595,15 +607,15 @@
 
       panel.className = `status-panel ${cfg.panelClass}`;
 
-      document.getElementById("rackNoBig").textContent = r.rackNo;
-      document.getElementById("rackNoJa").textContent = r.rackNo;
+      document.getElementById("rackNoBig").textContent = r.rackNo || rackNo;
+      document.getElementById("rackNoJa").textContent = r.rackNo || rackNo;
       document.getElementById("statusJa").textContent = cfg.statusJa;
       document.getElementById("statusEn").textContent = cfg.statusEn;
       document.getElementById("statusMsgJa").textContent = cfg.msgJa;
       document.getElementById("statusMsgEn").textContent = cfg.msgEn;
 
-      document.getElementById("timeLabelJa").textContent = cfg.timeLabelJa;
-      document.getElementById("timeLabelEn").textContent = cfg.timeLabelEn;
+      document.getElementById("timeLabelJa").textContent = cfg.timeLabelJa || "";
+      document.getElementById("timeLabelEn").textContent = cfg.timeLabelEn || "";
 
       if (stateKey === "reserved") {
         document.getElementById("timeValue").textContent = r.nextText || "";
@@ -628,19 +640,6 @@
       }
     }
 
-    function extractRemainValue_(subText) {
-      const s = String(subText || "");
-      const m = s.match(/残り\s*([0-9]+)\s*分/);
-      return m ? m[1] : "";
-    }
-
-    function buildUntilText_(currentText) {
-      const s = String(currentText || "");
-      const m = s.match(/(\d{2}:\d{2})まで/);
-      if (!m) return "";
-      return `～ ${m[1]} まで　UNTIL ${m[1]}`;
-    }
-
     async function fetchData() {
       const res = await fetch(`${API_URL}?action=getracktabletjson&rackNo=${rackNo}&t=${Date.now()}`, {
         method: "GET",
@@ -654,7 +653,6 @@
       try {
         const data = await fetchData();
         document.getElementById("lastUpdated").innerHTML = formatLastUpdated(data.lastUpdatedText || "");
-
         applyStateUI(data);
       } catch (e) {
         console.error(e);
