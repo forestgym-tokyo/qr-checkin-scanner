@@ -2,26 +2,27 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
-  <title>Workout Check-In</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+  />
+  <title>Workout Check-in</title>
   <style>
     :root{
-      --bg:#050607;
-      --panel:#0d1013;
-      --panel2:#11151a;
-      --line:rgba(255,255,255,.08);
+      --bg:#05070b;
+      --panel:#0b1018;
+      --panel2:#101826;
+      --line:#79d900;
+      --line-soft:rgba(121,217,0,.55);
       --text:#ffffff;
-      --muted:rgba(255,255,255,.62);
-      --muted2:rgba(255,255,255,.42);
-      --green:#78c53a;
-      --green2:#5fab24;
-      --whiteBadge:#d9dde2;
-      --orange:#d08a20;
-      --blue:#3f82c8;
-      --yellow:#d6b428;
-      --danger:#d9534f;
+      --muted:#a9b0bb;
+      --green:#79f000;
+      --green2:#5fd100;
+      --orange:#ffad33;
+      --orange2:#8a5a16;
+      --blueBtn:#1b2436;
+      --shadow:0 0 0 1px rgba(255,255,255,.05) inset;
       --radius:24px;
-      --shadow:0 14px 36px rgba(0,0,0,.34);
     }
 
     *{
@@ -32,909 +33,745 @@
     html,body{
       margin:0;
       padding:0;
-      background:linear-gradient(180deg,#060708 0%,#030405 100%);
+      width:100%;
+      height:100%;
+      background:#000;
       color:var(--text);
-      font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",system-ui,sans-serif;
-      overflow-x:hidden;
+      font-family:
+        "Segoe UI","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
     }
 
     body{
-      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      background:
+        radial-gradient(circle at top, #0f1724 0%, #05070b 45%, #000 100%);
     }
 
     .app{
-      width:100%;
-      max-width:1400px;
-      margin:0 auto;
-      padding:10px 18px 10px;
+      width:min(100vw, 800px);
+      min-height:100vh;
+      padding:18px 18px 10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
     }
 
-    /* ===== HEADER ===== */
-    .header{
+    .topbar{
       display:grid;
-      grid-template-columns: 300px 1fr;
-      gap:18px;
+      grid-template-columns: 180px 1fr 180px;
       align-items:center;
-      margin-bottom:10px;
+      gap:10px;
     }
 
     .logo-wrap{
-      height:78px;
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:flex-start;
-      overflow:hidden;
+      min-height:86px;
     }
 
-    .logo-wrap img{
-      display:block;
-      max-width:100%;
-      max-height:100%;
-      object-fit:contain;
+    .logo{
+      line-height:1;
+      user-select:none;
+    }
+
+    .logo .leaf{
+      color:#8CF000;
+      font-size:38px;
+      display:inline-block;
+      margin-right:2px;
+      transform:translateY(2px);
+    }
+
+    .logo .the{
+      font-size:30px;
+      font-weight:800;
+      color:#fff;
+      display:inline-block;
+      vertical-align:top;
+      margin-left:2px;
+    }
+
+    .logo .forest{
+      font-size:30px;
+      font-weight:900;
+      color:#7AF000;
+      margin-top:2px;
+    }
+
+    .logo .gym{
+      font-size:30px;
+      font-weight:900;
+      color:#fff;
+      margin-left:2px;
+    }
+
+    .logo .sub{
+      font-size:15px;
+      color:#d7dbdf;
+      margin-top:6px;
+      margin-left:26px;
+      font-weight:700;
     }
 
     .title-wrap{
+      text-align:center;
       display:flex;
       flex-direction:column;
-      justify-content:center;
       align-items:center;
-      height:78px;
-      min-width:0;
-      padding:0 90px 0 0;
+      justify-content:center;
     }
 
-    .title-main{
-      margin:0;
-      font-size:36px;
-      line-height:1;
+    .title{
+      font-size:28px;
       font-weight:900;
-      letter-spacing:.01em;
+      letter-spacing:.5px;
+      margin:0;
       text-align:center;
-      white-space:nowrap;
+      width:100%;
     }
 
-    .title-sub{
-      margin-top:6px;
-      font-size:15px;
-      line-height:1.1;
-      color:rgba(255,255,255,.78);
-      font-weight:600;
+    .subtitle{
+      margin-top:4px;
+      font-size:14px;
+      color:#eef2f5;
+      font-weight:800;
       text-align:center;
-      white-space:nowrap;
+      width:100%;
     }
 
-    /* ===== TOP ===== */
-    .top-row{
+    .topbar-spacer{
+      min-height:1px;
+    }
+
+    .hero{
       display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    .hero-box{
+      background:linear-gradient(180deg, rgba(16,24,37,.96), rgba(8,12,20,.96));
+      border:1.5px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      min-height:112px;
+      padding:16px 18px;
+      box-shadow:var(--shadow);
+    }
+
+    .code-title,
+    .qr-title{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-weight:900;
+      font-size:18px;
       margin-bottom:8px;
     }
 
-    .top-card{
-      background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01)), var(--panel);
-      border:1px solid var(--line);
-      border-radius:22px;
-      box-shadow:var(--shadow);
-      padding:14px 18px;
+    .en-green{
+      color:var(--green);
+      font-size:14px;
+      font-weight:900;
+    }
+
+    .code-value{
+      color:var(--green);
+      font-size:54px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:3px;
+      margin:8px 0 6px;
+    }
+
+    .date{
+      color:#f4f6f8;
+      font-size:16px;
+      font-weight:800;
+    }
+
+    .qr-box-btn{
+      width:100%;
+      height:100%;
+      background:none;
+      border:none;
+      color:#fff;
+      padding:0;
+      margin:0;
+      cursor:pointer;
+      text-align:left;
+    }
+
+    .qr-inner{
       display:flex;
       align-items:center;
-    }
-
-    .access-card{
-      min-height:118px;
-      justify-content:flex-start;
-    }
-
-    .access-inner{
-      display:flex;
-      flex-direction:column;
       justify-content:center;
-      gap:0;
-      min-width:0;
-    }
-
-    .access-label-row{
-      display:flex;
-      align-items:baseline;
-      gap:8px;
-      white-space:nowrap;
-    }
-
-    .card-ja{
-      font-size:23px;
-      line-height:1;
-      font-weight:900;
-      margin:0;
-    }
-
-    .card-en{
-      font-size:14px;
-      line-height:1;
-      color:var(--green);
-      font-weight:800;
-      margin:0;
-      letter-spacing:.02em;
-    }
-
-    .access-code{
-      margin-top:8px;
-      font-size:52px;
-      line-height:1;
-      font-weight:900;
-      letter-spacing:.14em;
-      color:var(--green);
-      white-space:nowrap;
-    }
-
-    .access-date{
-      margin-top:8px;
-      font-size:18px;
-      line-height:1;
-      font-weight:600;
-      color:rgba(255,255,255,.90);
-    }
-
-    .qr-card{
-      min-height:112px;
-      cursor:pointer;
-      gap:16px;
-      justify-content:flex-start;
-    }
-
-    .qr-card:active{
-      transform:scale(.997);
+      gap:18px;
+      height:100%;
+      min-height:78px;
     }
 
     .qr-icon{
-      width:54px;
-      height:54px;
-      flex:0 0 54px;
-      color:#fff;
-      opacity:.96;
+      font-size:42px;
+      line-height:1;
     }
 
-    .qr-ja{
-      margin:0;
-      font-size:28px;
-      line-height:1.05;
+    .qr-main-ja{
+      font-size:26px;
       font-weight:900;
+      line-height:1.15;
     }
 
-    .qr-en{
-      margin-top:6px;
-      font-size:16px;
-      line-height:1.05;
+    .qr-main-en{
+      font-size:14px;
       color:var(--green);
-      font-weight:800;
+      font-weight:900;
+      margin-top:6px;
     }
 
-    /* ===== UPDATE ===== */
-    .update-row{
-      min-height:28px;
+    .updated{
       display:flex;
       align-items:center;
       justify-content:center;
       gap:8px;
-      color:var(--muted);
-      font-size:16px;
-      line-height:1.1;
-      font-weight:600;
-      margin-bottom:8px;
+      color:#d9dee3;
+      font-weight:900;
+      font-size:14px;
+      margin:2px 0 0;
       text-align:center;
     }
 
-    .refresh-icon{
-      width:18px;
-      height:18px;
+    .updated .icon{
       color:var(--green);
-      flex:0 0 18px;
+      font-size:18px;
     }
 
-    .error-box{
-      display:none;
-      margin:0 0 10px;
-      padding:10px 12px;
-      border-radius:14px;
-      background:rgba(217,83,79,.12);
-      border:1px solid rgba(217,83,79,.3);
-      color:#ffd8d7;
-      font-size:15px;
-      font-weight:700;
-    }
-
-    .error-box.show{
-      display:block;
-    }
-
-    /* ===== GRID ===== */
     .rack-grid{
+      flex:1;
       display:grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns: 1fr 1fr;
       gap:14px;
+      align-content:start;
     }
 
     .rack-card{
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01)),
-        var(--panel2);
-      border:1px solid var(--line);
-      border-radius:24px;
-      box-shadow:var(--shadow);
-      height:370px;
-      min-height:370px;
-      padding:14px;
+      background:linear-gradient(180deg, rgba(8,15,24,.98), rgba(7,12,20,.98));
+      border:1.8px solid var(--line-soft);
+      border-radius:28px;
+      padding:18px 18px 16px;
+      box-shadow:
+        0 0 0 1px rgba(121,217,0,.14) inset,
+        0 8px 30px rgba(0,0,0,.25);
       display:flex;
       flex-direction:column;
+      min-height:335px;
     }
-
-    .rack-card.state-free{ border-color:rgba(120,197,58,.28); }
-    .rack-card.state-using{ border-color:rgba(255,255,255,.12); }
-    .rack-card.state-reserved{ border-color:rgba(208,138,32,.34); }
-    .rack-card.state-maintenance{ border-color:rgba(63,130,200,.34); }
-    .rack-card.state-gap{ border-color:rgba(214,180,40,.34); }
-    .rack-card.state-waiting{ border-color:rgba(120,197,58,.28); }
 
     .rack-top{
       display:grid;
-      grid-template-columns:180px 1fr;
-      gap:16px;
+      grid-template-columns: 155px 1fr;
+      gap:18px;
       align-items:start;
-      min-height:0;
     }
 
-    .rack-visual{
+    /* ここが今回の最重要 */
+    .rack-left{
+      width:155px;
       display:flex;
       flex-direction:column;
-      align-items:flex-start;
+      align-items:center;   /* アイコンとステータスラベルを同じ中心線に乗せる */
       justify-content:flex-start;
-      min-width:0;
+      gap:18px;
+      padding-top:2px;
     }
 
-    .rack-image-wrap{
-      width:100%;
-      min-height:160px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:center;
-    }
-
-    .rack-image-wrap img{
-      width:132px;
-      height:132px;
+    .rack-icon{
+      width:150px;
+      height:150px;
       object-fit:contain;
-      flex:0 0 132px;
+      display:block;
+      margin:0 auto;
+      filter:drop-shadow(0 4px 12px rgba(0,0,0,.45));
     }
 
-    .badge-under{
-      width:100%;
-      margin-top:14px;
+    .status-pill{
+      width:122px;                /* 固定幅 */
+      min-height:58px;
+      border-radius:16px;
       display:flex;
-      justify-content:flex-start;
-    }
-
-    .badge{
-      min-width:122px;
-      min-height:54px;
-      padding:8px 12px;
-      border-radius:14px;
-      display:inline-flex;
       flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:4px;
-      font-size:15px;
-      line-height:1.05;
-      font-weight:900;
-      border:1px solid transparent;
+      align-items:center;         /* 中央揃え */
+      justify-content:center;     /* 中央揃え */
       text-align:center;
-      white-space:nowrap;
-    }
-
-    .badge-ja{
-      font-size:16px;
-      line-height:1;
       font-weight:900;
+      line-height:1.05;
+      padding:8px 8px 7px;
+      margin:0 auto;              /* 左カラム中央 */
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
     }
 
-    .badge-en{
-      font-size:11px;
-      line-height:1;
-      font-weight:800;
-      letter-spacing:.02em;
-      opacity:.95;
+    .status-pill .ja{
+      font-size:15px;
+      margin-bottom:3px;
     }
 
-    .badge.free{
-      background:rgba(120,197,58,.16);
-      color:#ebffd7;
-      border-color:rgba(120,197,58,.3);
+    .status-pill .en{
+      font-size:10px;
+      letter-spacing:.4px;
+      opacity:.97;
     }
-    .badge.using{
-      background:rgba(255,255,255,.08);
-      color:#f4f6f8;
-      border-color:rgba(255,255,255,.14);
+
+    .status-free{
+      background:linear-gradient(180deg, #3e6d21, #2f541a);
+      color:#fff;
     }
-    .badge.reserved{
-      background:rgba(208,138,32,.16);
-      color:#ffe0ae;
-      border-color:rgba(208,138,32,.3);
+
+    .status-reserved{
+      background:linear-gradient(180deg, #7a5826, #5a4019);
+      color:#fff;
     }
-    .badge.maintenance{
-      background:rgba(63,130,200,.16);
-      color:#d8ebff;
-      border-color:rgba(63,130,200,.3);
-    }
-    .badge.gap{
-      background:rgba(214,180,40,.16);
-      color:#fff2ac;
-      border-color:rgba(214,180,40,.3);
-    }
-    .badge.waiting{
-      background:rgba(120,197,58,.16);
-      color:#ebffd7;
-      border-color:rgba(120,197,58,.3);
+
+    .status-using{
+      background:linear-gradient(180deg, #325f25, #264a1b);
+      color:#fff;
     }
 
     .rack-info{
-      min-width:0;
       display:flex;
       flex-direction:column;
-      min-height:0;
+      align-items:flex-start;
+      justify-content:flex-start;
+      padding-top:2px;
     }
 
-    .label{
+    .section-label{
       font-size:14px;
-      line-height:1.05;
+      font-weight:900;
+      margin-bottom:2px;
+    }
+
+    .section-label.green{
+      color:var(--green);
+    }
+
+    .section-label.orange{
+      color:var(--orange);
+    }
+
+    .big-status{
+      font-size:26px;
+      line-height:1.12;
+      font-weight:900;
+      margin-bottom:6px;
+    }
+
+    .substatus{
+      font-size:15px;
       font-weight:800;
-      margin:0 0 6px;
-      letter-spacing:.01em;
+      color:#f3f5f7;
+      line-height:1.25;
+      margin-bottom:16px;
     }
 
-    .label.green{ color:var(--green); }
-    .label.orange{ color:var(--orange); }
-    .label.blue{ color:var(--blue); }
-    .label.yellow{ color:var(--yellow); }
-    .label.white{ color:var(--whiteBadge); }
-
-    .status-main{
-      font-size:24px;
-      line-height:1.14;
+    .next-main{
+      font-size:20px;
       font-weight:900;
-      color:#fff;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      line-height:1.15;
+      margin-bottom:2px;
     }
 
-    .status-sub{
-      margin-top:6px;
+    .next-sub{
       font-size:15px;
-      line-height:1.2;
-      font-weight:700;
-      color:rgba(255,255,255,.86);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .divider{
-      height:1px;
-      background:linear-gradient(90deg, rgba(120,197,58,.38), rgba(255,255,255,.02));
-      margin:10px 0 10px;
-    }
-
-    .schedule-block{
-      margin-top:0;
-    }
-
-    .schedule-main{
-      font-size:22px;
-      line-height:1.18;
       font-weight:900;
-      color:#fff;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .schedule-sub{
-      margin-top:4px;
-      font-size:15px;
-      line-height:1.2;
-      font-weight:600;
-      color:rgba(255,255,255,.86);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      line-height:1.25;
+      margin-bottom:14px;
     }
 
     .waiting-row{
-      margin-top:10px;
+      display:flex;
+      align-items:flex-end;
+      gap:8px;
+      margin:0 0 8px;
+    }
+
+    .waiting-icon{
+      font-size:18px;
+      line-height:1;
+      transform:translateY(-2px);
     }
 
     .waiting-count{
-      margin-top:4px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-size:20px;
-      line-height:1.1;
+      font-size:22px;
       font-weight:900;
-      color:#fff;
-    }
-
-    .person-icon{
-      width:20px;
-      height:20px;
-      flex:0 0 20px;
-      color:rgba(255,255,255,.78);
+      line-height:1;
     }
 
     .note{
-      margin-top:8px;
-      padding-top:8px;
-      border-top:1px solid rgba(255,255,255,.08);
       font-size:13px;
+      color:#d8dde2;
       line-height:1.25;
-      font-weight:600;
-      color:var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      opacity:.92;
     }
 
-    .bottom-actions{
+    .rack-actions{
       margin-top:auto;
-      padding-top:12px;
+      padding-top:16px;
     }
 
-    .btn{
-      appearance:none;
-      border:0;
-      border-radius:16px;
-      cursor:pointer;
-      font-weight:900;
-      transition:transform .04s ease, opacity .15s ease;
-    }
-
-    .btn:active{
-      transform:scale(.995);
-    }
-
-    .btn-use{
+    .action-btn{
       width:100%;
-      min-height:66px;
-      padding:10px 18px;
-      background:linear-gradient(180deg,var(--green) 0%, var(--green2) 100%);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.14);
+      min-height:62px;
+      border:none;
+      border-radius:18px;
+      font-size:18px;
+      font-weight:900;
+      cursor:pointer;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
+      padding:0 22px 0 24px;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.1),
+        0 6px 16px rgba(0,0,0,.25);
     }
 
-    .btn-use-ja{
-      font-size:22px;
-      line-height:1;
+    .action-btn .btn-ja{
+      font-size:18px;
       font-weight:900;
+      line-height:1.05;
       text-align:left;
     }
 
-    .btn-use-en{
-      margin-top:3px;
-      font-size:13px;
-      line-height:1;
-      font-weight:800;
-      color:rgba(255,255,255,.92);
+    .action-btn .btn-en{
+      font-size:11px;
+      font-weight:900;
+      opacity:.95;
+      margin-top:4px;
       text-align:left;
-      letter-spacing:.02em;
     }
 
-    .btn-arrow{
-      font-size:34px;
+    .action-btn .arrow{
+      font-size:28px;
       line-height:1;
       font-weight:900;
       opacity:.95;
     }
 
-    .btn-queue{
-      width:100%;
-      min-height:54px;
-      padding:10px 14px;
-      background:rgba(255,255,255,.03);
+    .btn-green{
+      background:linear-gradient(180deg, #82f100, #67cf00);
       color:#fff;
-      border:1px solid rgba(255,255,255,.12);
-      font-size:18px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
+    }
+
+    .btn-dark{
+      background:linear-gradient(180deg, #1d2740, #172033);
+      color:#fff;
     }
 
     .footer{
-      min-height:30px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:rgba(255,255,255,.28);
+      text-align:center;
+      color:#dfe4e8;
       font-size:13px;
-      line-height:1;
-      letter-spacing:.04em;
-      margin-top:8px;
+      font-weight:700;
+      padding:2px 0 0;
+      margin-top:0;
+      opacity:.9;
     }
 
-    @media (max-width:1200px){
-      .header{
-        grid-template-columns:260px 1fr;
+    .hidden{
+      display:none !important;
+    }
+
+    @media (max-width: 760px){
+      .app{
+        width:100vw;
+        padding:14px 12px 8px;
       }
-      .title-wrap{
-        padding:0 70px 0 0;
+
+      .topbar{
+        grid-template-columns: 1fr;
+        gap:8px;
       }
-      .title-main{
-        font-size:32px;
+
+      .logo-wrap,
+      .topbar-spacer{
+        display:none;
       }
-      .title-sub{
-        font-size:14px;
+
+      .title{
+        font-size:26px;
       }
+
+      .hero,
+      .rack-grid{
+        grid-template-columns:1fr;
+      }
+
       .rack-top{
-        grid-template-columns:160px 1fr;
+        grid-template-columns:130px 1fr;
       }
-      .rack-image-wrap img{
-        width:118px;
-        height:118px;
-        flex-basis:118px;
+
+      .rack-left{
+        width:130px;
       }
-      .status-main{
-        font-size:22px;
+
+      .rack-icon{
+        width:124px;
+        height:124px;
       }
-      .schedule-main{
-        font-size:20px;
+
+      .status-pill{
+        width:110px;
       }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <header class="header">
+    <header class="topbar">
       <div class="logo-wrap">
-        <img src="logo.png" alt="The Forest Gym Logo">
+        <div class="logo">
+          <div>
+            <span class="leaf">🍃</span><span class="the">The</span>
+          </div>
+          <div><span class="forest">Forest</span> <span class="gym">Gym</span></div>
+          <div class="sub">24h Fitness</div>
+        </div>
       </div>
+
       <div class="title-wrap">
-        <h1 class="title-main">WORKOUT CHECK-IN</h1>
-        <div class="title-sub">ラック予定一覧 / Rack Status Board</div>
+        <h1 class="title">WORKOUT CHECK-IN</h1>
+        <div class="subtitle">ラック予定一覧 / Rack Status Board</div>
       </div>
+
+      <div class="topbar-spacer"></div>
     </header>
 
-    <section class="top-row">
-      <div class="top-card access-card">
-        <div class="access-inner">
-          <div class="access-label-row">
-            <div class="card-ja">認証コード</div>
-            <div class="card-en">/ ACCESS CODE</div>
-          </div>
-          <div class="access-code" id="authCode">----</div>
-          <div class="access-date" id="todayLabel">----/--/--</div>
+    <section class="hero">
+      <div class="hero-box">
+        <div class="code-title">
+          <span>認証コード</span>
+          <span class="en-green">/ ACCESS CODE</span>
         </div>
+        <div id="authCode" class="code-value">----</div>
+        <div id="todayLabel" class="date">----/--/--</div>
       </div>
 
-      <div class="top-card qr-card" id="qrCard" role="button" tabindex="0" aria-label="QRでチェックイン">
-        <svg class="qr-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-          <path d="M10 23V12a2 2 0 0 1 2-2h11" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-          <path d="M54 23V12a2 2 0 0 0-2-2H41" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-          <path d="M10 41v11a2 2 0 0 0 2 2h11" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-          <path d="M54 41v11a2 2 0 0 1-2 2H41" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-          <rect x="18" y="18" width="10" height="10" stroke="currentColor" stroke-width="4"/>
-          <rect x="36" y="18" width="10" height="10" stroke="currentColor" stroke-width="4"/>
-          <rect x="18" y="36" width="10" height="10" stroke="currentColor" stroke-width="4"/>
-          <path d="M36 36h10v10h-5m-7-5h5v10" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <div class="qr-ja">QRでチェックイン</div>
-          <div class="qr-en">CHECK IN WITH QR</div>
-        </div>
+      <div class="hero-box">
+        <button class="qr-box-btn" onclick="goQrPage()">
+          <div class="qr-inner">
+            <div class="qr-icon">▣</div>
+            <div>
+              <div class="qr-main-ja">QRでチェックイン</div>
+              <div class="qr-main-en">CHECK IN WITH QR</div>
+            </div>
+          </div>
+        </button>
       </div>
     </section>
 
-    <div class="update-row">
-      <svg class="refresh-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M20 7v5h-5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M4 17v-5h5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M6.8 9.2A8 8 0 0 1 20 12" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
-        <path d="M17.2 14.8A8 8 0 0 1 4 12" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
-      </svg>
-      <div id="lastUpdated">最終更新 / LAST UPDATED: --</div>
+    <div class="updated">
+      <span class="icon">⟳</span>
+      <span id="updatedText">最終更新 / LAST UPDATED: ----/--/-- --:--</span>
     </div>
 
-    <div class="error-box" id="errorBox"></div>
+    <main id="rackGrid" class="rack-grid"></main>
 
-    <section class="rack-grid" id="rackGrid"></section>
-
-    <footer class="footer">All rights reserved.</footer>
+    <footer class="footer">All rights reserved. A-nauts.</footer>
   </div>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-    const QR_PAGE_URL = "index.html";
-    const CHECKIN_PAGE_URL = "checkin.html";
-    const QUEUE_PAGE_URL = "queue.html";
-    const REFRESH_MS = 15000;
+    const QR_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/index.html";
 
-    const STATE_UI = {
-      free: {
-        badgeClass: "free",
-        badgeTextJa: "空き",
-        badgeTextEn: "AVAILABLE",
-        cardClass: "state-free",
-        currentLabelClass: "green",
-        nextLabelClass: "green",
-        waitingLabelClass: "green"
-      },
-      using: {
-        badgeClass: "using",
-        badgeTextJa: "利用中",
-        badgeTextEn: "IN USE",
-        cardClass: "state-using",
-        currentLabelClass: "white",
-        nextLabelClass: "green",
-        waitingLabelClass: "white"
-      },
-      reserved: {
-        badgeClass: "reserved",
-        badgeTextJa: "予約あり",
-        badgeTextEn: "RESERVED",
-        cardClass: "state-reserved",
-        currentLabelClass: "orange",
-        nextLabelClass: "orange",
-        waitingLabelClass: "orange"
-      },
-      maintenance: {
-        badgeClass: "maintenance",
-        badgeTextJa: "メンテ中",
-        badgeTextEn: "MAINTENANCE",
-        cardClass: "state-maintenance",
-        currentLabelClass: "blue",
-        nextLabelClass: "blue",
-        waitingLabelClass: "blue"
-      },
-      gap: {
-        badgeClass: "gap",
-        badgeTextJa: "すき間利用可",
-        badgeTextEn: "SHORT USE",
-        cardClass: "state-gap",
-        currentLabelClass: "yellow",
-        nextLabelClass: "orange",
-        waitingLabelClass: "yellow"
-      },
-      waiting: {
-        badgeClass: "waiting",
-        badgeTextJa: "順番待ち",
-        badgeTextEn: "WAITING",
-        cardClass: "state-waiting",
-        currentLabelClass: "green",
-        nextLabelClass: "green",
-        waitingLabelClass: "green"
-      }
-    };
-
-    function esc(str) {
+    function escapeHtml(str) {
       return String(str ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
     }
 
-    function withBr(str) {
-      return esc(str).replace(/\n/g, "<br>");
+    function rackImageUrl(rackNo){
+      return `https://forestgym-tokyo.github.io/qr-checkin-scanner/assets/rack${rackNo}.png`;
     }
 
-    function txt(v, fallback = "—") {
-      const s = String(v ?? "").trim();
-      return s ? s : fallback;
+    function goQrPage(){
+      window.location.href = QR_URL + "?t=" + Date.now();
     }
 
-    function showError(msg) {
-      const el = document.getElementById("errorBox");
-      el.textContent = msg;
-      el.classList.add("show");
+    function goCheckin(rackNo){
+      window.location.href = `https://forestgym-tokyo.github.io/qr-checkin-scanner/checkin.html?rackNo=${encodeURIComponent(rackNo)}&t=${Date.now()}`;
     }
 
-    function hideError() {
-      const el = document.getElementById("errorBox");
-      el.textContent = "";
-      el.classList.remove("show");
+    function goQueue(rackNo){
+      window.location.href = `https://forestgym-tokyo.github.io/qr-checkin-scanner/queue.html?rackNo=${encodeURIComponent(rackNo)}&t=${Date.now()}`;
     }
 
-    function normalizeRack(raw) {
-      const state = String(raw.state || "free").toLowerCase().trim();
-      const ui = STATE_UI[state] || STATE_UI.free;
+    function normalizeRackState(rack){
+      const state = String(rack.state || "").toLowerCase();
+      const current = String(rack.currentText || "");
+      const next = String(rack.nextText || "");
 
-      return {
-        rackNo: Number(raw.rackNo) || 0,
-        state,
-        ui,
-        badgeTextJa: txt(raw.badgeTextJa, raw.badgeText, ui.badgeTextJa),
-        badgeTextEn: txt(raw.badgeTextEn, ui.badgeTextEn),
-
-        currentLabelJa: txt(raw.currentLabelJa, "現在"),
-        currentLabelEn: txt(raw.currentLabelEn, "CURRENT"),
-        currentText: txt(raw.currentText),
-        currentSubText: txt(raw.currentSubText, ""),
-
-        nextLabelJa: txt(raw.nextLabelJa, "次の予定"),
-        nextLabelEn: txt(raw.nextLabelEn, "NEXT"),
-        nextText: txt(raw.nextText, ""),
-        nextSubText: txt(raw.nextSubText, ""),
-
-        waitingLabelJa: txt(raw.waitingLabelJa, "順番待ち"),
-        waitingLabelEn: txt(raw.waitingLabelEn, "WAITING"),
-        waitingCount: Number.isFinite(Number(raw.waitingCount)) ? Number(raw.waitingCount) : 0,
-
-        noteText: txt(raw.noteText, ""),
-
-        showUseNowButton: Boolean(raw.showUseNowButton),
-        useNowLabelJa: txt(raw.useNowLabelJa, "すぐに利用"),
-        useNowLabelEn: txt(raw.useNowLabelEn, "USE NOW"),
-
-        showQueueButton: Boolean(raw.showQueueButton),
-        queueButtonText: txt(raw.queueButtonText, "順番待ち"),
-
-        checkinUrl: txt(raw.checkinUrl, ""),
-        queueUrl: txt(raw.queueUrl, "")
-      };
+      if (state.includes("using")) return "using";
+      if (state.includes("reserved")) return "reserved";
+      if (current.includes("利用中")) return "using";
+      if (current.includes("空いています")) return "free";
+      if (current.includes("後から") || current.includes("予定")) return "reserved";
+      if (next.includes("PERSONAL")) return "reserved";
+      return "free";
     }
 
-    function renderBadge(r) {
+    function buildStatusPill(state){
+      if(state === "reserved"){
+        return `
+          <div class="status-pill status-reserved">
+            <div class="ja">予定があります</div>
+            <div class="en">RESERVED SOON</div>
+          </div>
+        `;
+      }
+      if(state === "using"){
+        return `
+          <div class="status-pill status-using">
+            <div class="ja">利用中</div>
+            <div class="en">IN USE</div>
+          </div>
+        `;
+      }
       return `
-        <div class="badge ${r.ui.badgeClass}">
-          <div class="badge-ja">${esc(r.badgeTextJa)}</div>
-          <div class="badge-en">${esc(r.badgeTextEn)}</div>
+        <div class="status-pill status-free">
+          <div class="ja">空き</div>
+          <div class="en">AVAILABLE</div>
         </div>
       `;
     }
 
-    function renderRack(raw) {
-      const r = normalizeRack(raw);
+    function buildActionButton(rack, state){
+      const rackNo = rack.rackNo;
+      const showUseNow = !!rack.showUseNowButton || state === "free";
+      const showQueue = !!rack.showQueueButton || state !== "free";
 
-      const checkinUrl = r.checkinUrl || `${CHECKIN_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}`;
-      const queueUrl = r.queueUrl || `${QUEUE_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}`;
-
-      const useButton = (r.showUseNowButton && r.state !== "maintenance")
-        ? `
-          <button class="btn btn-use" data-url="${esc(checkinUrl)}" data-kind="use">
+      if(showUseNow){
+        return `
+          <button class="action-btn btn-green" onclick="goCheckin(${rackNo})">
             <div>
-              <div class="btn-use-ja">${esc(r.useNowLabelJa)}</div>
-              <div class="btn-use-en">${esc(r.useNowLabelEn)}</div>
+              <div class="btn-ja">すぐに利用</div>
+              <div class="btn-en">USE NOW</div>
             </div>
-            <div class="btn-arrow">›</div>
+            <div class="arrow">›</div>
           </button>
-        `
-        : "";
+        `;
+      }
 
-      const queueButton = (r.showQueueButton && r.state !== "maintenance")
-        ? `
-          <button class="btn btn-queue" data-url="${esc(queueUrl)}" data-kind="queue">
-            <span>${esc(r.queueButtonText)}</span>
-            <span>›</span>
+      if(showQueue){
+        return `
+          <button class="action-btn btn-dark" onclick="goQueue(${rackNo})">
+            <div>
+              <div class="btn-ja">順番待ち</div>
+            </div>
+            <div class="arrow">›</div>
           </button>
-        `
-        : "";
+        `;
+      }
 
       return `
-        <article class="rack-card ${r.ui.cardClass}">
-          <div class="rack-top">
-            <div class="rack-visual">
-              <div class="rack-image-wrap">
-                <img src="rack${r.rackNo}.png?t=1" alt="Rack ${r.rackNo}">
-              </div>
-              <div class="badge-under">
-                ${renderBadge(r)}
-              </div>
-            </div>
-
-            <div class="rack-info">
-              <div class="label ${r.ui.currentLabelClass}">
-                ${esc(r.currentLabelJa)} / ${esc(r.currentLabelEn)}
-              </div>
-              <div class="status-main">${withBr(r.currentText)}</div>
-              ${r.currentSubText ? `<div class="status-sub">${withBr(r.currentSubText)}</div>` : ""}
-
-              <div class="divider"></div>
-
-              <div class="schedule-block">
-                <div class="label ${r.ui.nextLabelClass}">
-                  ${esc(r.nextLabelJa)} / ${esc(r.nextLabelEn)}
-                </div>
-                <div class="schedule-main">${withBr(r.nextText || "予定なし")}</div>
-                ${r.nextSubText ? `<div class="schedule-sub">${withBr(r.nextSubText)}</div>` : ""}
-              </div>
-
-              <div class="waiting-row">
-                <div class="label ${r.ui.waitingLabelClass}">
-                  ${esc(r.waitingLabelJa)} / ${esc(r.waitingLabelEn)}
-                </div>
-                <div class="waiting-count">
-                  <svg class="person-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-4.14 0-7.5 2.46-7.5 5.5A1.5 1.5 0 0 0 6 21h12a1.5 1.5 0 0 0 1.5-1.5C19.5 16.46 16.14 14 12 14Z"/>
-                  </svg>
-                  <span>${r.waitingCount}名</span>
-                </div>
-              </div>
-
-              ${r.noteText ? `<div class="note">${withBr(r.noteText)}</div>` : ""}
-            </div>
+        <button class="action-btn btn-dark" onclick="goQueue(${rackNo})">
+          <div>
+            <div class="btn-ja">順番待ち</div>
           </div>
-
-          <div class="bottom-actions">
-            ${useButton || queueButton || '<div style="height:54px;"></div>'}
-          </div>
-        </article>
+          <div class="arrow">›</div>
+        </button>
       `;
     }
 
-    function renderAll(data) {
-      document.getElementById("authCode").textContent = txt(data.authCode, "----");
-      document.getElementById("todayLabel").textContent = txt(data.todayLabel, "----/--/--");
-      document.getElementById("lastUpdated").textContent =
-        `最終更新 / LAST UPDATED: ${txt(data.lastUpdatedText, "--")}`;
+    function renderRackCard(rack){
+      const state = normalizeRackState(rack);
+      const isReserved = state === "reserved";
 
-      const racks = Array.isArray(data.racks) ? data.racks.slice() : [];
-      racks.sort((a, b) => (Number(a.rackNo) || 0) - (Number(b.rackNo) || 0));
+      const currentText = escapeHtml(rack.currentText || "空いています");
+      const nextText = escapeHtml(rack.nextText || "予定なし");
+      const waitingCount = Number(rack.waitingCount || 0);
 
-      document.getElementById("rackGrid").innerHTML = racks.map(renderRack).join("");
+      const currentLabelClass = isReserved ? "orange" : "green";
+      const nextLabelClass = isReserved ? "orange" : "green";
+
+      const noteText = isReserved
+        ? (rack.bottomNote || "Available until the next...")
+        : (rack.bottomNote || "本日この後の予定はあ...");
+
+      return `
+        <section class="rack-card">
+          <div class="rack-top">
+            <div class="rack-left">
+              <img
+                class="rack-icon"
+                src="${rackImageUrl(rack.rackNo)}"
+                alt="Rack ${rack.rackNo}"
+                onerror="this.style.display='none'"
+              />
+              ${buildStatusPill(state)}
+            </div>
+
+            <div class="rack-info">
+              <div class="section-label ${currentLabelClass}">現在 / CURRENT</div>
+              <div class="big-status">${currentText}</div>
+              <div class="substatus">${escapeHtml(rack.currentSubText || "本日の後続予定なし")}</div>
+
+              <div class="section-label ${nextLabelClass}">次の予定 / NEXT</div>
+              <div class="next-main">${nextText}</div>
+              <div class="next-sub">${escapeHtml(rack.nextSubText || "")}</div>
+
+              <div class="section-label ${nextLabelClass}">順番待ち / WAITING</div>
+              <div class="waiting-row">
+                <div class="waiting-icon">👤</div>
+                <div class="waiting-count">${waitingCount}名</div>
+              </div>
+
+              <div class="note">${escapeHtml(noteText)}</div>
+            </div>
+          </div>
+
+          <div class="rack-actions">
+            ${buildActionButton(rack, state)}
+          </div>
+        </section>
+      `;
     }
 
-    async function fetchData() {
-      const res = await fetch(`${API_URL}?action=getscheduletabletjson&t=${Date.now()}`, {
-        method: "GET",
-        cache: "no-store"
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      if (!data || typeof data !== "object") throw new Error("invalid json");
-      return data;
+    function renderScreen(data){
+      document.getElementById("authCode").textContent = data.authCode || "----";
+      document.getElementById("todayLabel").textContent = data.todayLabel || "----/--/--";
+      document.getElementById("updatedText").textContent =
+        "最終更新 / LAST UPDATED: " + (data.lastUpdated || data.updatedAt || "----/--/-- --:--");
+
+      const racks = Array.isArray(data.racks) ? data.racks : [];
+      const grid = document.getElementById("rackGrid");
+      grid.innerHTML = racks.map(renderRackCard).join("");
     }
 
-    async function loadData() {
-      try {
-        hideError();
-        const data = await fetchData();
-        renderAll(data);
-      } catch (e) {
-        console.error(e);
-        showError("データ取得失敗。GASレスポンスまたは通信状態をご確認ください。");
+    async function fetchSchedule(){
+      try{
+        const url = API_URL + "?action=getscheduletabletjson&t=" + Date.now();
+        const res = await fetch(url, { cache: "no-store" });
+        if(!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json();
+        renderScreen(data);
+      }catch(err){
+        console.error(err);
+        document.getElementById("rackGrid").innerHTML = `
+          <section class="rack-card" style="grid-column:1 / -1; min-height:180px;">
+            <div class="big-status">表示データの取得に失敗しました</div>
+            <div class="substatus">Failed to load schedule data.</div>
+          </section>
+        `;
       }
     }
 
-    function setupEvents() {
-      const qrCard = document.getElementById("qrCard");
-
-      qrCard.addEventListener("click", () => {
-        location.href = QR_PAGE_URL;
-      });
-
-      qrCard.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          location.href = QR_PAGE_URL;
-        }
-      });
-
-      document.addEventListener("click", (e) => {
-        const btn = e.target.closest("[data-url]");
-        if (!btn) return;
-        const url = btn.getAttribute("data-url");
-        if (!url) return;
-        location.href = url;
-      });
-    }
-
-    setupEvents();
-    loadData();
-    setInterval(loadData, REFRESH_MS);
+    fetchSchedule();
+    setInterval(fetchSchedule, 15000);
   </script>
 </body>
 </html>
