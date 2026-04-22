@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <title>Rack Tablet</title>
+  <style>
+    :root{
+      --bg:#050607;
+      --panel:#0a0b0d;
+      --line:rgba(255,255,255,.10);
+      --text:#ffffff;
+      --muted:rgba(255,255,255,.72);
+      --green:#8DFF00;
+      --cyan:#00C8FF;
+      --yellow:#FFD400;
+      --orange:#FF8A00;
+      --red:#FF4D4D;
+    }
+
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    html,body{
+      margin:0;
+      padding:0;
+      width:100%;
+      min-height:100%;
+      background:#000;
+      color:var(--text);
+      font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",system-ui,sans-serif;
+      overflow:hidden;
+    }
+
+    body{
+      background:
+        linear-gradient(180deg,#050607 0%,#020304 100%);
+    }
+
+    .app{
+      width:100vw;
+      height:100vh;
+      padding:20px 28px 18px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    /* HEADER */
+    .header{
+      display:grid;
+      grid-template-columns: 360px 1fr 180px;
+      align-items:center;
+      gap:24px;
+      min-height:92px;
+      padding-bottom:14px;
+      border-bottom:1px solid rgba(255,255,255,.14);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      min-width:0;
+    }
+
+    .brand-logo{
+      width:68px;
+      height:68px;
+      object-fit:contain;
+      flex:0 0 68px;
+    }
+
+    .brand-text{
+      min-width:0;
+    }
+
+    .brand-main{
+      font-size:28px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:.02em;
+      white-space:nowrap;
+    }
+
+    .brand-sub{
+      margin-top:8px;
+      font-size:16px;
+      line-height:1;
+      color:var(--green);
+      font-weight:800;
+      letter-spacing:.03em;
+      white-space:nowrap;
+    }
+
+    .updated{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:18px;
+      min-width:0;
+    }
+
+    .updated-line{
+      width:1px;
+      height:56px;
+      background:rgba(255,255,255,.18);
+      flex:0 0 1px;
+    }
+
+    .updated-text{
+      min-width:0;
+    }
+
+    .updated-label{
+      font-size:14px;
+      line-height:1;
+      color:rgba(255,255,255,.88);
+      font-weight:700;
+      letter-spacing:.03em;
+    }
+
+    .updated-value{
+      margin-top:10px;
+      font-size:32px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:.01em;
+      white-space:nowrap;
+    }
+
+    .updated-time{
+      color:var(--green);
+    }
+
+    .refresh-btn{
+      appearance:none;
+      border:2px solid rgba(141,255,0,.72);
+      background:transparent;
+      color:var(--green);
+      border-radius:16px;
+      min-height:72px;
+      font-size:20px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    /* MAIN */
+    .main{
+      flex:1;
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:28px;
+      min-height:0;
+    }
+
+    .rack-side{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      min-width:0;
+    }
+
+    .rack-title{
+      font-size:86px;
+      line-height:.92;
+      font-weight:900;
+      letter-spacing:.01em;
+      white-space:nowrap;
+    }
+
+    .rack-title .num{
+      color:var(--green);
+    }
+
+    .rack-divider{
+      margin:14px 0 16px;
+      height:4px;
+      width:100%;
+      background:var(--green);
+    }
+
+    .rack-sub{
+      font-size:30px;
+      line-height:1;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .content{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      min-height:0;
+    }
+
+    /* STATUS AREA */
+    .status-panel{
+      flex:1;
+      min-height:0;
+      padding:22px 24px;
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap:26px;
+      align-items:stretch;
+      border-top:3px solid var(--accent);
+      border-bottom:3px solid var(--accent);
+      color:var(--text);
+    }
+
+    .status-main{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      min-width:0;
+    }
+
+    .status-heading{
+      display:flex;
+      align-items:flex-end;
+      gap:18px;
+      flex-wrap:wrap;
+      min-width:0;
+    }
+
+    .status-ja{
+      font-size:68px;
+      line-height:1;
+      font-weight:900;
+      color:var(--accent);
+      white-space:nowrap;
+    }
+
+    .status-en{
+      font-size:32px;
+      line-height:1;
+      font-weight:900;
+      color:var(--accent);
+      white-space:nowrap;
+      letter-spacing:.02em;
+    }
+
+    .status-sep{
+      margin:14px 0 18px;
+      height:2px;
+      background:var(--accent);
+      opacity:.95;
+    }
+
+    .status-msg-ja{
+      font-size:24px;
+      line-height:1.3;
+      font-weight:800;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .status-msg-en{
+      margin-top:10px;
+      font-size:20px;
+      line-height:1.3;
+      color:var(--accent);
+      font-weight:700;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .status-side{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      padding-left:26px;
+      border-left:2px solid var(--accent);
+      min-width:0;
+    }
+
+    .time-label-ja{
+      font-size:24px;
+      line-height:1;
+      font-weight:900;
+    }
+
+    .time-label-en{
+      margin-top:10px;
+      font-size:18px;
+      line-height:1;
+      color:var(--accent);
+      font-weight:800;
+      letter-spacing:.02em;
+    }
+
+    .time-value{
+      margin-top:20px;
+      font-size:84px;
+      line-height:1;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .time-sub{
+      margin-top:14px;
+      font-size:22px;
+      line-height:1.2;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .checkout-btn{
+      appearance:none;
+      margin-top:24px;
+      width:100%;
+      min-height:94px;
+      border:2px solid var(--accent);
+      background:transparent;
+      color:var(--accent);
+      border-radius:18px;
+      font-size:28px;
+      font-weight:900;
+      cursor:pointer;
+      letter-spacing:.01em;
+    }
+
+    /* MESSAGE BOARD */
+    .message-board{
+      min-height:150px;
+      border:2px solid rgba(141,255,0,.65);
+      border-radius:18px;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      background:rgba(255,255,255,.01);
+    }
+
+    .message-head{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-height:56px;
+      padding:0 20px;
+      border-bottom:1px solid rgba(141,255,0,.18);
+    }
+
+    .message-head-ja{
+      font-size:22px;
+      line-height:1;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .message-head-en{
+      font-size:16px;
+      line-height:1;
+      font-weight:800;
+      color:var(--green);
+      letter-spacing:.03em;
+      white-space:nowrap;
+    }
+
+    .marquee-wrap{
+      flex:1;
+      display:flex;
+      align-items:center;
+      overflow:hidden;
+      position:relative;
+      padding:0 20px;
+    }
+
+    .marquee{
+      white-space:nowrap;
+      display:inline-block;
+      padding-left:100%;
+      animation: marquee 22s linear infinite;
+      font-size:42px;
+      line-height:1;
+      font-weight:900;
+    }
+
+    .marquee-en{
+      color:var(--green);
+      font-size:24px;
+      font-weight:700;
+      margin-left:26px;
+    }
+
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .hidden{
+      display:none !important;
+    }
+
+    /* STATE COLORS */
+    .state-free{
+      --accent: var(--cyan);
+    }
+    .state-reserved{
+      --accent: var(--yellow);
+    }
+    .state-using-not{
+      --accent: var(--orange);
+    }
+    .state-using-checked{
+      --accent: var(--green);
+    }
+    .state-maintenance{
+      --accent: var(--red);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="brand">
+        <img class="brand-logo" src="logo.png" alt="logo">
+        <div class="brand-text">
+          <div class="brand-main">WORK SPACE</div>
+          <div class="brand-sub">RESERVATION SYSTEM</div>
+        </div>
+      </div>
+
+      <div class="updated">
+        <div class="updated-line"></div>
+        <div class="updated-text">
+          <div class="updated-label">LAST UPDATED</div>
+          <div class="updated-value" id="lastUpdated">-- <span class="updated-time">--</span></div>
+        </div>
+      </div>
+
+      <button class="refresh-btn" id="refreshBtn">更新<br><span style="font-size:16px;">REFRESH</span></button>
+    </header>
+
+    <main class="main">
+      <section class="rack-side">
+        <div class="rack-title">RACK <span class="num" id="rackNoBig">1</span></div>
+        <div class="rack-divider"></div>
+        <div class="rack-sub">ラック<span id="rackNoJa">1</span></div>
+      </section>
+
+      <section class="content">
+        <section class="status-panel state-reserved" id="statusPanel">
+          <div class="status-main">
+            <div class="status-heading">
+              <div class="status-ja" id="statusJa">予定があります</div>
+              <div class="status-en" id="statusEn">RESERVED SOON</div>
+            </div>
+            <div class="status-sep"></div>
+            <div class="status-msg-ja" id="statusMsgJa">次の予定までご自由にご利用いただけます</div>
+            <div class="status-msg-en" id="statusMsgEn">Available until the next reservation</div>
+          </div>
+
+          <div class="status-side">
+            <div class="time-label-ja" id="timeLabelJa">次の予定</div>
+            <div class="time-label-en" id="timeLabelEn">NEXT RESERVATION</div>
+            <div class="time-value" id="timeValue">10:00</div>
+            <div class="time-sub" id="timeSub">～10:40 まで　UNTIL 10:40</div>
+            <button class="checkout-btn hidden" id="checkoutBtn">チェックアウトする<br><span style="font-size:22px;">CHECK OUT</span></button>
+          </div>
+        </section>
+
+        <section class="message-board">
+          <div class="message-head">
+            <div class="message-head-ja">メッセージボード</div>
+            <div class="message-head-en">MESSAGE BOARD</div>
+          </div>
+          <div class="marquee-wrap">
+            <div class="marquee" id="messageMarquee">
+              集中ブースの利用ルールが変更になりました。　荷物の置きっぱなしはご遠慮ください。
+              <span class="marquee-en">The rules for using the focus booths have been updated. Please do not leave your belongings unattended.</span>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+    const REFRESH_MS = 15000;
+
+    const params = new URLSearchParams(location.search);
+    const rackNo = Number(params.get("rackNo") || "1");
+
+    const STATE_MAP = {
+      free: {
+        panelClass: "state-free",
+        statusJa: "空いています",
+        statusEn: "AVAILABLE",
+        msgJa: "店舗タブレットよりチェックインしてください",
+        msgEn: "Please check in from the store tablet.",
+        timeLabelJa: "",
+        timeLabelEn: "",
+        timeValue: "",
+        timeSub: "",
+        showCheckout: false
+      },
+      reserved: {
+        panelClass: "state-reserved",
+        statusJa: "予定があります",
+        statusEn: "RESERVED SOON",
+        msgJa: "次の予定までご自由にご利用いただけます",
+        msgEn: "Available until the next reservation",
+        timeLabelJa: "次の予定",
+        timeLabelEn: "NEXT RESERVATION",
+        showCheckout: false
+      },
+      using_not_checked_in: {
+        panelClass: "state-using-not",
+        statusJa: "利用中（未チェックイン）",
+        statusEn: "IN USE (NOT CHECKED IN)",
+        msgJa: "5分以内にチェックインがない場合、自動キャンセルになります。",
+        msgEn: "This reservation will be automatically cancelled if check-in is not completed within 5 minutes.",
+        timeLabelJa: "残り時間",
+        timeLabelEn: "TIME REMAINING",
+        showCheckout: false
+      },
+      using_checked_in: {
+        panelClass: "state-using-checked",
+        statusJa: "チェックイン済",
+        statusEn: "CHECKED IN",
+        msgJa: "ご利用中です",
+        msgEn: "IN USE",
+        timeLabelJa: "残り時間",
+        timeLabelEn: "TIME REMAINING",
+        showCheckout: true
+      },
+      maintenance: {
+        panelClass: "state-maintenance",
+        statusJa: "利用停止中",
+        statusEn: "OUT OF SERVICE",
+        msgJa: "現在ご利用いただけません",
+        msgEn: "This rack is temporarily unavailable.",
+        timeLabelJa: "",
+        timeLabelEn: "",
+        timeValue: "",
+        timeSub: "",
+        showCheckout: false
+      }
+    };
+
+    function esc(str) {
+      return String(str ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function formatLastUpdated(text) {
+      const s = String(text || "");
+      const m = s.match(/^(\d{4}\/\d{2}\/\d{2})\s+(\d{2}:\d{2})$/);
+      if (!m) return esc(s);
+      return `${esc(m[1])} <span class="updated-time">${esc(m[2])}</span>`;
+    }
+
+    function findRack(data, rackNo) {
+      const racks = Array.isArray(data.racks) ? data.racks : [];
+      return racks.find(r => Number(r.rackNo) === Number(rackNo)) || null;
+    }
+
+    function normalizeState(r) {
+      const raw = String(r.state || "").toLowerCase();
+
+      if (raw === "using_checked_in") return "using_checked_in";
+      if (raw === "using_not_checked_in") return "using_not_checked_in";
+
+      if (raw === "using") {
+        // 旧JSON互換。必要ならここをGAS側で using_checked_in / using_not_checked_in に分ける
+        return "using_checked_in";
+      }
+
+      if (raw === "reserved") return "reserved";
+      if (raw === "free") return "free";
+      if (raw === "maintenance") return "maintenance";
+
+      return "free";
+    }
+
+    function applyStateUI(r) {
+      const stateKey = normalizeState(r);
+      const cfg = STATE_MAP[stateKey];
+      const panel = document.getElementById("statusPanel");
+
+      panel.className = `status-panel ${cfg.panelClass}`;
+
+      document.getElementById("rackNoBig").textContent = r.rackNo;
+      document.getElementById("rackNoJa").textContent = r.rackNo;
+      document.getElementById("statusJa").textContent = cfg.statusJa;
+      document.getElementById("statusEn").textContent = cfg.statusEn;
+      document.getElementById("statusMsgJa").textContent = cfg.msgJa;
+      document.getElementById("statusMsgEn").textContent = cfg.msgEn;
+
+      document.getElementById("timeLabelJa").textContent = cfg.timeLabelJa;
+      document.getElementById("timeLabelEn").textContent = cfg.timeLabelEn;
+
+      if (stateKey === "reserved") {
+        document.getElementById("timeValue").textContent = r.nextText || "";
+        document.getElementById("timeSub").textContent = r.nextSubText || "";
+      } else if (stateKey === "using_checked_in" || stateKey === "using_not_checked_in") {
+        document.getElementById("timeValue").textContent = extractRemainValue_(r.currentSubText);
+        document.getElementById("timeSub").textContent = buildUntilText_(r.currentText);
+      } else {
+        document.getElementById("timeValue").textContent = "";
+        document.getElementById("timeSub").textContent = "";
+      }
+
+      const checkoutBtn = document.getElementById("checkoutBtn");
+      if (cfg.showCheckout) {
+        checkoutBtn.classList.remove("hidden");
+      } else {
+        checkoutBtn.classList.add("hidden");
+      }
+
+      if (r.messageBoardText) {
+        document.getElementById("messageMarquee").innerHTML = esc(r.messageBoardText);
+      }
+    }
+
+    function extractRemainValue_(subText) {
+      const s = String(subText || "");
+      const m = s.match(/残り\s*([0-9]+)\s*分/);
+      return m ? m[1] : "";
+    }
+
+    function buildUntilText_(currentText) {
+      const s = String(currentText || "");
+      const m = s.match(/(\d{2}:\d{2})まで/);
+      if (!m) return "";
+      return `～ ${m[1]} まで　UNTIL ${m[1]}`;
+    }
+
+    async function fetchData() {
+      const res = await fetch(`${API_URL}?action=getscheduletabletjson&t=${Date.now()}`, {
+        method: "GET",
+        cache: "no-store"
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    }
+
+    async function loadData() {
+      try {
+        const data = await fetchData();
+        document.getElementById("lastUpdated").innerHTML = formatLastUpdated(data.lastUpdatedText);
+
+        const rack = findRack(data, rackNo);
+        if (!rack) throw new Error("rack not found");
+
+        applyStateUI(rack);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    document.getElementById("refreshBtn").addEventListener("click", loadData);
+
+    document.getElementById("checkoutBtn").addEventListener("click", async () => {
+      alert("ここにチェックアウト処理を接続");
+    });
+
+    loadData();
+    setInterval(loadData, REFRESH_MS);
+  </script>
+</body>
+</html>
