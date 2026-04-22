@@ -2,7 +2,10 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+  />
   <title>Workout Check-in</title>
   <style>
     :root{
@@ -13,7 +16,6 @@
       --line-soft:rgba(110,230,0,.55);
       --line-softer:rgba(110,230,0,.18);
       --text:#ffffff;
-      --muted:#cfd6dd;
       --green:#83f500;
       --green-dark:#416f23;
       --green-dark-2:#2f5318;
@@ -55,70 +57,26 @@
       gap:7px;
     }
 
-    /* ===== header ===== */
     .header{
       display:grid;
-      grid-template-columns:160px 1fr 160px;
+      grid-template-columns:170px 1fr 170px;
       align-items:center;
-      min-height:58px;
+      min-height:60px;
     }
 
     .logo-wrap{
       display:flex;
       align-items:center;
       justify-content:flex-start;
+      min-width:0;
     }
 
-    .logo{
-      line-height:1;
-      user-select:none;
-    }
-
-    .logo-top{
-      display:flex;
-      align-items:flex-start;
-      gap:3px;
-    }
-
-    .leaf{
-      font-size:25px;
-      line-height:1;
-      color:#8ef000;
-      transform:translateY(1px);
-    }
-
-    .the{
-      font-size:17px;
-      font-weight:900;
-      color:#fff;
-      line-height:1.05;
-    }
-
-    .forest-row{
-      margin-top:1px;
-      white-space:nowrap;
-      line-height:1;
-    }
-
-    .forest{
-      font-size:23px;
-      font-weight:900;
-      color:#79f000;
-    }
-
-    .gym{
-      font-size:23px;
-      font-weight:900;
-      color:#fff;
-      margin-left:2px;
-    }
-
-    .logo-sub{
-      margin-top:3px;
-      margin-left:20px;
-      font-size:10px;
-      font-weight:800;
-      color:#dbe2e8;
+    .logo-img{
+      display:block;
+      width:150px;
+      max-width:100%;
+      height:auto;
+      object-fit:contain;
     }
 
     .title-wrap{
@@ -127,6 +85,7 @@
       align-items:center;
       justify-content:center;
       text-align:center;
+      min-width:0;
     }
 
     .title{
@@ -153,7 +112,6 @@
       min-height:1px;
     }
 
-    /* ===== top boxes ===== */
     .hero{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -259,12 +217,11 @@
       line-height:1;
     }
 
-    /* ===== grid ===== */
     .rack-grid{
       min-height:0;
       display:grid;
-      grid-template-columns:1fr 1fr;   /* 常に2列 */
-      grid-template-rows:1fr 1fr;      /* 常に2行 */
+      grid-template-columns:1fr 1fr;
+      grid-template-rows:1fr 1fr;
       gap:9px;
       align-content:stretch;
     }
@@ -292,7 +249,6 @@
       align-items:start;
     }
 
-    /* 依頼の②：中心線を合わせる */
     .rack-left{
       width:108px;
       display:flex;
@@ -303,72 +259,13 @@
       min-height:0;
     }
 
-    .rack-badge{
+    .rack-icon{
       width:96px;
       height:96px;
-      border-radius:18px;
-      position:relative;
-      overflow:hidden;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.03)),
-        radial-gradient(circle at 50% 20%, rgba(255,255,255,.12), rgba(255,255,255,0) 42%),
-        linear-gradient(180deg, #121824, #080c13);
-      border:2px solid rgba(255,255,255,.20);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.05),
-        0 5px 12px rgba(0,0,0,.35);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .rack-badge::before,
-    .rack-badge::after{
-      content:"";
-      position:absolute;
-      top:13px;
-      width:14px;
-      height:50px;
-      border:2px solid rgba(255,255,255,.18);
-      border-bottom:none;
-      border-radius:4px 4px 0 0;
-    }
-
-    .rack-badge::before{ left:10px; }
-    .rack-badge::after{ right:10px; }
-
-    .rack-top-bar{
-      position:absolute;
-      top:11px;
-      left:18px;
-      right:18px;
-      height:5px;
-      border-radius:999px;
-      background:rgba(255,255,255,.12);
-    }
-
-    .rack-no{
-      font-size:54px;
-      line-height:1;
-      font-weight:1000;
-      letter-spacing:-1px;
-      text-shadow:0 3px 8px rgba(0,0,0,.35);
-      transform:translateY(1px);
-    }
-
-    .rack-label{
-      position:absolute;
-      bottom:7px;
-      left:0;
-      right:0;
-      text-align:center;
-      font-size:10px;
-      line-height:1;
-      font-weight:900;
-      letter-spacing:3px;
-      color:#fff;
-      opacity:.96;
+      display:block;
+      object-fit:contain;
+      margin:0 auto;
+      filter:drop-shadow(0 4px 10px rgba(0,0,0,.30));
     }
 
     .status-pill{
@@ -503,7 +400,7 @@
       align-items:center;
       justify-content:space-between;
       gap:8px;
-      padding:0 16px 0 16px;
+      padding:0 16px;
       cursor:pointer;
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,.10),
@@ -583,7 +480,6 @@
       color:#d6dce2;
     }
 
-    /* スマホだけ1列 */
     @media (max-width: 560px){
       html,body{
         overflow:auto;
@@ -624,16 +520,12 @@
   <div class="app">
     <header class="header">
       <div class="logo-wrap">
-        <div class="logo">
-          <div class="logo-top">
-            <div class="leaf">🍃</div>
-            <div class="the">The</div>
-          </div>
-          <div class="forest-row">
-            <span class="forest">Forest</span><span class="gym">Gym</span>
-          </div>
-          <div class="logo-sub">24h Fitness</div>
-        </div>
+        <img
+          id="logoImg"
+          class="logo-img"
+          src="assets/logo.png"
+          alt="The Forest Gym"
+        />
       </div>
 
       <div class="title-wrap">
@@ -697,6 +589,10 @@
       return text || fallback;
     }
 
+    function rackImageUrl(rackNo) {
+      return "assets/rack" + encodeURIComponent(rackNo) + ".png";
+    }
+
     function goQrPage() {
       window.location.href = QR_URL + "?t=" + Date.now();
     }
@@ -728,13 +624,13 @@
       return "free";
     }
 
-    function buildRackBadge(rackNo) {
+    function buildRackIcon(rackNo) {
       return `
-        <div class="rack-badge" aria-label="Rack ${rackNo}">
-          <div class="rack-top-bar"></div>
-          <div class="rack-no">${escapeHtml(rackNo)}</div>
-          <div class="rack-label">RACK</div>
-        </div>
+        <img
+          class="rack-icon"
+          src="${rackImageUrl(rackNo)}"
+          alt="Rack ${escapeHtml(rackNo)}"
+        />
       `;
     }
 
@@ -806,8 +702,14 @@
       const state = normalizeRackState(rack);
       const labelColor = state === "reserved" ? "orange" : "green";
 
-      const currentText = pickDisplayText(rack.currentText, state === "reserved" ? "予定があります" : "空いています");
-      const currentSubText = pickDisplayText(rack.currentSubText, state === "reserved" ? "" : "本日の後続予定なし");
+      const currentText = pickDisplayText(
+        rack.currentText,
+        state === "reserved" ? "予定があります" : "空いています"
+      );
+      const currentSubText = pickDisplayText(
+        rack.currentSubText,
+        state === "reserved" ? "" : "本日の後続予定なし"
+      );
       const nextText = pickDisplayText(rack.nextText, "予定なし");
       const nextSubText = pickDisplayText(rack.nextSubText, "");
       const waitingCount = Number(rack.waitingCount ?? 0);
@@ -820,7 +722,7 @@
         <section class="rack-card">
           <div class="rack-main">
             <div class="rack-left">
-              ${buildRackBadge(rackNo)}
+              ${buildRackIcon(rackNo)}
               ${buildStatusPill(state)}
             </div>
 
@@ -864,7 +766,8 @@
       document.getElementById("todayLabel").textContent = pickDisplayText(data.todayLabel, "----/--/--");
 
       const updated = pickDisplayText(data.lastUpdated || data.updatedAt, "----/--/-- --:--");
-      document.getElementById("updatedText").textContent = "最終更新 / LAST UPDATED: " + updated;
+      document.getElementById("updatedText").textContent =
+        "最終更新 / LAST UPDATED: " + updated;
 
       const racks = Array.isArray(data.racks) ? [...data.racks] : [];
       if (!racks.length) {
@@ -878,7 +781,9 @@
 
     async function fetchSchedule() {
       try {
-        const res = await fetch(API_URL + "?action=getscheduletabletjson&t=" + Date.now(), { cache: "no-store" });
+        const res = await fetch(API_URL + "?action=getscheduletabletjson&t=" + Date.now(), {
+          cache: "no-store"
+        });
         if (!res.ok) throw new Error("HTTP " + res.status);
         const data = await res.json();
         renderScreen(data);
