@@ -52,7 +52,7 @@
     /* ===== HEADER ===== */
     .header{
       display:grid;
-      grid-template-columns: 320px 1fr;
+      grid-template-columns: 300px 1fr;
       gap:18px;
       align-items:center;
       margin-bottom:10px;
@@ -80,7 +80,7 @@
       align-items:center;
       height:78px;
       min-width:0;
-      padding:0 40px 0 0;
+      padding:0 90px 0 0;
     }
 
     .title-main{
@@ -116,28 +116,22 @@
       border:1px solid var(--line);
       border-radius:22px;
       box-shadow:var(--shadow);
-      height:112px;
-      min-height:112px;
       padding:14px 18px;
       display:flex;
       align-items:center;
     }
 
     .access-card{
+      min-height:118px;
       justify-content:flex-start;
     }
 
-    .access-box{
-      width:100%;
-      max-width:360px;
-      min-height:80px;
-      padding:10px 14px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:16px;
-      background:rgba(255,255,255,.02);
+    .access-inner{
       display:flex;
       flex-direction:column;
       justify-content:center;
+      gap:0;
+      min-width:0;
     }
 
     .access-label-row{
@@ -174,7 +168,7 @@
     }
 
     .access-date{
-      margin-top:6px;
+      margin-top:8px;
       font-size:18px;
       line-height:1;
       font-weight:600;
@@ -182,6 +176,7 @@
     }
 
     .qr-card{
+      min-height:112px;
       cursor:pointer;
       gap:16px;
       justify-content:flex-start;
@@ -282,8 +277,8 @@
 
     .rack-top{
       display:grid;
-      grid-template-columns:170px 1fr;
-      gap:14px;
+      grid-template-columns:180px 1fr;
+      gap:16px;
       align-items:start;
       min-height:0;
     }
@@ -296,34 +291,24 @@
       min-width:0;
     }
 
-    .rack-no-row{
+    .rack-image-wrap{
+      width:100%;
+      min-height:160px;
       display:flex;
-      align-items:center;
-      gap:10px;
-      min-height:96px;
+      align-items:flex-start;
+      justify-content:center;
     }
 
-    .rack-no{
-      font-size:34px;
-      line-height:1;
-      font-weight:900;
-      white-space:nowrap;
-    }
-
-    .rack-no .no{
-      color:var(--green);
-    }
-
-    .rack-no-row img{
-      width:88px;
-      height:88px;
+    .rack-image-wrap img{
+      width:132px;
+      height:132px;
       object-fit:contain;
-      flex:0 0 88px;
+      flex:0 0 132px;
     }
 
     .badge-under{
       width:100%;
-      margin-top:10px;
+      margin-top:14px;
       display:flex;
       justify-content:flex-start;
     }
@@ -582,7 +567,10 @@
 
     @media (max-width:1200px){
       .header{
-        grid-template-columns:280px 1fr;
+        grid-template-columns:260px 1fr;
+      }
+      .title-wrap{
+        padding:0 70px 0 0;
       }
       .title-main{
         font-size:32px;
@@ -591,15 +579,12 @@
         font-size:14px;
       }
       .rack-top{
-        grid-template-columns:150px 1fr;
+        grid-template-columns:160px 1fr;
       }
-      .rack-no{
-        font-size:30px;
-      }
-      .rack-no-row img{
-        width:76px;
-        height:76px;
-        flex-basis:76px;
+      .rack-image-wrap img{
+        width:118px;
+        height:118px;
+        flex-basis:118px;
       }
       .status-main{
         font-size:22px;
@@ -624,7 +609,7 @@
 
     <section class="top-row">
       <div class="top-card access-card">
-        <div class="access-box">
+        <div class="access-inner">
           <div class="access-label-row">
             <div class="card-ja">認証コード</div>
             <div class="card-en">/ ACCESS CODE</div>
@@ -842,8 +827,7 @@
         <article class="rack-card ${r.ui.cardClass}">
           <div class="rack-top">
             <div class="rack-visual">
-              <div class="rack-no-row">
-                <div class="rack-no">№<span class="no">${r.rackNo}</span></div>
+              <div class="rack-image-wrap">
                 <img src="rack${r.rackNo}.png?t=1" alt="Rack ${r.rackNo}">
               </div>
               <div class="badge-under">
