@@ -2,29 +2,26 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-  />
-  <title>Workout Check-in</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <title>Workout Check-In</title>
   <style>
     :root{
-      --bg:#06080d;
-      --panel:#0b111b;
-      --panel2:#101827;
-      --line:#6ee600;
-      --line-soft:rgba(110,230,0,.55);
-      --line-softer:rgba(110,230,0,.18);
+      --bg:#050607;
+      --panel:#0d1013;
+      --panel2:#11151a;
+      --line:rgba(255,255,255,.08);
       --text:#ffffff;
-      --green:#83f500;
-      --green-dark:#416f23;
-      --green-dark-2:#2f5318;
-      --orange:#ffb03b;
-      --orange-dark:#7a5826;
-      --orange-dark-2:#5a4019;
-      --btn-dark:#1a2334;
-      --btn-dark-2:#141c2b;
-      --shadow:0 0 0 1px rgba(255,255,255,.05) inset;
+      --muted:rgba(255,255,255,.62);
+      --muted2:rgba(255,255,255,.42);
+      --green:#78c53a;
+      --green2:#5fab24;
+      --whiteBadge:#d9dde2;
+      --orange:#d08a20;
+      --blue:#3f82c8;
+      --yellow:#d6b428;
+      --danger:#d9534f;
+      --radius:24px;
+      --shadow:0 14px 36px rgba(0,0,0,.34);
     }
 
     *{
@@ -35,483 +32,565 @@
     html,body{
       margin:0;
       padding:0;
-      width:100%;
-      height:100%;
-      overflow:hidden;
-      background:#000;
+      background:linear-gradient(180deg,#060708 0%,#030405 100%);
       color:var(--text);
-      font-family:"Segoe UI","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+      font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",system-ui,sans-serif;
+      overflow-x:hidden;
     }
 
     body{
-      background:
-        radial-gradient(circle at top, #141d2a 0%, #070a10 42%, #000 100%);
+      min-height:100vh;
     }
 
     .app{
       width:100%;
-      height:100%;
-      padding:10px 12px 6px;
-      display:grid;
-      grid-template-rows:auto auto auto 1fr auto;
-      gap:7px;
+      max-width:1400px;
+      margin:0 auto;
+      padding:10px 18px 10px;
     }
 
+    /* ===== HEADER ===== */
     .header{
       display:grid;
-      grid-template-columns:170px 1fr 170px;
+      grid-template-columns: 300px 1fr;
+      gap:18px;
       align-items:center;
-      min-height:60px;
+      margin-bottom:10px;
     }
 
     .logo-wrap{
+      height:78px;
       display:flex;
       align-items:center;
       justify-content:flex-start;
-      min-width:0;
+      overflow:hidden;
     }
 
-    .logo-img{
+    .logo-wrap img{
       display:block;
-      width:150px;
       max-width:100%;
-      height:auto;
+      max-height:100%;
       object-fit:contain;
     }
 
     .title-wrap{
       display:flex;
       flex-direction:column;
-      align-items:center;
       justify-content:center;
+      align-items:center;
+      height:78px;
+      min-width:0;
+      padding:0 90px 0 0;
+    }
+
+    .title-main{
+      margin:0;
+      font-size:36px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:.01em;
       text-align:center;
+      white-space:nowrap;
+    }
+
+    .title-sub{
+      margin-top:6px;
+      font-size:15px;
+      line-height:1.1;
+      color:rgba(255,255,255,.78);
+      font-weight:600;
+      text-align:center;
+      white-space:nowrap;
+    }
+
+    /* ===== TOP ===== */
+    .top-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-bottom:8px;
+    }
+
+    .top-card{
+      background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01)), var(--panel);
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+    }
+
+    .access-card{
+      min-height:118px;
+      justify-content:flex-start;
+    }
+
+    .access-inner{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:0;
       min-width:0;
     }
 
-    .title{
-      margin:0;
-      width:100%;
-      text-align:center;
-      font-size:24px;
-      line-height:1.05;
-      font-weight:900;
-      letter-spacing:.4px;
-    }
-
-    .subtitle{
-      margin-top:2px;
-      width:100%;
-      text-align:center;
-      font-size:12px;
-      line-height:1.1;
-      font-weight:800;
-      color:#e6ebef;
-    }
-
-    .header-spacer{
-      min-height:1px;
-    }
-
-    .hero{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:9px;
-    }
-
-    .hero-box{
-      min-height:92px;
-      padding:12px 14px;
-      background:linear-gradient(180deg, rgba(15,23,36,.97), rgba(9,13,21,.97));
-      border:1.3px solid rgba(255,255,255,.11);
-      border-radius:20px;
-      box-shadow:var(--shadow);
-    }
-
-    .hero-title{
+    .access-label-row{
       display:flex;
-      align-items:center;
-      gap:6px;
-      font-size:14px;
-      font-weight:900;
-      margin-bottom:7px;
+      align-items:baseline;
+      gap:8px;
+      white-space:nowrap;
     }
 
-    .hero-title .en{
-      font-size:11px;
-      font-weight:900;
-      color:var(--green);
-    }
-
-    .code-value{
-      color:var(--green);
-      font-size:44px;
+    .card-ja{
+      font-size:23px;
       line-height:1;
       font-weight:900;
-      letter-spacing:2px;
-      margin:4px 0 4px;
-    }
-
-    .date{
-      font-size:14px;
-      line-height:1;
-      font-weight:800;
-      color:#f5f7f8;
-    }
-
-    .qr-btn{
-      width:100%;
-      height:100%;
-      border:none;
-      background:none;
-      color:#fff;
-      padding:0;
       margin:0;
+    }
+
+    .card-en{
+      font-size:14px;
+      line-height:1;
+      color:var(--green);
+      font-weight:800;
+      margin:0;
+      letter-spacing:.02em;
+    }
+
+    .access-code{
+      margin-top:8px;
+      font-size:52px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:.14em;
+      color:var(--green);
+      white-space:nowrap;
+    }
+
+    .access-date{
+      margin-top:8px;
+      font-size:18px;
+      line-height:1;
+      font-weight:600;
+      color:rgba(255,255,255,.90);
+    }
+
+    .qr-card{
+      min-height:112px;
       cursor:pointer;
+      gap:16px;
+      justify-content:flex-start;
     }
 
-    .qr-inner{
-      min-height:66px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:14px;
+    .qr-card:active{
+      transform:scale(.997);
     }
 
     .qr-icon{
-      font-size:30px;
-      line-height:1;
+      width:54px;
+      height:54px;
+      flex:0 0 54px;
+      color:#fff;
+      opacity:.96;
     }
 
     .qr-ja{
-      font-size:20px;
+      margin:0;
+      font-size:28px;
       line-height:1.05;
       font-weight:900;
-      text-align:left;
     }
 
     .qr-en{
-      margin-top:3px;
-      font-size:11px;
+      margin-top:6px;
+      font-size:16px;
       line-height:1.05;
-      font-weight:900;
       color:var(--green);
-      text-align:left;
+      font-weight:800;
     }
 
-    .updated{
-      min-height:18px;
+    /* ===== UPDATE ===== */
+    .update-row{
+      min-height:28px;
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:6px;
+      gap:8px;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.1;
+      font-weight:600;
+      margin-bottom:8px;
       text-align:center;
-      font-size:12px;
-      line-height:1;
-      font-weight:900;
-      color:#dce2e7;
     }
 
-    .updated .icon{
+    .refresh-icon{
+      width:18px;
+      height:18px;
       color:var(--green);
-      font-size:14px;
-      line-height:1;
+      flex:0 0 18px;
     }
 
+    .error-box{
+      display:none;
+      margin:0 0 10px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:rgba(217,83,79,.12);
+      border:1px solid rgba(217,83,79,.3);
+      color:#ffd8d7;
+      font-size:15px;
+      font-weight:700;
+    }
+
+    .error-box.show{
+      display:block;
+    }
+
+    /* ===== GRID ===== */
     .rack-grid{
-      min-height:0;
       display:grid;
       grid-template-columns:1fr 1fr;
-      grid-template-rows:1fr 1fr;
-      gap:9px;
-      align-content:stretch;
+      gap:14px;
     }
 
     .rack-card{
-      min-height:0;
-      background:linear-gradient(180deg, rgba(8,14,22,.98), rgba(7,11,18,.98));
-      border:1.7px solid var(--line-soft);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01)),
+        var(--panel2);
+      border:1px solid var(--line);
       border-radius:24px;
-      padding:12px 12px 10px;
-      box-shadow:
-        0 0 0 1px var(--line-softer) inset,
-        0 6px 16px rgba(0,0,0,.28);
-      display:grid;
-      grid-template-rows:1fr auto;
-      gap:8px;
-      overflow:hidden;
-    }
-
-    .rack-main{
-      min-height:0;
-      display:grid;
-      grid-template-columns:108px 1fr;
-      gap:12px;
-      align-items:start;
-    }
-
-    .rack-left{
-      width:108px;
+      box-shadow:var(--shadow);
+      height:370px;
+      min-height:370px;
+      padding:14px;
       display:flex;
       flex-direction:column;
-      align-items:center;
-      justify-content:flex-start;
-      gap:10px;
+    }
+
+    .rack-card.state-free{ border-color:rgba(120,197,58,.28); }
+    .rack-card.state-using{ border-color:rgba(255,255,255,.12); }
+    .rack-card.state-reserved{ border-color:rgba(208,138,32,.34); }
+    .rack-card.state-maintenance{ border-color:rgba(63,130,200,.34); }
+    .rack-card.state-gap{ border-color:rgba(214,180,40,.34); }
+    .rack-card.state-waiting{ border-color:rgba(120,197,58,.28); }
+
+    .rack-top{
+      display:grid;
+      grid-template-columns:180px 1fr;
+      gap:16px;
+      align-items:start;
       min-height:0;
     }
 
-    .rack-icon{
-      width:96px;
-      height:96px;
-      display:block;
-      object-fit:contain;
-      margin:0 auto;
-      filter:drop-shadow(0 4px 10px rgba(0,0,0,.30));
+    .rack-visual{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      justify-content:flex-start;
+      min-width:0;
     }
 
-    .status-pill{
-      width:96px;
-      min-height:44px;
-      margin:0 auto;
-      border-radius:14px;
+    .rack-image-wrap{
+      width:100%;
+      min-height:160px;
       display:flex;
+      align-items:flex-start;
+      justify-content:center;
+    }
+
+    .rack-image-wrap img{
+      width:132px;
+      height:132px;
+      object-fit:contain;
+      flex:0 0 132px;
+    }
+
+    .badge-under{
+      width:100%;
+      margin-top:14px;
+      display:flex;
+      justify-content:flex-start;
+    }
+
+    .badge{
+      min-width:122px;
+      min-height:54px;
+      padding:8px 12px;
+      border-radius:14px;
+      display:inline-flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
+      gap:4px;
+      font-size:15px;
+      line-height:1.05;
+      font-weight:900;
+      border:1px solid transparent;
       text-align:center;
-      line-height:1.03;
-      padding:5px 5px 4px;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
+      white-space:nowrap;
     }
 
-    .status-pill .ja{
-      font-size:13px;
+    .badge-ja{
+      font-size:16px;
+      line-height:1;
       font-weight:900;
-      margin-bottom:2px;
     }
 
-    .status-pill .en{
-      font-size:8px;
-      font-weight:900;
-      letter-spacing:.2px;
-      opacity:.98;
+    .badge-en{
+      font-size:11px;
+      line-height:1;
+      font-weight:800;
+      letter-spacing:.02em;
+      opacity:.95;
     }
 
-    .status-free{
-      background:linear-gradient(180deg, var(--green-dark), var(--green-dark-2));
-      color:#fff;
+    .badge.free{
+      background:rgba(120,197,58,.16);
+      color:#ebffd7;
+      border-color:rgba(120,197,58,.3);
     }
-
-    .status-using{
-      background:linear-gradient(180deg, #355f25, #27461b);
-      color:#fff;
+    .badge.using{
+      background:rgba(255,255,255,.08);
+      color:#f4f6f8;
+      border-color:rgba(255,255,255,.14);
     }
-
-    .status-reserved{
-      background:linear-gradient(180deg, var(--orange-dark), var(--orange-dark-2));
-      color:#fff;
+    .badge.reserved{
+      background:rgba(208,138,32,.16);
+      color:#ffe0ae;
+      border-color:rgba(208,138,32,.3);
+    }
+    .badge.maintenance{
+      background:rgba(63,130,200,.16);
+      color:#d8ebff;
+      border-color:rgba(63,130,200,.3);
+    }
+    .badge.gap{
+      background:rgba(214,180,40,.16);
+      color:#fff2ac;
+      border-color:rgba(214,180,40,.3);
+    }
+    .badge.waiting{
+      background:rgba(120,197,58,.16);
+      color:#ebffd7;
+      border-color:rgba(120,197,58,.3);
     }
 
     .rack-info{
       min-width:0;
-      display:grid;
-      grid-template-rows:auto auto auto auto auto auto auto auto auto auto;
-      align-content:start;
-      row-gap:1px;
-    }
-
-    .section-label{
-      font-size:12px;
-      line-height:1.08;
-      font-weight:900;
-    }
-
-    .section-label.green{ color:var(--green); }
-    .section-label.orange{ color:var(--orange); }
-
-    .big-status{
-      font-size:18px;
-      line-height:1.08;
-      font-weight:900;
-      margin-bottom:1px;
-      word-break:break-word;
-    }
-
-    .substatus{
-      font-size:12px;
-      line-height:1.16;
-      font-weight:800;
-      color:#f1f3f5;
-      margin-bottom:6px;
-      word-break:break-word;
-    }
-
-    .next-main{
-      font-size:15px;
-      line-height:1.12;
-      font-weight:900;
-      margin-bottom:1px;
-      word-break:break-word;
-    }
-
-    .next-sub{
-      font-size:12px;
-      line-height:1.16;
-      font-weight:900;
-      margin-bottom:6px;
-      word-break:break-word;
-    }
-
-    .waiting-row{
       display:flex;
-      align-items:center;
-      gap:5px;
-      margin:1px 0 2px;
-    }
-
-    .waiting-icon{
-      font-size:14px;
-      line-height:1;
-    }
-
-    .waiting-count{
-      font-size:17px;
-      line-height:1;
-      font-weight:1000;
-    }
-
-    .note{
-      font-size:11px;
-      line-height:1.14;
-      color:#d9dee4;
-      opacity:.95;
-      word-break:break-word;
-    }
-
-    .rack-actions{
+      flex-direction:column;
       min-height:0;
     }
 
-    .action-btn{
+    .label{
+      font-size:14px;
+      line-height:1.05;
+      font-weight:800;
+      margin:0 0 6px;
+      letter-spacing:.01em;
+    }
+
+    .label.green{ color:var(--green); }
+    .label.orange{ color:var(--orange); }
+    .label.blue{ color:var(--blue); }
+    .label.yellow{ color:var(--yellow); }
+    .label.white{ color:var(--whiteBadge); }
+
+    .status-main{
+      font-size:24px;
+      line-height:1.14;
+      font-weight:900;
+      color:#fff;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .status-sub{
+      margin-top:6px;
+      font-size:15px;
+      line-height:1.2;
+      font-weight:700;
+      color:rgba(255,255,255,.86);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .divider{
+      height:1px;
+      background:linear-gradient(90deg, rgba(120,197,58,.38), rgba(255,255,255,.02));
+      margin:10px 0 10px;
+    }
+
+    .schedule-block{
+      margin-top:0;
+    }
+
+    .schedule-main{
+      font-size:22px;
+      line-height:1.18;
+      font-weight:900;
+      color:#fff;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .schedule-sub{
+      margin-top:4px;
+      font-size:15px;
+      line-height:1.2;
+      font-weight:600;
+      color:rgba(255,255,255,.86);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .waiting-row{
+      margin-top:10px;
+    }
+
+    .waiting-count{
+      margin-top:4px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:20px;
+      line-height:1.1;
+      font-weight:900;
+      color:#fff;
+    }
+
+    .person-icon{
+      width:20px;
+      height:20px;
+      flex:0 0 20px;
+      color:rgba(255,255,255,.78);
+    }
+
+    .note{
+      margin-top:8px;
+      padding-top:8px;
+      border-top:1px solid rgba(255,255,255,.08);
+      font-size:13px;
+      line-height:1.25;
+      font-weight:600;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .bottom-actions{
+      margin-top:auto;
+      padding-top:12px;
+    }
+
+    .btn{
+      appearance:none;
+      border:0;
+      border-radius:16px;
+      cursor:pointer;
+      font-weight:900;
+      transition:transform .04s ease, opacity .15s ease;
+    }
+
+    .btn:active{
+      transform:scale(.995);
+    }
+
+    .btn-use{
       width:100%;
-      min-height:42px;
-      border:none;
-      border-radius:15px;
+      min-height:66px;
+      padding:10px 18px;
+      background:linear-gradient(180deg,var(--green) 0%, var(--green2) 100%);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.14);
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:8px;
-      padding:0 16px;
-      cursor:pointer;
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.10),
-        0 5px 12px rgba(0,0,0,.24);
+      gap:10px;
     }
 
-    .btn-green{
-      background:linear-gradient(180deg, #84f400, #67d000);
-      color:#fff;
-    }
-
-    .btn-dark{
-      background:linear-gradient(180deg, var(--btn-dark), var(--btn-dark-2));
-      color:#fff;
-    }
-
-    .btn-text{
-      text-align:left;
-      line-height:1;
-    }
-
-    .btn-ja{
-      font-size:15px;
-      line-height:1.02;
-      font-weight:900;
-    }
-
-    .btn-en{
-      margin-top:2px;
-      font-size:9px;
-      line-height:1;
-      font-weight:900;
-      opacity:.96;
-    }
-
-    .btn-arrow{
+    .btn-use-ja{
       font-size:22px;
       line-height:1;
       font-weight:900;
+      text-align:left;
+    }
+
+    .btn-use-en{
+      margin-top:3px;
+      font-size:13px;
+      line-height:1;
+      font-weight:800;
+      color:rgba(255,255,255,.92);
+      text-align:left;
+      letter-spacing:.02em;
+    }
+
+    .btn-arrow{
+      font-size:34px;
+      line-height:1;
+      font-weight:900;
       opacity:.95;
-      flex:0 0 auto;
+    }
+
+    .btn-queue{
+      width:100%;
+      min-height:54px;
+      padding:10px 14px;
+      background:rgba(255,255,255,.03);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.12);
+      font-size:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
     }
 
     .footer{
-      min-height:14px;
-      text-align:center;
-      font-size:11px;
-      line-height:1;
-      font-weight:700;
-      color:#dce1e6;
-      opacity:.92;
-      padding-top:1px;
-    }
-
-    .error-card{
-      grid-column:1 / -1;
+      min-height:30px;
       display:flex;
-      flex-direction:column;
       align-items:center;
       justify-content:center;
-      text-align:center;
-      gap:6px;
-      border-radius:22px;
-      padding:20px;
-      background:linear-gradient(180deg, rgba(20,18,24,.97), rgba(14,12,18,.97));
-      border:1.5px solid rgba(255,255,255,.10);
-    }
-
-    .error-card .ja{
-      font-size:20px;
-      font-weight:900;
-    }
-
-    .error-card .en{
+      color:rgba(255,255,255,.28);
       font-size:13px;
-      font-weight:800;
-      color:#d6dce2;
+      line-height:1;
+      letter-spacing:.04em;
+      margin-top:8px;
     }
 
-    @media (max-width: 560px){
-      html,body{
-        overflow:auto;
-      }
-
-      .app{
-        height:auto;
-        min-height:100vh;
-        grid-template-rows:auto auto auto auto auto;
-      }
-
+    @media (max-width:1200px){
       .header{
-        grid-template-columns:1fr;
-        gap:6px;
+        grid-template-columns:260px 1fr;
       }
-
-      .logo-wrap,
-      .header-spacer{
-        display:none;
+      .title-wrap{
+        padding:0 70px 0 0;
       }
-
-      .hero,
-      .rack-grid{
-        grid-template-columns:1fr;
+      .title-main{
+        font-size:32px;
       }
-
-      .rack-grid{
-        grid-template-rows:auto;
+      .title-sub{
+        font-size:14px;
       }
-
-      .rack-card{
-        min-height:250px;
+      .rack-top{
+        grid-template-columns:160px 1fr;
+      }
+      .rack-image-wrap img{
+        width:118px;
+        height:118px;
+        flex-basis:118px;
+      }
+      .status-main{
+        font-size:22px;
+      }
+      .schedule-main{
+        font-size:20px;
       }
     }
   </style>
@@ -520,281 +599,342 @@
   <div class="app">
     <header class="header">
       <div class="logo-wrap">
-        <img
-          id="logoImg"
-          class="logo-img"
-          src="assets/logo.png"
-          alt="The Forest Gym"
-        />
+        <img src="logo.png" alt="The Forest Gym Logo">
       </div>
-
       <div class="title-wrap">
-        <h1 class="title">WORKOUT CHECK-IN</h1>
-        <div class="subtitle">ラック予定一覧 / Rack Status Board</div>
+        <h1 class="title-main">WORKOUT CHECK-IN</h1>
+        <div class="title-sub">ラック予定一覧 / Rack Status Board</div>
       </div>
-
-      <div class="header-spacer"></div>
     </header>
 
-    <section class="hero">
-      <div class="hero-box">
-        <div class="hero-title">
-          <span>認証コード</span>
-          <span class="en">/ ACCESS CODE</span>
+    <section class="top-row">
+      <div class="top-card access-card">
+        <div class="access-inner">
+          <div class="access-label-row">
+            <div class="card-ja">認証コード</div>
+            <div class="card-en">/ ACCESS CODE</div>
+          </div>
+          <div class="access-code" id="authCode">----</div>
+          <div class="access-date" id="todayLabel">----/--/--</div>
         </div>
-        <div id="authCode" class="code-value">----</div>
-        <div id="todayLabel" class="date">----/--/--</div>
       </div>
 
-      <div class="hero-box">
-        <button class="qr-btn" onclick="goQrPage()">
-          <div class="qr-inner">
-            <div class="qr-icon">▣</div>
-            <div>
-              <div class="qr-ja">QRでチェックイン</div>
-              <div class="qr-en">CHECK IN WITH QR</div>
-            </div>
-          </div>
-        </button>
+      <div class="top-card qr-card" id="qrCard" role="button" tabindex="0" aria-label="QRでチェックイン">
+        <svg class="qr-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path d="M10 23V12a2 2 0 0 1 2-2h11" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <path d="M54 23V12a2 2 0 0 0-2-2H41" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <path d="M10 41v11a2 2 0 0 0 2 2h11" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <path d="M54 41v11a2 2 0 0 1-2 2H41" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <rect x="18" y="18" width="10" height="10" stroke="currentColor" stroke-width="4"/>
+          <rect x="36" y="18" width="10" height="10" stroke="currentColor" stroke-width="4"/>
+          <rect x="18" y="36" width="10" height="10" stroke="currentColor" stroke-width="4"/>
+          <path d="M36 36h10v10h-5m-7-5h5v10" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <div class="qr-ja">QRでチェックイン</div>
+          <div class="qr-en">CHECK IN WITH QR</div>
+        </div>
       </div>
     </section>
 
-    <div class="updated">
-      <span class="icon">⟳</span>
-      <span id="updatedText">最終更新 / LAST UPDATED: ----/--/-- --:--</span>
+    <div class="update-row">
+      <svg class="refresh-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M20 7v5h-5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M4 17v-5h5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6.8 9.2A8 8 0 0 1 20 12" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+        <path d="M17.2 14.8A8 8 0 0 1 4 12" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+      </svg>
+      <div id="lastUpdated">最終更新 / LAST UPDATED: --</div>
     </div>
 
-    <main id="rackGrid" class="rack-grid"></main>
+    <div class="error-box" id="errorBox"></div>
 
-    <footer class="footer">All rights reserved. A-nauts.</footer>
+    <section class="rack-grid" id="rackGrid"></section>
+
+    <footer class="footer">All rights reserved.</footer>
   </div>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-    const QR_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/index.html";
-    const CHECKIN_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/checkin.html";
-    const QUEUE_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/queue.html";
+    const QR_PAGE_URL = "index.html";
+    const CHECKIN_PAGE_URL = "checkin.html";
+    const QUEUE_PAGE_URL = "queue.html";
+    const REFRESH_MS = 15000;
 
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
-
-    function pickDisplayText(value, fallback = "") {
-      const text = String(value ?? "").trim();
-      return text || fallback;
-    }
-
-    function rackImageUrl(rackNo) {
-      return "assets/rack" + encodeURIComponent(rackNo) + ".png";
-    }
-
-    function goQrPage() {
-      window.location.href = QR_URL + "?t=" + Date.now();
-    }
-
-    function goCheckin(rackNo) {
-      window.location.href = CHECKIN_URL + "?rackNo=" + encodeURIComponent(rackNo) + "&t=" + Date.now();
-    }
-
-    function goQueue(rackNo) {
-      window.location.href = QUEUE_URL + "?rackNo=" + encodeURIComponent(rackNo) + "&t=" + Date.now();
-    }
-
-    function normalizeRackState(rack) {
-      const rawState = String(rack.state || "").toLowerCase();
-      const joined = [
-        rack.currentText || "",
-        rack.currentSubText || "",
-        rack.nextText || "",
-        rack.nextSubText || "",
-        rack.bottomNote || ""
-      ].join(" ");
-
-      if (rawState.includes("using")) return "using";
-      if (rawState.includes("reserved")) return "reserved";
-      if (rawState.includes("free")) return "free";
-
-      if (/利用中|使用中|in use/i.test(joined)) return "using";
-      if (/予定があります|reserved|personal|見学|開始|分後|available until/i.test(joined)) return "reserved";
-      return "free";
-    }
-
-    function buildRackIcon(rackNo) {
-      return `
-        <img
-          class="rack-icon"
-          src="${rackImageUrl(rackNo)}"
-          alt="Rack ${escapeHtml(rackNo)}"
-        />
-      `;
-    }
-
-    function buildStatusPill(state) {
-      if (state === "reserved") {
-        return `
-          <div class="status-pill status-reserved">
-            <div class="ja">予定があります</div>
-            <div class="en">RESERVED SOON</div>
-          </div>
-        `;
+    const STATE_UI = {
+      free: {
+        badgeClass: "free",
+        badgeTextJa: "空き",
+        badgeTextEn: "AVAILABLE",
+        cardClass: "state-free",
+        currentLabelClass: "green",
+        nextLabelClass: "green",
+        waitingLabelClass: "green"
+      },
+      using: {
+        badgeClass: "using",
+        badgeTextJa: "利用中",
+        badgeTextEn: "IN USE",
+        cardClass: "state-using",
+        currentLabelClass: "white",
+        nextLabelClass: "green",
+        waitingLabelClass: "white"
+      },
+      reserved: {
+        badgeClass: "reserved",
+        badgeTextJa: "予約あり",
+        badgeTextEn: "RESERVED",
+        cardClass: "state-reserved",
+        currentLabelClass: "orange",
+        nextLabelClass: "orange",
+        waitingLabelClass: "orange"
+      },
+      maintenance: {
+        badgeClass: "maintenance",
+        badgeTextJa: "メンテ中",
+        badgeTextEn: "MAINTENANCE",
+        cardClass: "state-maintenance",
+        currentLabelClass: "blue",
+        nextLabelClass: "blue",
+        waitingLabelClass: "blue"
+      },
+      gap: {
+        badgeClass: "gap",
+        badgeTextJa: "すき間利用可",
+        badgeTextEn: "SHORT USE",
+        cardClass: "state-gap",
+        currentLabelClass: "yellow",
+        nextLabelClass: "orange",
+        waitingLabelClass: "yellow"
+      },
+      waiting: {
+        badgeClass: "waiting",
+        badgeTextJa: "順番待ち",
+        badgeTextEn: "WAITING",
+        cardClass: "state-waiting",
+        currentLabelClass: "green",
+        nextLabelClass: "green",
+        waitingLabelClass: "green"
       }
-      if (state === "using") {
-        return `
-          <div class="status-pill status-using">
-            <div class="ja">利用中</div>
-            <div class="en">IN USE</div>
-          </div>
-        `;
-      }
+    };
+
+    function esc(str) {
+      return String(str ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function withBr(str) {
+      return esc(str).replace(/\n/g, "<br>");
+    }
+
+    function txt(v, fallback = "—") {
+      const s = String(v ?? "").trim();
+      return s ? s : fallback;
+    }
+
+    function showError(msg) {
+      const el = document.getElementById("errorBox");
+      el.textContent = msg;
+      el.classList.add("show");
+    }
+
+    function hideError() {
+      const el = document.getElementById("errorBox");
+      el.textContent = "";
+      el.classList.remove("show");
+    }
+
+    function normalizeRack(raw) {
+      const state = String(raw.state || "free").toLowerCase().trim();
+      const ui = STATE_UI[state] || STATE_UI.free;
+
+      return {
+        rackNo: Number(raw.rackNo) || 0,
+        state,
+        ui,
+        badgeTextJa: txt(raw.badgeTextJa, raw.badgeText, ui.badgeTextJa),
+        badgeTextEn: txt(raw.badgeTextEn, ui.badgeTextEn),
+
+        currentLabelJa: txt(raw.currentLabelJa, "現在"),
+        currentLabelEn: txt(raw.currentLabelEn, "CURRENT"),
+        currentText: txt(raw.currentText),
+        currentSubText: txt(raw.currentSubText, ""),
+
+        nextLabelJa: txt(raw.nextLabelJa, "次の予定"),
+        nextLabelEn: txt(raw.nextLabelEn, "NEXT"),
+        nextText: txt(raw.nextText, ""),
+        nextSubText: txt(raw.nextSubText, ""),
+
+        waitingLabelJa: txt(raw.waitingLabelJa, "順番待ち"),
+        waitingLabelEn: txt(raw.waitingLabelEn, "WAITING"),
+        waitingCount: Number.isFinite(Number(raw.waitingCount)) ? Number(raw.waitingCount) : 0,
+
+        noteText: txt(raw.noteText, ""),
+
+        showUseNowButton: Boolean(raw.showUseNowButton),
+        useNowLabelJa: txt(raw.useNowLabelJa, "すぐに利用"),
+        useNowLabelEn: txt(raw.useNowLabelEn, "USE NOW"),
+
+        showQueueButton: Boolean(raw.showQueueButton),
+        queueButtonText: txt(raw.queueButtonText, "順番待ち"),
+
+        checkinUrl: txt(raw.checkinUrl, ""),
+        queueUrl: txt(raw.queueUrl, "")
+      };
+    }
+
+    function renderBadge(r) {
       return `
-        <div class="status-pill status-free">
-          <div class="ja">空き</div>
-          <div class="en">AVAILABLE</div>
+        <div class="badge ${r.ui.badgeClass}">
+          <div class="badge-ja">${esc(r.badgeTextJa)}</div>
+          <div class="badge-en">${esc(r.badgeTextEn)}</div>
         </div>
       `;
     }
 
-    function buildActionButton(rack, state) {
-      const rackNo = rack.rackNo;
-      const showUseNow = !!rack.showUseNowButton || state === "free";
-      const showQueue = !!rack.showQueueButton || state !== "free";
+    function renderRack(raw) {
+      const r = normalizeRack(raw);
 
-      if (showUseNow) {
-        return `
-          <button class="action-btn btn-green" onclick="goCheckin(${rackNo})">
-            <div class="btn-text">
-              <div class="btn-ja">すぐに利用</div>
-              <div class="btn-en">USE NOW</div>
+      const checkinUrl = r.checkinUrl || `${CHECKIN_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}`;
+      const queueUrl = r.queueUrl || `${QUEUE_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}`;
+
+      const useButton = (r.showUseNowButton && r.state !== "maintenance")
+        ? `
+          <button class="btn btn-use" data-url="${esc(checkinUrl)}" data-kind="use">
+            <div>
+              <div class="btn-use-ja">${esc(r.useNowLabelJa)}</div>
+              <div class="btn-use-en">${esc(r.useNowLabelEn)}</div>
             </div>
             <div class="btn-arrow">›</div>
           </button>
-        `;
-      }
+        `
+        : "";
 
-      if (showQueue) {
-        return `
-          <button class="action-btn btn-dark" onclick="goQueue(${rackNo})">
-            <div class="btn-text">
-              <div class="btn-ja">順番待ち</div>
-            </div>
-            <div class="btn-arrow">›</div>
+      const queueButton = (r.showQueueButton && r.state !== "maintenance")
+        ? `
+          <button class="btn btn-queue" data-url="${esc(queueUrl)}" data-kind="queue">
+            <span>${esc(r.queueButtonText)}</span>
+            <span>›</span>
           </button>
-        `;
-      }
+        `
+        : "";
 
       return `
-        <button class="action-btn btn-dark" onclick="goQueue(${rackNo})">
-          <div class="btn-text">
-            <div class="btn-ja">順番待ち</div>
-          </div>
-          <div class="btn-arrow">›</div>
-        </button>
-      `;
-    }
-
-    function renderRackCard(rack) {
-      const rackNo = pickDisplayText(rack.rackNo, "-");
-      const state = normalizeRackState(rack);
-      const labelColor = state === "reserved" ? "orange" : "green";
-
-      const currentText = pickDisplayText(
-        rack.currentText,
-        state === "reserved" ? "予定があります" : "空いています"
-      );
-      const currentSubText = pickDisplayText(
-        rack.currentSubText,
-        state === "reserved" ? "" : "本日の後続予定なし"
-      );
-      const nextText = pickDisplayText(rack.nextText, "予定なし");
-      const nextSubText = pickDisplayText(rack.nextSubText, "");
-      const waitingCount = Number(rack.waitingCount ?? 0);
-      const bottomNote = pickDisplayText(
-        rack.bottomNote,
-        state === "reserved" ? "Available until the next..." : "本日この後の予定はあ..."
-      );
-
-      return `
-        <section class="rack-card">
-          <div class="rack-main">
-            <div class="rack-left">
-              ${buildRackIcon(rackNo)}
-              ${buildStatusPill(state)}
+        <article class="rack-card ${r.ui.cardClass}">
+          <div class="rack-top">
+            <div class="rack-visual">
+              <div class="rack-image-wrap">
+                <img src="rack${r.rackNo}.png?t=1" alt="Rack ${r.rackNo}">
+              </div>
+              <div class="badge-under">
+                ${renderBadge(r)}
+              </div>
             </div>
 
             <div class="rack-info">
-              <div class="section-label ${labelColor}">現在 / CURRENT</div>
-              <div class="big-status">${escapeHtml(currentText)}</div>
-              <div class="substatus">${escapeHtml(currentSubText)}</div>
+              <div class="label ${r.ui.currentLabelClass}">
+                ${esc(r.currentLabelJa)} / ${esc(r.currentLabelEn)}
+              </div>
+              <div class="status-main">${withBr(r.currentText)}</div>
+              ${r.currentSubText ? `<div class="status-sub">${withBr(r.currentSubText)}</div>` : ""}
 
-              <div class="section-label ${labelColor}">次の予定 / NEXT</div>
-              <div class="next-main">${escapeHtml(nextText)}</div>
-              <div class="next-sub">${escapeHtml(nextSubText)}</div>
+              <div class="divider"></div>
 
-              <div class="section-label ${labelColor}">順番待ち / WAITING</div>
-              <div class="waiting-row">
-                <div class="waiting-icon">👤</div>
-                <div class="waiting-count">${waitingCount}名</div>
+              <div class="schedule-block">
+                <div class="label ${r.ui.nextLabelClass}">
+                  ${esc(r.nextLabelJa)} / ${esc(r.nextLabelEn)}
+                </div>
+                <div class="schedule-main">${withBr(r.nextText || "予定なし")}</div>
+                ${r.nextSubText ? `<div class="schedule-sub">${withBr(r.nextSubText)}</div>` : ""}
               </div>
 
-              <div class="note">${escapeHtml(bottomNote)}</div>
+              <div class="waiting-row">
+                <div class="label ${r.ui.waitingLabelClass}">
+                  ${esc(r.waitingLabelJa)} / ${esc(r.waitingLabelEn)}
+                </div>
+                <div class="waiting-count">
+                  <svg class="person-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-4.14 0-7.5 2.46-7.5 5.5A1.5 1.5 0 0 0 6 21h12a1.5 1.5 0 0 0 1.5-1.5C19.5 16.46 16.14 14 12 14Z"/>
+                  </svg>
+                  <span>${r.waitingCount}名</span>
+                </div>
+              </div>
+
+              ${r.noteText ? `<div class="note">${withBr(r.noteText)}</div>` : ""}
             </div>
           </div>
 
-          <div class="rack-actions">
-            ${buildActionButton(rack, state)}
+          <div class="bottom-actions">
+            ${useButton || queueButton || '<div style="height:54px;"></div>'}
           </div>
-        </section>
+        </article>
       `;
     }
 
-    function renderError(messageJa, messageEn) {
-      document.getElementById("rackGrid").innerHTML = `
-        <section class="error-card">
-          <div class="ja">${escapeHtml(messageJa)}</div>
-          <div class="en">${escapeHtml(messageEn)}</div>
-        </section>
-      `;
+    function renderAll(data) {
+      document.getElementById("authCode").textContent = txt(data.authCode, "----");
+      document.getElementById("todayLabel").textContent = txt(data.todayLabel, "----/--/--");
+      document.getElementById("lastUpdated").textContent =
+        `最終更新 / LAST UPDATED: ${txt(data.lastUpdatedText, "--")}`;
+
+      const racks = Array.isArray(data.racks) ? data.racks.slice() : [];
+      racks.sort((a, b) => (Number(a.rackNo) || 0) - (Number(b.rackNo) || 0));
+
+      document.getElementById("rackGrid").innerHTML = racks.map(renderRack).join("");
     }
 
-    function renderScreen(data) {
-      document.getElementById("authCode").textContent = pickDisplayText(data.authCode, "----");
-      document.getElementById("todayLabel").textContent = pickDisplayText(data.todayLabel, "----/--/--");
-
-      const updated = pickDisplayText(data.lastUpdated || data.updatedAt, "----/--/-- --:--");
-      document.getElementById("updatedText").textContent =
-        "最終更新 / LAST UPDATED: " + updated;
-
-      const racks = Array.isArray(data.racks) ? [...data.racks] : [];
-      if (!racks.length) {
-        renderError("表示データがありません", "No rack data available.");
-        return;
-      }
-
-      racks.sort((a, b) => Number(a.rackNo || 0) - Number(b.rackNo || 0));
-      document.getElementById("rackGrid").innerHTML = racks.map(renderRackCard).join("");
+    async function fetchData() {
+      const res = await fetch(`${API_URL}?action=getscheduletabletjson&t=${Date.now()}`, {
+        method: "GET",
+        cache: "no-store"
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!data || typeof data !== "object") throw new Error("invalid json");
+      return data;
     }
 
-    async function fetchSchedule() {
+    async function loadData() {
       try {
-        const res = await fetch(API_URL + "?action=getscheduletabletjson&t=" + Date.now(), {
-          cache: "no-store"
-        });
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        const data = await res.json();
-        renderScreen(data);
-      } catch (error) {
-        console.error(error);
-        renderError("表示データの取得に失敗しました", "Failed to load schedule data.");
+        hideError();
+        const data = await fetchData();
+        renderAll(data);
+      } catch (e) {
+        console.error(e);
+        showError("データ取得失敗。GASレスポンスまたは通信状態をご確認ください。");
       }
     }
 
-    fetchSchedule();
-    setInterval(fetchSchedule, 15000);
+    function setupEvents() {
+      const qrCard = document.getElementById("qrCard");
+
+      qrCard.addEventListener("click", () => {
+        location.href = QR_PAGE_URL;
+      });
+
+      qrCard.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          location.href = QR_PAGE_URL;
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-url]");
+        if (!btn) return;
+        const url = btn.getAttribute("data-url");
+        if (!url) return;
+        location.href = url;
+      });
+    }
+
+    setupEvents();
+    loadData();
+    setInterval(loadData, REFRESH_MS);
   </script>
 </body>
 </html>
