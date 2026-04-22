@@ -9,20 +9,25 @@
   <title>Workout Check-in</title>
   <style>
     :root{
-      --bg:#05070b;
-      --panel:#0b1018;
-      --panel2:#101826;
-      --line:#79d900;
-      --line-soft:rgba(121,217,0,.55);
+      --bg:#06080d;
+      --panel:#0b111b;
+      --panel2:#101827;
+      --line:#6ee600;
+      --line-soft:rgba(110,230,0,.55);
+      --line-softer:rgba(110,230,0,.22);
       --text:#ffffff;
-      --muted:#a9b0bb;
-      --green:#79f000;
-      --green2:#5fd100;
-      --orange:#ffad33;
-      --orange2:#8a5a16;
-      --blueBtn:#1b2436;
-      --shadow:0 0 0 1px rgba(255,255,255,.05) inset;
-      --radius:24px;
+      --muted:#c8d0d8;
+      --green:#83f500;
+      --green-dark:#3f6f21;
+      --green-dark-2:#2e5417;
+      --orange:#ffb03b;
+      --orange-dark:#7a5826;
+      --orange-dark-2:#5a4019;
+      --blue-dark:#1b2435;
+      --blue-dark-2:#151d2d;
+      --shadow:0 0 0 1px rgba(255,255,255,.06) inset;
+      --radius:22px;
+      --footer-h:18px;
     }
 
     *{
@@ -39,37 +44,35 @@
       color:var(--text);
       font-family:
         "Segoe UI","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+      overflow:hidden;
     }
 
     body{
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
       background:
-        radial-gradient(circle at top, #0f1724 0%, #05070b 45%, #000 100%);
+        radial-gradient(circle at top, #141d2a 0%, #070a10 42%, #000 100%);
     }
 
     .app{
-      width:min(100vw, 800px);
-      min-height:100vh;
-      padding:18px 18px 10px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
+      width:100%;
+      height:100%;
+      padding:12px 14px 8px;
+      display:grid;
+      grid-template-rows:auto auto auto 1fr auto;
+      gap:8px;
     }
 
-    .topbar{
+    /* ===== Header ===== */
+    .header{
       display:grid;
-      grid-template-columns: 180px 1fr 180px;
+      grid-template-columns:170px 1fr 170px;
       align-items:center;
-      gap:10px;
+      min-height:66px;
     }
 
     .logo-wrap{
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:flex-start;
-      min-height:86px;
     }
 
     .logo{
@@ -77,43 +80,51 @@
       user-select:none;
     }
 
-    .logo .leaf{
-      color:#8CF000;
-      font-size:38px;
-      display:inline-block;
-      margin-right:2px;
-      transform:translateY(2px);
+    .logo-top{
+      display:flex;
+      align-items:flex-start;
+      gap:4px;
     }
 
-    .logo .the{
-      font-size:30px;
-      font-weight:800;
-      color:#fff;
-      display:inline-block;
-      vertical-align:top;
-      margin-left:2px;
+    .leaf{
+      color:#8ff000;
+      font-size:28px;
+      line-height:1;
+      transform:translateY(1px);
     }
 
-    .logo .forest{
-      font-size:30px;
+    .the{
+      font-size:18px;
       font-weight:900;
-      color:#7AF000;
+      color:#fff;
+      line-height:1.05;
+    }
+
+    .forest-row{
       margin-top:2px;
+      line-height:1;
+      white-space:nowrap;
     }
 
-    .logo .gym{
-      font-size:30px;
+    .forest{
+      font-size:24px;
+      font-weight:900;
+      color:#7df000;
+    }
+
+    .gym{
+      font-size:24px;
       font-weight:900;
       color:#fff;
-      margin-left:2px;
+      margin-left:3px;
     }
 
-    .logo .sub{
-      font-size:15px;
-      color:#d7dbdf;
-      margin-top:6px;
-      margin-left:26px;
-      font-weight:700;
+    .logo-sub{
+      margin-top:3px;
+      margin-left:22px;
+      font-size:11px;
+      font-weight:800;
+      color:#dbe1e6;
     }
 
     .title-wrap{
@@ -125,74 +136,76 @@
     }
 
     .title{
-      font-size:28px;
-      font-weight:900;
-      letter-spacing:.5px;
       margin:0;
-      text-align:center;
+      font-size:26px;
+      line-height:1.08;
+      font-weight:900;
+      letter-spacing:.4px;
       width:100%;
+      text-align:center;
     }
 
     .subtitle{
-      margin-top:4px;
-      font-size:14px;
-      color:#eef2f5;
+      margin-top:3px;
+      font-size:13px;
       font-weight:800;
-      text-align:center;
+      color:#e5ebef;
       width:100%;
+      text-align:center;
     }
 
-    .topbar-spacer{
+    .header-spacer{
       min-height:1px;
     }
 
+    /* ===== Top boxes ===== */
     .hero{
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
     }
 
     .hero-box{
-      background:linear-gradient(180deg, rgba(16,24,37,.96), rgba(8,12,20,.96));
-      border:1.5px solid rgba(255,255,255,.12);
-      border-radius:24px;
-      min-height:112px;
-      padding:16px 18px;
+      background:linear-gradient(180deg, rgba(15,23,36,.97), rgba(9,13,21,.97));
+      border:1.4px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      min-height:102px;
+      padding:14px 16px;
       box-shadow:var(--shadow);
     }
 
-    .code-title,
-    .qr-title{
+    .hero-title{
       display:flex;
       align-items:center;
-      gap:8px;
+      gap:7px;
+      font-size:15px;
       font-weight:900;
-      font-size:18px;
       margin-bottom:8px;
     }
 
-    .en-green{
+    .hero-title .en{
       color:var(--green);
-      font-size:14px;
+      font-size:12px;
       font-weight:900;
     }
 
     .code-value{
       color:var(--green);
-      font-size:54px;
+      font-size:50px;
       line-height:1;
       font-weight:900;
-      letter-spacing:3px;
-      margin:8px 0 6px;
+      letter-spacing:2px;
+      margin:6px 0 4px;
     }
 
     .date{
-      color:#f4f6f8;
-      font-size:16px;
+      color:#f5f7f8;
+      font-size:15px;
       font-weight:800;
+      line-height:1;
     }
 
-    .qr-box-btn{
+    .qr-btn{
       width:100%;
       height:100%;
       background:none;
@@ -201,306 +214,397 @@
       padding:0;
       margin:0;
       cursor:pointer;
-      text-align:left;
     }
 
     .qr-inner{
+      width:100%;
+      min-height:72px;
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:18px;
-      height:100%;
-      min-height:78px;
+      gap:16px;
     }
 
     .qr-icon{
-      font-size:42px;
+      font-size:34px;
       line-height:1;
     }
 
-    .qr-main-ja{
-      font-size:26px;
+    .qr-ja{
+      font-size:22px;
       font-weight:900;
-      line-height:1.15;
+      line-height:1.06;
+      text-align:left;
     }
 
-    .qr-main-en{
-      font-size:14px;
-      color:var(--green);
+    .qr-en{
+      margin-top:4px;
+      font-size:12px;
       font-weight:900;
-      margin-top:6px;
+      color:var(--green);
+      text-align:left;
     }
 
     .updated{
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:8px;
-      color:#d9dee3;
+      gap:7px;
+      min-height:20px;
+      font-size:13px;
       font-weight:900;
-      font-size:14px;
-      margin:2px 0 0;
+      color:#dce2e7;
       text-align:center;
     }
 
     .updated .icon{
       color:var(--green);
-      font-size:18px;
+      font-size:15px;
+      line-height:1;
     }
 
+    /* ===== Rack grid ===== */
     .rack-grid{
-      flex:1;
+      min-height:0;
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px;
-      align-content:start;
+      grid-template-columns:1fr 1fr;
+      grid-template-rows:1fr 1fr;
+      gap:10px;
+      align-content:stretch;
     }
 
     .rack-card{
-      background:linear-gradient(180deg, rgba(8,15,24,.98), rgba(7,12,20,.98));
+      min-height:0;
+      background:linear-gradient(180deg, rgba(8,14,22,.98), rgba(7,11,18,.98));
       border:1.8px solid var(--line-soft);
-      border-radius:28px;
-      padding:18px 18px 16px;
+      border-radius:26px;
+      padding:14px 14px 12px;
       box-shadow:
-        0 0 0 1px rgba(121,217,0,.14) inset,
-        0 8px 30px rgba(0,0,0,.25);
-      display:flex;
-      flex-direction:column;
-      min-height:335px;
+        0 0 0 1px var(--line-softer) inset,
+        0 6px 18px rgba(0,0,0,.28);
+      display:grid;
+      grid-template-rows:1fr auto;
+      gap:10px;
+      overflow:hidden;
     }
 
-    .rack-top{
+    .rack-main{
+      min-height:0;
       display:grid;
-      grid-template-columns: 155px 1fr;
-      gap:18px;
+      grid-template-columns:118px 1fr;
+      gap:14px;
       align-items:start;
     }
 
-    /* ここが今回の最重要 */
+    /* ここで中心線を合わせる */
     .rack-left{
-      width:155px;
+      width:118px;
       display:flex;
       flex-direction:column;
-      align-items:center;   /* アイコンとステータスラベルを同じ中心線に乗せる */
+      align-items:center;
       justify-content:flex-start;
-      gap:18px;
-      padding-top:2px;
+      gap:12px;
+      min-height:0;
     }
 
-    .rack-icon{
-      width:150px;
-      height:150px;
-      object-fit:contain;
-      display:block;
-      margin:0 auto;
-      filter:drop-shadow(0 4px 12px rgba(0,0,0,.45));
+    /* 画像依存をやめたラックアイコン */
+    .rack-badge{
+      width:104px;
+      height:104px;
+      border-radius:20px;
+      position:relative;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03)),
+        radial-gradient(circle at 50% 22%, rgba(255,255,255,.14), rgba(255,255,255,0) 45%),
+        linear-gradient(180deg, #111722, #070b12);
+      border:2px solid rgba(255,255,255,.22);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.06),
+        0 6px 14px rgba(0,0,0,.35);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .rack-badge::before,
+    .rack-badge::after{
+      content:"";
+      position:absolute;
+      top:14px;
+      width:16px;
+      height:54px;
+      border:2px solid rgba(255,255,255,.22);
+      border-bottom:none;
+      border-radius:4px 4px 0 0;
+    }
+
+    .rack-badge::before{ left:11px; }
+    .rack-badge::after{ right:11px; }
+
+    .rack-top-bar{
+      position:absolute;
+      top:12px;
+      left:20px;
+      right:20px;
+      height:5px;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+    }
+
+    .rack-no{
+      font-size:58px;
+      line-height:1;
+      font-weight:1000;
+      letter-spacing:-1px;
+      text-shadow:0 3px 10px rgba(0,0,0,.35);
+      transform:translateY(1px);
+    }
+
+    .rack-label{
+      position:absolute;
+      bottom:8px;
+      left:0;
+      right:0;
+      text-align:center;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:4px;
+      color:#ffffff;
+      opacity:.96;
     }
 
     .status-pill{
-      width:122px;                /* 固定幅 */
-      min-height:58px;
-      border-radius:16px;
+      width:102px;
+      min-height:50px;
+      border-radius:15px;
       display:flex;
       flex-direction:column;
-      align-items:center;         /* 中央揃え */
-      justify-content:center;     /* 中央揃え */
+      align-items:center;
+      justify-content:center;
       text-align:center;
       font-weight:900;
-      line-height:1.05;
-      padding:8px 8px 7px;
-      margin:0 auto;              /* 左カラム中央 */
+      line-height:1.04;
+      padding:6px 6px 5px;
+      margin:0 auto;
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
     }
 
     .status-pill .ja{
-      font-size:15px;
-      margin-bottom:3px;
+      font-size:14px;
+      margin-bottom:2px;
     }
 
     .status-pill .en{
-      font-size:10px;
-      letter-spacing:.4px;
-      opacity:.97;
+      font-size:9px;
+      letter-spacing:.25px;
+      opacity:.98;
     }
 
     .status-free{
-      background:linear-gradient(180deg, #3e6d21, #2f541a);
-      color:#fff;
-    }
-
-    .status-reserved{
-      background:linear-gradient(180deg, #7a5826, #5a4019);
+      background:linear-gradient(180deg, var(--green-dark), var(--green-dark-2));
       color:#fff;
     }
 
     .status-using{
-      background:linear-gradient(180deg, #325f25, #264a1b);
+      background:linear-gradient(180deg, #355f25, #26461a);
+      color:#fff;
+    }
+
+    .status-reserved{
+      background:linear-gradient(180deg, var(--orange-dark), var(--orange-dark-2));
       color:#fff;
     }
 
     .rack-info{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-start;
-      justify-content:flex-start;
-      padding-top:2px;
+      min-width:0;
+      display:grid;
+      grid-template-rows:auto auto auto auto auto auto auto auto auto auto;
+      align-content:start;
+      row-gap:2px;
     }
 
     .section-label{
-      font-size:14px;
+      font-size:13px;
       font-weight:900;
-      margin-bottom:2px;
+      line-height:1.15;
     }
 
-    .section-label.green{
-      color:var(--green);
-    }
-
-    .section-label.orange{
-      color:var(--orange);
-    }
+    .section-label.green{ color:var(--green); }
+    .section-label.orange{ color:var(--orange); }
 
     .big-status{
-      font-size:26px;
-      line-height:1.12;
+      font-size:21px;
+      line-height:1.08;
       font-weight:900;
-      margin-bottom:6px;
+      margin-bottom:1px;
+      word-break:break-word;
     }
 
     .substatus{
-      font-size:15px;
+      font-size:13px;
+      line-height:1.2;
       font-weight:800;
-      color:#f3f5f7;
-      line-height:1.25;
-      margin-bottom:16px;
+      color:#f0f3f5;
+      margin-bottom:8px;
+      word-break:break-word;
     }
 
     .next-main{
-      font-size:20px;
+      font-size:16px;
+      line-height:1.14;
       font-weight:900;
-      line-height:1.15;
-      margin-bottom:2px;
+      margin-bottom:1px;
+      word-break:break-word;
     }
 
     .next-sub{
-      font-size:15px;
+      font-size:13px;
+      line-height:1.2;
       font-weight:900;
-      line-height:1.25;
-      margin-bottom:14px;
+      margin-bottom:8px;
+      word-break:break-word;
     }
 
     .waiting-row{
       display:flex;
-      align-items:flex-end;
-      gap:8px;
-      margin:0 0 8px;
+      align-items:center;
+      gap:6px;
+      margin-top:1px;
+      margin-bottom:3px;
     }
 
     .waiting-icon{
-      font-size:18px;
+      font-size:15px;
       line-height:1;
-      transform:translateY(-2px);
     }
 
     .waiting-count{
-      font-size:22px;
-      font-weight:900;
+      font-size:19px;
       line-height:1;
+      font-weight:1000;
     }
 
     .note{
-      font-size:13px;
-      color:#d8dde2;
-      line-height:1.25;
-      opacity:.92;
+      font-size:12px;
+      line-height:1.18;
+      color:#d9dee4;
+      opacity:.95;
+      word-break:break-word;
     }
 
     .rack-actions{
-      margin-top:auto;
-      padding-top:16px;
+      min-height:0;
     }
 
     .action-btn{
       width:100%;
-      min-height:62px;
+      min-height:48px;
       border:none;
-      border-radius:18px;
-      font-size:18px;
-      font-weight:900;
-      cursor:pointer;
+      border-radius:17px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding:0 22px 0 24px;
+      gap:10px;
+      padding:0 18px 0 18px;
+      cursor:pointer;
       box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.1),
-        0 6px 16px rgba(0,0,0,.25);
-    }
-
-    .action-btn .btn-ja{
-      font-size:18px;
-      font-weight:900;
-      line-height:1.05;
-      text-align:left;
-    }
-
-    .action-btn .btn-en{
-      font-size:11px;
-      font-weight:900;
-      opacity:.95;
-      margin-top:4px;
-      text-align:left;
-    }
-
-    .action-btn .arrow{
-      font-size:28px;
-      line-height:1;
-      font-weight:900;
-      opacity:.95;
+        inset 0 0 0 1px rgba(255,255,255,.10),
+        0 5px 14px rgba(0,0,0,.26);
     }
 
     .btn-green{
-      background:linear-gradient(180deg, #82f100, #67cf00);
+      background:linear-gradient(180deg, #84f400, #67d000);
       color:#fff;
     }
 
     .btn-dark{
-      background:linear-gradient(180deg, #1d2740, #172033);
+      background:linear-gradient(180deg, var(--blue-dark), var(--blue-dark-2));
       color:#fff;
     }
 
+    .btn-text{
+      text-align:left;
+      line-height:1;
+    }
+
+    .btn-ja{
+      font-size:16px;
+      font-weight:900;
+      line-height:1.05;
+    }
+
+    .btn-en{
+      margin-top:3px;
+      font-size:10px;
+      font-weight:900;
+      opacity:.96;
+    }
+
+    .btn-arrow{
+      font-size:24px;
+      font-weight:900;
+      line-height:1;
+      opacity:.95;
+      flex:0 0 auto;
+    }
+
     .footer{
+      min-height:var(--footer-h);
       text-align:center;
-      color:#dfe4e8;
-      font-size:13px;
-      font-weight:700;
-      padding:2px 0 0;
-      margin-top:0;
+      font-size:12px;
+      line-height:1;
+      color:#dce1e6;
       opacity:.9;
+      font-weight:700;
+      padding-top:1px;
     }
 
-    .hidden{
-      display:none !important;
+    .error-card{
+      grid-column:1 / -1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      gap:6px;
+      background:linear-gradient(180deg, rgba(20,18,24,.97), rgba(14,12,18,.97));
+      border:1.6px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      padding:20px;
     }
 
-    @media (max-width: 760px){
-      .app{
-        width:100vw;
-        padding:14px 12px 8px;
+    .error-card .ja{
+      font-size:21px;
+      font-weight:900;
+    }
+
+    .error-card .en{
+      font-size:14px;
+      font-weight:800;
+      color:#d6dce2;
+    }
+
+    @media (max-width: 820px){
+      html,body{
+        overflow:auto;
       }
 
-      .topbar{
-        grid-template-columns: 1fr;
-        gap:8px;
+      .app{
+        height:auto;
+        min-height:100vh;
+        grid-template-rows:auto auto auto auto auto;
+      }
+
+      .header{
+        grid-template-columns:1fr;
+        gap:6px;
       }
 
       .logo-wrap,
-      .topbar-spacer{
+      .header-spacer{
         display:none;
-      }
-
-      .title{
-        font-size:26px;
       }
 
       .hero,
@@ -508,35 +612,29 @@
         grid-template-columns:1fr;
       }
 
-      .rack-top{
-        grid-template-columns:130px 1fr;
+      .rack-grid{
+        grid-template-rows:auto;
       }
 
-      .rack-left{
-        width:130px;
-      }
-
-      .rack-icon{
-        width:124px;
-        height:124px;
-      }
-
-      .status-pill{
-        width:110px;
+      .rack-card{
+        min-height:260px;
       }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <header class="topbar">
+    <header class="header">
       <div class="logo-wrap">
         <div class="logo">
-          <div>
-            <span class="leaf">🍃</span><span class="the">The</span>
+          <div class="logo-top">
+            <div class="leaf">🍃</div>
+            <div class="the">The</div>
           </div>
-          <div><span class="forest">Forest</span> <span class="gym">Gym</span></div>
-          <div class="sub">24h Fitness</div>
+          <div class="forest-row">
+            <span class="forest">Forest</span><span class="gym">Gym</span>
+          </div>
+          <div class="logo-sub">24h Fitness</div>
         </div>
       </div>
 
@@ -545,26 +643,26 @@
         <div class="subtitle">ラック予定一覧 / Rack Status Board</div>
       </div>
 
-      <div class="topbar-spacer"></div>
+      <div class="header-spacer"></div>
     </header>
 
     <section class="hero">
       <div class="hero-box">
-        <div class="code-title">
+        <div class="hero-title">
           <span>認証コード</span>
-          <span class="en-green">/ ACCESS CODE</span>
+          <span class="en">/ ACCESS CODE</span>
         </div>
         <div id="authCode" class="code-value">----</div>
         <div id="todayLabel" class="date">----/--/--</div>
       </div>
 
       <div class="hero-box">
-        <button class="qr-box-btn" onclick="goQrPage()">
+        <button class="qr-btn" onclick="goQrPage()">
           <div class="qr-inner">
             <div class="qr-icon">▣</div>
             <div>
-              <div class="qr-main-ja">QRでチェックイン</div>
-              <div class="qr-main-en">CHECK IN WITH QR</div>
+              <div class="qr-ja">QRでチェックイン</div>
+              <div class="qr-en">CHECK IN WITH QR</div>
             </div>
           </div>
         </button>
@@ -584,9 +682,11 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
     const QR_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/index.html";
+    const CHECKIN_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/checkin.html";
+    const QUEUE_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/queue.html";
 
-    function escapeHtml(str) {
-      return String(str ?? "")
+    function escapeHtml(value) {
+      return String(value ?? "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -594,38 +694,48 @@
         .replace(/'/g, "&#39;");
     }
 
-    function rackImageUrl(rackNo){
-      return `https://forestgym-tokyo.github.io/qr-checkin-scanner/assets/rack${rackNo}.png`;
-    }
-
-    function goQrPage(){
+    function goQrPage() {
       window.location.href = QR_URL + "?t=" + Date.now();
     }
 
-    function goCheckin(rackNo){
-      window.location.href = `https://forestgym-tokyo.github.io/qr-checkin-scanner/checkin.html?rackNo=${encodeURIComponent(rackNo)}&t=${Date.now()}`;
+    function goCheckin(rackNo) {
+      window.location.href = CHECKIN_URL + "?rackNo=" + encodeURIComponent(rackNo) + "&t=" + Date.now();
     }
 
-    function goQueue(rackNo){
-      window.location.href = `https://forestgym-tokyo.github.io/qr-checkin-scanner/queue.html?rackNo=${encodeURIComponent(rackNo)}&t=${Date.now()}`;
+    function goQueue(rackNo) {
+      window.location.href = QUEUE_URL + "?rackNo=" + encodeURIComponent(rackNo) + "&t=" + Date.now();
     }
 
-    function normalizeRackState(rack){
-      const state = String(rack.state || "").toLowerCase();
-      const current = String(rack.currentText || "");
-      const next = String(rack.nextText || "");
+    function normalizeRackState(rack) {
+      const rawState = String(rack.state || "").toLowerCase();
+      const currentText = String(rack.currentText || "");
+      const currentSubText = String(rack.currentSubText || "");
+      const nextText = String(rack.nextText || "");
+      const nextSubText = String(rack.nextSubText || "");
 
-      if (state.includes("using")) return "using";
-      if (state.includes("reserved")) return "reserved";
-      if (current.includes("利用中")) return "using";
-      if (current.includes("空いています")) return "free";
-      if (current.includes("後から") || current.includes("予定")) return "reserved";
-      if (next.includes("PERSONAL")) return "reserved";
+      if (rawState.includes("using")) return "using";
+      if (rawState.includes("reserved")) return "reserved";
+      if (rawState.includes("free")) return "free";
+
+      const joined = [currentText, currentSubText, nextText, nextSubText].join(" ");
+
+      if (/利用中|使用中|in use/i.test(joined)) return "using";
+      if (/予定があります|reserved|personal|見学|開始|後から|分後|available until/i.test(joined)) return "reserved";
       return "free";
     }
 
-    function buildStatusPill(state){
-      if(state === "reserved"){
+    function buildRackBadge(rackNo) {
+      return `
+        <div class="rack-badge" aria-label="Rack ${rackNo}">
+          <div class="rack-top-bar"></div>
+          <div class="rack-no">${escapeHtml(rackNo)}</div>
+          <div class="rack-label">RACK</div>
+        </div>
+      `;
+    }
+
+    function buildStatusPill(state) {
+      if (state === "reserved") {
         return `
           <div class="status-pill status-reserved">
             <div class="ja">予定があります</div>
@@ -633,7 +743,7 @@
           </div>
         `;
       }
-      if(state === "using"){
+      if (state === "using") {
         return `
           <div class="status-pill status-using">
             <div class="ja">利用中</div>
@@ -649,88 +759,89 @@
       `;
     }
 
-    function buildActionButton(rack, state){
+    function buildActionButton(rack, state) {
       const rackNo = rack.rackNo;
       const showUseNow = !!rack.showUseNowButton || state === "free";
       const showQueue = !!rack.showQueueButton || state !== "free";
 
-      if(showUseNow){
+      if (showUseNow) {
         return `
           <button class="action-btn btn-green" onclick="goCheckin(${rackNo})">
-            <div>
+            <div class="btn-text">
               <div class="btn-ja">すぐに利用</div>
               <div class="btn-en">USE NOW</div>
             </div>
-            <div class="arrow">›</div>
+            <div class="btn-arrow">›</div>
           </button>
         `;
       }
 
-      if(showQueue){
+      if (showQueue) {
         return `
           <button class="action-btn btn-dark" onclick="goQueue(${rackNo})">
-            <div>
+            <div class="btn-text">
               <div class="btn-ja">順番待ち</div>
             </div>
-            <div class="arrow">›</div>
+            <div class="btn-arrow">›</div>
           </button>
         `;
       }
 
       return `
         <button class="action-btn btn-dark" onclick="goQueue(${rackNo})">
-          <div>
+          <div class="btn-text">
             <div class="btn-ja">順番待ち</div>
           </div>
-          <div class="arrow">›</div>
+          <div class="btn-arrow">›</div>
         </button>
       `;
     }
 
-    function renderRackCard(rack){
+    function pickDisplayText(value, fallback = "") {
+      const text = String(value ?? "").trim();
+      return text || fallback;
+    }
+
+    function renderRackCard(rack) {
+      const rackNo = pickDisplayText(rack.rackNo, "-");
       const state = normalizeRackState(rack);
       const isReserved = state === "reserved";
+      const labelColor = isReserved ? "orange" : "green";
 
-      const currentText = escapeHtml(rack.currentText || "空いています");
-      const nextText = escapeHtml(rack.nextText || "予定なし");
-      const waitingCount = Number(rack.waitingCount || 0);
-
-      const currentLabelClass = isReserved ? "orange" : "green";
-      const nextLabelClass = isReserved ? "orange" : "green";
-
-      const noteText = isReserved
-        ? (rack.bottomNote || "Available until the next...")
-        : (rack.bottomNote || "本日この後の予定はあ...");
+      const currentText = pickDisplayText(rack.currentText, state === "reserved" ? "予定があります" : "空いています");
+      const currentSubText = pickDisplayText(rack.currentSubText, state === "reserved" ? "" : "本日の後続予定なし");
+      const nextText = pickDisplayText(rack.nextText, "予定なし");
+      const nextSubText = pickDisplayText(rack.nextSubText, "");
+      const waitingCount = Number(rack.waitingCount ?? 0);
+      const bottomNote = pickDisplayText(
+        rack.bottomNote,
+        state === "reserved" ? "Available until the next..." : "本日この後の予定はあ..."
+      );
 
       return `
         <section class="rack-card">
-          <div class="rack-top">
+          <div class="rack-main">
             <div class="rack-left">
-              <img
-                class="rack-icon"
-                src="${rackImageUrl(rack.rackNo)}"
-                alt="Rack ${rack.rackNo}"
-                onerror="this.style.display='none'"
-              />
+              ${buildRackBadge(rackNo)}
               ${buildStatusPill(state)}
             </div>
 
             <div class="rack-info">
-              <div class="section-label ${currentLabelClass}">現在 / CURRENT</div>
-              <div class="big-status">${currentText}</div>
-              <div class="substatus">${escapeHtml(rack.currentSubText || "本日の後続予定なし")}</div>
+              <div class="section-label ${labelColor}">現在 / CURRENT</div>
+              <div class="big-status">${escapeHtml(currentText)}</div>
+              <div class="substatus">${escapeHtml(currentSubText)}</div>
 
-              <div class="section-label ${nextLabelClass}">次の予定 / NEXT</div>
-              <div class="next-main">${nextText}</div>
-              <div class="next-sub">${escapeHtml(rack.nextSubText || "")}</div>
+              <div class="section-label ${labelColor}">次の予定 / NEXT</div>
+              <div class="next-main">${escapeHtml(nextText)}</div>
+              <div class="next-sub">${escapeHtml(nextSubText)}</div>
 
-              <div class="section-label ${nextLabelClass}">順番待ち / WAITING</div>
+              <div class="section-label ${labelColor}">順番待ち / WAITING</div>
               <div class="waiting-row">
                 <div class="waiting-icon">👤</div>
                 <div class="waiting-count">${waitingCount}名</div>
               </div>
 
-              <div class="note">${escapeHtml(noteText)}</div>
+              <div class="note">${escapeHtml(bottomNote)}</div>
             </div>
           </div>
 
@@ -741,32 +852,49 @@
       `;
     }
 
-    function renderScreen(data){
-      document.getElementById("authCode").textContent = data.authCode || "----";
-      document.getElementById("todayLabel").textContent = data.todayLabel || "----/--/--";
-      document.getElementById("updatedText").textContent =
-        "最終更新 / LAST UPDATED: " + (data.lastUpdated || data.updatedAt || "----/--/-- --:--");
-
-      const racks = Array.isArray(data.racks) ? data.racks : [];
+    function renderError(messageJa, messageEn) {
       const grid = document.getElementById("rackGrid");
-      grid.innerHTML = racks.map(renderRackCard).join("");
+      grid.innerHTML = `
+        <section class="error-card">
+          <div class="ja">${escapeHtml(messageJa)}</div>
+          <div class="en">${escapeHtml(messageEn)}</div>
+        </section>
+      `;
     }
 
-    async function fetchSchedule(){
-      try{
+    function renderScreen(data) {
+      document.getElementById("authCode").textContent = pickDisplayText(data.authCode, "----");
+      document.getElementById("todayLabel").textContent = pickDisplayText(data.todayLabel, "----/--/--");
+
+      const updated = pickDisplayText(data.lastUpdated || data.updatedAt, "----/--/-- --:--");
+      document.getElementById("updatedText").textContent =
+        "最終更新 / LAST UPDATED: " + updated;
+
+      const racks = Array.isArray(data.racks) ? data.racks : [];
+
+      if (!racks.length) {
+        renderError("表示データがありません", "No rack data available.");
+        return;
+      }
+
+      const sortedRacks = [...racks].sort((a, b) => Number(a.rackNo || 0) - Number(b.rackNo || 0));
+      document.getElementById("rackGrid").innerHTML = sortedRacks.map(renderRackCard).join("");
+    }
+
+    async function fetchSchedule() {
+      try {
         const url = API_URL + "?action=getscheduletabletjson&t=" + Date.now();
         const res = await fetch(url, { cache: "no-store" });
-        if(!res.ok) throw new Error("HTTP " + res.status);
+
+        if (!res.ok) {
+          throw new Error("HTTP " + res.status);
+        }
+
         const data = await res.json();
         renderScreen(data);
-      }catch(err){
-        console.error(err);
-        document.getElementById("rackGrid").innerHTML = `
-          <section class="rack-card" style="grid-column:1 / -1; min-height:180px;">
-            <div class="big-status">表示データの取得に失敗しました</div>
-            <div class="substatus">Failed to load schedule data.</div>
-          </section>
-        `;
+      } catch (error) {
+        console.error(error);
+        renderError("表示データの取得に失敗しました", "Failed to load schedule data.");
       }
     }
 
