@@ -35,42 +35,41 @@
     }
 
     body{
-      background:
-        linear-gradient(180deg,#050607 0%,#020304 100%);
+      background:linear-gradient(180deg,#050607 0%,#020304 100%);
     }
 
     .app{
       width:100vw;
       height:100vh;
-      padding:20px 28px 18px;
+      padding:12px 18px 10px;
       display:flex;
       flex-direction:column;
-      gap:16px;
+      gap:10px;
     }
 
     /* HEADER */
     .header{
       display:grid;
-      grid-template-columns: 360px 1fr 180px;
+      grid-template-columns:300px 1fr 140px;
       align-items:center;
-      gap:24px;
-      min-height:92px;
-      padding-bottom:14px;
+      gap:16px;
+      min-height:70px;
+      padding-bottom:10px;
       border-bottom:1px solid rgba(255,255,255,.14);
     }
 
     .brand{
       display:flex;
       align-items:center;
-      gap:18px;
+      gap:12px;
       min-width:0;
     }
 
     .brand-logo{
-      width:68px;
-      height:68px;
+      width:52px;
+      height:52px;
       object-fit:contain;
-      flex:0 0 68px;
+      flex:0 0 52px;
     }
 
     .brand-text{
@@ -78,7 +77,7 @@
     }
 
     .brand-main{
-      font-size:28px;
+      font-size:22px;
       line-height:1;
       font-weight:900;
       letter-spacing:.02em;
@@ -86,8 +85,8 @@
     }
 
     .brand-sub{
-      margin-top:8px;
-      font-size:16px;
+      margin-top:6px;
+      font-size:13px;
       line-height:1;
       color:var(--green);
       font-weight:800;
@@ -99,13 +98,13 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:18px;
+      gap:14px;
       min-width:0;
     }
 
     .updated-line{
       width:1px;
-      height:56px;
+      height:42px;
       background:rgba(255,255,255,.18);
       flex:0 0 1px;
     }
@@ -115,7 +114,7 @@
     }
 
     .updated-label{
-      font-size:14px;
+      font-size:11px;
       line-height:1;
       color:rgba(255,255,255,.88);
       font-weight:700;
@@ -123,8 +122,8 @@
     }
 
     .updated-value{
-      margin-top:10px;
-      font-size:32px;
+      margin-top:6px;
+      font-size:22px;
       line-height:1;
       font-weight:900;
       letter-spacing:.01em;
@@ -140,19 +139,20 @@
       border:2px solid rgba(141,255,0,.72);
       background:transparent;
       color:var(--green);
-      border-radius:16px;
-      min-height:72px;
-      font-size:20px;
+      border-radius:12px;
+      min-height:54px;
+      font-size:16px;
       font-weight:900;
       cursor:pointer;
+      line-height:1.1;
     }
 
     /* MAIN */
     .main{
       flex:1;
       display:grid;
-      grid-template-columns: 320px 1fr;
-      gap:28px;
+      grid-template-columns:220px 1fr;
+      gap:16px;
       min-height:0;
     }
 
@@ -164,7 +164,7 @@
     }
 
     .rack-title{
-      font-size:86px;
+      font-size:58px;
       line-height:.92;
       font-weight:900;
       letter-spacing:.01em;
@@ -176,14 +176,14 @@
     }
 
     .rack-divider{
-      margin:14px 0 16px;
-      height:4px;
+      margin:10px 0 12px;
+      height:3px;
       width:100%;
       background:var(--green);
     }
 
     .rack-sub{
-      font-size:30px;
+      font-size:22px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
@@ -192,7 +192,7 @@
     .content{
       display:flex;
       flex-direction:column;
-      gap:18px;
+      gap:10px;
       min-height:0;
     }
 
@@ -200,10 +200,10 @@
     .status-panel{
       flex:1;
       min-height:0;
-      padding:22px 24px;
+      padding:14px 16px;
       display:grid;
-      grid-template-columns: minmax(0, 1fr) 380px;
-      gap:26px;
+      grid-template-columns:1fr 220px;
+      gap:16px;
       align-items:stretch;
       border-top:3px solid var(--accent);
       border-bottom:3px solid var(--accent);
@@ -220,13 +220,13 @@
     .status-heading{
       display:flex;
       align-items:flex-end;
-      gap:18px;
+      gap:12px;
       flex-wrap:wrap;
       min-width:0;
     }
 
     .status-ja{
-      font-size:68px;
+      font-size:42px;
       line-height:1;
       font-weight:900;
       color:var(--accent);
@@ -234,7 +234,7 @@
     }
 
     .status-en{
-      font-size:32px;
+      font-size:20px;
       line-height:1;
       font-weight:900;
       color:var(--accent);
@@ -243,15 +243,15 @@
     }
 
     .status-sep{
-      margin:14px 0 18px;
+      margin:10px 0 12px;
       height:2px;
       background:var(--accent);
       opacity:.95;
     }
 
     .status-msg-ja{
-      font-size:24px;
-      line-height:1.3;
+      font-size:18px;
+      line-height:1.25;
       font-weight:800;
       white-space:nowrap;
       overflow:hidden;
@@ -259,9 +259,9 @@
     }
 
     .status-msg-en{
-      margin-top:10px;
-      font-size:20px;
-      line-height:1.3;
+      margin-top:6px;
+      font-size:15px;
+      line-height:1.25;
       color:var(--accent);
       font-weight:700;
       white-space:nowrap;
@@ -273,20 +273,20 @@
       display:flex;
       flex-direction:column;
       justify-content:center;
-      padding-left:26px;
+      padding-left:16px;
       border-left:2px solid var(--accent);
       min-width:0;
     }
 
     .time-label-ja{
-      font-size:24px;
+      font-size:18px;
       line-height:1;
       font-weight:900;
     }
 
     .time-label-en{
-      margin-top:10px;
-      font-size:18px;
+      margin-top:6px;
+      font-size:13px;
       line-height:1;
       color:var(--accent);
       font-weight:800;
@@ -294,44 +294,42 @@
     }
 
     .time-value{
-      margin-top:20px;
-      font-size:64px;
+      margin-top:12px;
+      font-size:54px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
     }
 
     .time-sub{
-      margin-top:14px;
-      font-size:18px;
-      line-height:1.25;
+      margin-top:8px;
+      font-size:16px;
+      line-height:1.2;
       font-weight:800;
-      white-space:pre-line;
-      word-break:break-word;
+      white-space:nowrap;
     }
 
     .checkout-btn{
       appearance:none;
-      margin-top:24px;
+      margin-top:14px;
       width:100%;
-      min-height:94px;
+      min-height:68px;
       border:2px solid var(--accent);
       background:transparent;
       color:var(--accent);
-      border-radius:18px;
-      font-size:28px;
+      border-radius:14px;
+      font-size:20px;
       font-weight:900;
       cursor:pointer;
       letter-spacing:.01em;
+      line-height:1.1;
     }
 
     /* MESSAGE BOARD */
     .message-board{
-      min-height:150px;
+      min-height:96px;
       border:2px solid rgba(141,255,0,.65);
-      border-radius:18px;
+      border-radius:14px;
       display:flex;
       flex-direction:column;
       overflow:hidden;
@@ -341,21 +339,21 @@
     .message-head{
       display:flex;
       align-items:center;
-      gap:14px;
-      min-height:56px;
-      padding:0 20px;
+      gap:10px;
+      min-height:40px;
+      padding:0 14px;
       border-bottom:1px solid rgba(141,255,0,.18);
     }
 
     .message-head-ja{
-      font-size:22px;
+      font-size:16px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
     }
 
     .message-head-en{
-      font-size:16px;
+      font-size:12px;
       line-height:1;
       font-weight:800;
       color:var(--green);
@@ -369,7 +367,7 @@
       align-items:center;
       overflow:hidden;
       position:relative;
-      padding:0 20px;
+      padding:0 14px;
     }
 
     .marquee{
@@ -377,16 +375,16 @@
       display:inline-block;
       padding-left:100%;
       animation: marquee 22s linear infinite;
-      font-size:42px;
+      font-size:24px;
       line-height:1;
       font-weight:900;
     }
 
     .marquee-en{
       color:var(--green);
-      font-size:24px;
+      font-size:15px;
       font-weight:700;
-      margin-left:26px;
+      margin-left:18px;
     }
 
     @keyframes marquee {
@@ -414,6 +412,12 @@
     .state-maintenance{
       --accent: var(--red);
     }
+
+    @media (max-height: 800px){
+      body{
+        overflow:auto;
+      }
+    }
   </style>
 </head>
 <body>
@@ -435,7 +439,7 @@
         </div>
       </div>
 
-      <button class="refresh-btn" id="refreshBtn">更新<br><span style="font-size:16px;">REFRESH</span></button>
+      <button class="refresh-btn" id="refreshBtn">更新<br><span style="font-size:12px;">REFRESH</span></button>
     </header>
 
     <main class="main">
@@ -461,9 +465,8 @@
             <div class="time-label-ja" id="timeLabelJa">次の予定</div>
             <div class="time-label-en" id="timeLabelEn">NEXT RESERVATION</div>
             <div class="time-value" id="timeValue">10:00</div>
-            <div class="time-sub" id="timeSub">～10:40 まで
-UNTIL 10:40</div>
-            <button class="checkout-btn hidden" id="checkoutBtn">チェックアウトする<br><span style="font-size:22px;">CHECK OUT</span></button>
+            <div class="time-sub" id="timeSub">～10:40 まで　UNTIL 10:40</div>
+            <button class="checkout-btn hidden" id="checkoutBtn">チェックアウトする<br><span style="font-size:16px;">CHECK OUT</span></button>
           </div>
         </section>
 
@@ -563,8 +566,9 @@ UNTIL 10:40</div>
       return `${esc(m[1])} <span class="updated-time">${esc(m[2])}</span>`;
     }
 
-    function normalizeRackData(raw) {
-      return raw || {};
+    function findRack(data, rackNo) {
+      const racks = Array.isArray(data.racks) ? data.racks : [];
+      return racks.find(r => Number(r.rackNo) === Number(rackNo)) || null;
     }
 
     function normalizeState(r) {
@@ -572,8 +576,6 @@ UNTIL 10:40</div>
 
       if (raw === "using_checked_in") return "using_checked_in";
       if (raw === "using_not_checked_in") return "using_not_checked_in";
-      if (raw === "using_checkedin") return "using_checked_in";
-      if (raw === "using_uncheckedin") return "using_not_checked_in";
 
       if (raw === "using") {
         return "using_checked_in";
@@ -587,15 +589,14 @@ UNTIL 10:40</div>
     }
 
     function applyStateUI(r) {
-      const rack = normalizeRackData(r);
-      const stateKey = normalizeState(rack);
+      const stateKey = normalizeState(r);
       const cfg = STATE_MAP[stateKey];
       const panel = document.getElementById("statusPanel");
 
       panel.className = `status-panel ${cfg.panelClass}`;
 
-      document.getElementById("rackNoBig").textContent = rack.rackNo || rackNo;
-      document.getElementById("rackNoJa").textContent = rack.rackNo || rackNo;
+      document.getElementById("rackNoBig").textContent = r.rackNo;
+      document.getElementById("rackNoJa").textContent = r.rackNo;
       document.getElementById("statusJa").textContent = cfg.statusJa;
       document.getElementById("statusEn").textContent = cfg.statusEn;
       document.getElementById("statusMsgJa").textContent = cfg.msgJa;
@@ -605,11 +606,11 @@ UNTIL 10:40</div>
       document.getElementById("timeLabelEn").textContent = cfg.timeLabelEn;
 
       if (stateKey === "reserved") {
-        document.getElementById("timeValue").textContent = rack.nextText || "";
-        document.getElementById("timeSub").textContent = rack.nextSubText || "";
+        document.getElementById("timeValue").textContent = r.nextText || "";
+        document.getElementById("timeSub").textContent = r.nextSubText || "";
       } else if (stateKey === "using_checked_in" || stateKey === "using_not_checked_in") {
-        document.getElementById("timeValue").textContent = extractRemainValue_(rack.currentSubText);
-        document.getElementById("timeSub").textContent = buildUntilText_(rack.currentText);
+        document.getElementById("timeValue").textContent = extractRemainValue_(r.currentSubText);
+        document.getElementById("timeSub").textContent = buildUntilText_(r.currentText);
       } else {
         document.getElementById("timeValue").textContent = "";
         document.getElementById("timeSub").textContent = "";
@@ -622,8 +623,8 @@ UNTIL 10:40</div>
         checkoutBtn.classList.add("hidden");
       }
 
-      if (rack.messageBoardText) {
-        document.getElementById("messageMarquee").textContent = rack.messageBoardText;
+      if (r.messageBoardText) {
+        document.getElementById("messageMarquee").innerHTML = esc(r.messageBoardText);
       }
     }
 
@@ -637,11 +638,11 @@ UNTIL 10:40</div>
       const s = String(currentText || "");
       const m = s.match(/(\d{2}:\d{2})まで/);
       if (!m) return "";
-      return `～ ${m[1]} まで\nUNTIL ${m[1]}`;
+      return `～ ${m[1]} まで　UNTIL ${m[1]}`;
     }
 
     async function fetchData() {
-      const res = await fetch(`${API_URL}?action=getracktabletjson&rackNo=${encodeURIComponent(rackNo)}&t=${Date.now()}`, {
+      const res = await fetch(`${API_URL}?action=getracktabletjson&rackNo=${rackNo}&t=${Date.now()}`, {
         method: "GET",
         cache: "no-store"
       });
@@ -651,11 +652,10 @@ UNTIL 10:40</div>
 
     async function loadData() {
       try {
-        const rack = await fetchData();
-        document.getElementById("lastUpdated").innerHTML =
-          formatLastUpdated(rack.lastUpdatedText || new Date().toLocaleString('ja-JP'));
+        const data = await fetchData();
+        document.getElementById("lastUpdated").innerHTML = formatLastUpdated(data.lastUpdatedText || "");
 
-        applyStateUI(rack);
+        applyStateUI(data);
       } catch (e) {
         console.error(e);
       }
