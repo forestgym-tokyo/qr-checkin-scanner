@@ -4,28 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
   <title>Rack Tablet</title>
+
   <style>
     :root{
-      --bg:#050607;
-      --panel:#0a0a0a;
       --text:#ffffff;
-      --muted:#d6d6d6;
-      --line:rgba(255,255,255,.12);
-
       --green:#8DFF00;
       --cyan:#00C8FF;
       --yellow:#FFD400;
       --orange:#FF8A00;
-
       --header-border:rgba(255,255,255,.16);
       --accent:#8DFF00;
       --accent-glow:rgba(141,255,0,.18);
     }
 
-    *{
-      box-sizing:border-box;
-      -webkit-tap-highlight-color:transparent;
-    }
+    *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
     html,body{
       margin:0;
@@ -37,9 +29,7 @@
       overflow:hidden;
     }
 
-    body{
-      background:linear-gradient(180deg,#030303 0%, #090909 100%);
-    }
+    body{ background:linear-gradient(180deg,#030303 0%, #090909 100%); }
 
     .app{
       width:100%;
@@ -53,11 +43,11 @@
 
     .header{
       display:grid;
-      grid-template-columns: 90px 1fr 180px;
+      grid-template-columns:90px 1fr;
       gap:18px;
       align-items:center;
-      min-height:74px;
-      padding-bottom:10px;
+      min-height:60px;
+      padding-bottom:8px;
       border-bottom:1px solid var(--header-border);
     }
 
@@ -84,13 +74,13 @@
 
     .updated-line{
       width:1px;
-      height:54px;
+      height:50px;
       background:rgba(255,255,255,.18);
       flex:0 0 1px;
     }
 
     .updated-label{
-      font-size:14px;
+      font-size:13px;
       line-height:1;
       font-weight:700;
       white-space:nowrap;
@@ -98,35 +88,19 @@
 
     .updated-value{
       margin-top:8px;
-      font-size:30px;
+      font-size:28px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
     }
 
-    .updated-time{
-      color:var(--accent);
-    }
-
-    .refresh-btn{
-      appearance:none;
-      border:2px solid var(--accent);
-      background:transparent;
-      color:var(--accent);
-      border-radius:16px;
-      min-height:80px;
-      font-size:20px;
-      font-weight:900;
-      line-height:1.1;
-      cursor:pointer;
-      box-shadow:0 0 16px var(--accent-glow);
-    }
+    .updated-time{ color:var(--accent); }
 
     .main{
       flex:1;
       display:grid;
-      grid-template-columns: 230px 1fr;
-      gap:18px;
+      grid-template-columns:150px 1fr;
+      gap:14px;
       min-height:0;
       overflow:hidden;
     }
@@ -134,25 +108,28 @@
     .left-col{
       min-width:0;
       display:flex;
-      align-items:flex-start;
+      align-items:stretch;
     }
 
     .rack-card{
       width:100%;
+      height:100%;
       border:2px solid var(--accent);
-      border-radius:26px;
-      padding:18px 14px;
+      border-radius:22px;
+      padding:10px 6px;
       background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
       box-shadow:0 0 16px var(--accent-glow);
       display:flex;
       align-items:center;
       justify-content:center;
+      cursor:pointer;
     }
 
     .rack-image{
       width:100%;
-      max-width:170px;
-      max-height:410px;
+      height:100%;
+      max-width:118px;
+      max-height:none;
       object-fit:contain;
       display:block;
     }
@@ -161,7 +138,7 @@
       min-width:0;
       display:flex;
       flex-direction:column;
-      gap:12px;
+      gap:10px;
       overflow:hidden;
     }
 
@@ -177,10 +154,10 @@
 
     .main-card-inner{
       display:grid;
-      grid-template-columns: minmax(0,1fr) 410px;
-      gap:24px;
-      min-height:400px;
-      padding:20px 24px;
+      grid-template-columns:minmax(0,1fr) 300px;
+      gap:18px;
+      min-height:390px;
+      padding:18px 20px;
     }
 
     .main-left{
@@ -197,9 +174,9 @@
     }
 
     .state-icon{
-      width:140px;
-      height:140px;
-      flex:0 0 140px;
+      width:130px;
+      height:130px;
+      flex:0 0 130px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -211,12 +188,10 @@
       display:block;
     }
 
-    .state-heading{
-      min-width:0;
-    }
+    .state-heading{ min-width:0; }
 
     .state-ja{
-      font-size:68px;
+      font-size:56px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
@@ -225,8 +200,8 @@
     }
 
     .state-en{
-      margin-top:10px;
-      font-size:36px;
+      margin-top:8px;
+      font-size:30px;
       line-height:1;
       font-weight:900;
       color:var(--accent);
@@ -236,14 +211,14 @@
     }
 
     .divider{
-      margin:16px 0 20px;
+      margin:14px 0 18px;
       height:2px;
       background:var(--accent);
       opacity:.95;
     }
 
     .hero-primary{
-      font-size:72px;
+      font-size:64px;
       line-height:1.08;
       font-weight:900;
       white-space:nowrap;
@@ -253,41 +228,33 @@
     }
 
     .hero-sub-ja{
-      margin-top:12px;
-      font-size:38px;
+      margin-top:10px;
+      font-size:30px;
       line-height:1.25;
       font-weight:900;
       white-space:normal;
     }
 
     .hero-sub-en{
-      margin-top:10px;
-      font-size:24px;
+      margin-top:8px;
+      font-size:22px;
       line-height:1.3;
       font-weight:800;
       color:var(--accent);
       white-space:normal;
     }
 
-    .hero-sub-ja.small{
-      font-size:28px;
-    }
-
-    .hero-sub-en.small{
-      font-size:20px;
-    }
-
     .instruction-row{
       display:grid;
-      grid-template-columns: 120px 1fr;
-      gap:20px;
+      grid-template-columns:110px 1fr;
+      gap:18px;
       align-items:center;
       margin-top:4px;
     }
 
     .instruction-icon{
-      width:120px;
-      height:120px;
+      width:110px;
+      height:110px;
     }
 
     .instruction-icon svg{
@@ -299,14 +266,14 @@
     .main-right{
       min-width:0;
       border-left:2px solid var(--accent);
-      padding-left:22px;
+      padding-left:18px;
       display:flex;
       flex-direction:column;
       justify-content:flex-start;
     }
 
     .time-head-ja{
-      font-size:30px;
+      font-size:24px;
       line-height:1;
       font-weight:900;
       color:var(--accent);
@@ -314,8 +281,8 @@
     }
 
     .time-head-en{
-      margin-top:8px;
-      font-size:22px;
+      margin-top:7px;
+      font-size:18px;
       line-height:1;
       font-weight:800;
       color:var(--accent);
@@ -325,12 +292,12 @@
     .time-value-wrap{
       display:flex;
       align-items:flex-end;
-      gap:10px;
-      margin-top:16px;
+      gap:8px;
+      margin-top:14px;
     }
 
     .time-value{
-      font-size:98px;
+      font-size:70px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
@@ -338,24 +305,24 @@
     }
 
     .time-unit{
-      font-size:34px;
+      font-size:26px;
       line-height:1;
       font-weight:900;
-      padding-bottom:12px;
+      padding-bottom:8px;
       display:none;
     }
 
     .time-sub{
-      margin-top:14px;
-      font-size:30px;
+      margin-top:12px;
+      font-size:24px;
       line-height:1.2;
       font-weight:900;
       white-space:normal;
     }
 
     .time-sub-en{
-      margin-top:10px;
-      font-size:22px;
+      margin-top:8px;
+      font-size:18px;
       line-height:1.25;
       font-weight:800;
       color:var(--accent);
@@ -364,14 +331,14 @@
 
     .checkout-btn{
       appearance:none;
-      margin-top:24px;
+      margin-top:18px;
       width:100%;
-      min-height:128px;
+      min-height:110px;
       border:2px solid var(--accent);
       background:var(--accent);
       color:#0a0a0a;
       border-radius:18px;
-      font-size:36px;
+      font-size:34px;
       line-height:1;
       font-weight:900;
       cursor:pointer;
@@ -383,8 +350,8 @@
 
     .checkout-btn span{
       display:block;
-      font-size:24px;
-      margin-top:12px;
+      font-size:22px;
+      margin-top:10px;
     }
 
     .sub-panel{
@@ -392,34 +359,32 @@
       border-radius:18px;
       background:rgba(255,255,255,.01);
       box-shadow:0 0 12px var(--accent-glow);
-      min-height:118px;
+      min-height:104px;
       overflow:hidden;
       display:none;
-      margin-top:8px;
+      margin-top:10px;
     }
 
     .sub-panel-inner{
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      min-height:118px;
+      grid-template-columns:1fr 1fr;
+      min-height:104px;
     }
 
     .sub-block{
       display:flex;
       align-items:center;
       gap:14px;
-      padding:20px 22px;
+      padding:16px 20px;
       min-width:0;
     }
 
-    .sub-block + .sub-block{
-      border-left:2px solid var(--accent);
-    }
+    .sub-block + .sub-block{ border-left:2px solid var(--accent); }
 
     .sub-icon{
-      width:56px;
-      height:56px;
-      flex:0 0 56px;
+      width:52px;
+      height:52px;
+      flex:0 0 52px;
     }
 
     .sub-icon svg{
@@ -428,12 +393,10 @@
       display:block;
     }
 
-    .sub-meta{
-      min-width:0;
-    }
+    .sub-meta{ min-width:0; }
 
     .sub-label-ja{
-      font-size:22px;
+      font-size:20px;
       line-height:1;
       font-weight:900;
       color:var(--accent);
@@ -441,8 +404,8 @@
     }
 
     .sub-label-en{
-      margin-top:6px;
-      font-size:18px;
+      margin-top:5px;
+      font-size:16px;
       line-height:1;
       font-weight:800;
       color:var(--accent);
@@ -450,8 +413,8 @@
     }
 
     .sub-value{
-      margin-top:10px;
-      font-size:42px;
+      margin-top:8px;
+      font-size:34px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
@@ -472,7 +435,7 @@
           rgba(255,255,255,.00) 20px
         );
       box-shadow:0 0 12px var(--accent-glow);
-      min-height:120px;
+      min-height:88px;
       display:flex;
       flex-direction:column;
       overflow:hidden;
@@ -481,16 +444,16 @@
     .message-head{
       display:flex;
       align-items:center;
-      gap:14px;
-      min-height:46px;
-      padding:0 16px;
+      gap:12px;
+      min-height:34px;
+      padding:0 14px;
       border-bottom:1px solid rgba(255,255,255,.10);
     }
 
     .message-head-icon{
-      width:34px;
-      height:34px;
-      flex:0 0 34px;
+      width:30px;
+      height:30px;
+      flex:0 0 30px;
     }
 
     .message-head-icon svg{
@@ -500,14 +463,14 @@
     }
 
     .message-head-ja{
-      font-size:20px;
+      font-size:18px;
       line-height:1;
       font-weight:900;
       white-space:nowrap;
     }
 
     .message-head-en{
-      font-size:16px;
+      font-size:14px;
       line-height:1;
       font-weight:800;
       color:var(--accent);
@@ -519,50 +482,55 @@
       display:flex;
       flex-direction:column;
       justify-content:center;
-      padding:12px 18px 14px;
+      padding:8px 16px 10px;
       min-width:0;
     }
 
     .message-ja{
-      font-size:24px;
-      line-height:1.3;
+      font-size:22px;
+      line-height:1.25;
       font-weight:900;
       white-space:normal;
     }
 
     .message-line{
-      margin:10px 0 10px;
+      margin:6px 0;
       height:2px;
       background:var(--accent);
       opacity:.95;
     }
 
     .message-en{
-      font-size:18px;
-      line-height:1.35;
+      font-size:16px;
+      line-height:1.25;
       font-weight:800;
       color:var(--accent);
       white-space:normal;
     }
 
-    .hidden{
-      display:none !important;
-    }
+    .hidden{ display:none !important; }
 
-    @media (max-width: 1400px){
-      .header{ grid-template-columns: 80px 1fr 160px; }
-      .main{ grid-template-columns: 200px 1fr; }
-      .main-card-inner{ grid-template-columns:minmax(0,1fr) 350px; }
-      .state-ja{ font-size:56px; }
-      .state-en{ font-size:30px; }
-      .hero-primary{ font-size:58px; }
-      .hero-sub-ja{ font-size:30px; }
-      .hero-sub-en{ font-size:22px; }
-      .time-value{ font-size:82px; }
-      .sub-value{ font-size:34px; }
+    @media (max-width:1400px){
+      .header{ grid-template-columns:80px 1fr; }
+      .main{ grid-template-columns:140px 1fr; }
+      .rack-image{ max-width:110px; }
+      .main-card-inner{ grid-template-columns:minmax(0,1fr) 280px; min-height:360px; }
+      .state-icon{ width:112px; height:112px; flex-basis:112px; }
+      .state-ja{ font-size:46px; }
+      .state-en{ font-size:25px; }
+      .hero-primary{ font-size:50px; }
+      .hero-sub-ja{ font-size:26px; }
+      .hero-sub-en{ font-size:18px; }
+      .time-value{ font-size:58px; }
+      .checkout-btn{ min-height:92px; font-size:28px; }
+      .sub-value{ font-size:28px; }
+      .message-board{ min-height:82px; }
+      .message-ja{ font-size:19px; }
+      .message-en{ font-size:14px; }
     }
   </style>
 </head>
+
 <body>
   <div class="app">
     <header class="header">
@@ -577,15 +545,11 @@
           <div class="updated-value" id="lastUpdated">--</div>
         </div>
       </div>
-
-      <button class="refresh-btn" id="refreshBtn">
-        更新<br><span style="font-size:16px;">REFRESH</span>
-      </button>
     </header>
 
     <main class="main">
       <section class="left-col">
-        <div class="rack-card">
+        <div class="rack-card" id="rackRefreshArea">
           <img class="rack-image" id="rackImage" src="rack1.png" alt="Rack">
         </div>
       </section>
@@ -688,168 +652,71 @@
     const rackNo = Number(params.get("rackNo") || DEFAULT_RACK_NO);
 
     const SVG = {
-      check: `
-        <svg viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6"/>
-          <path d="M27 51l15 15 31-31" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      `,
-      clock: `
-        <svg viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6"/>
-          <path d="M50 24v26l18 14" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      `,
-      qr: `
-        <svg viewBox="0 0 100 100" fill="none">
-          <rect x="10" y="10" width="26" height="26" stroke="currentColor" stroke-width="6"/>
-          <rect x="64" y="10" width="26" height="26" stroke="currentColor" stroke-width="6"/>
-          <rect x="10" y="64" width="26" height="26" stroke="currentColor" stroke-width="6"/>
-          <rect x="20" y="20" width="6" height="6" fill="currentColor"/>
-          <rect x="74" y="20" width="6" height="6" fill="currentColor"/>
-          <rect x="20" y="74" width="6" height="6" fill="currentColor"/>
-          <rect x="52" y="52" width="8" height="8" fill="currentColor"/>
-          <rect x="64" y="52" width="8" height="8" fill="currentColor"/>
-          <rect x="76" y="52" width="8" height="8" fill="currentColor"/>
-          <rect x="52" y="64" width="8" height="8" fill="currentColor"/>
-          <rect x="76" y="64" width="8" height="8" fill="currentColor"/>
-          <rect x="52" y="76" width="8" height="8" fill="currentColor"/>
-          <rect x="64" y="76" width="8" height="8" fill="currentColor"/>
-        </svg>
-      `,
-      warning: `
-        <svg viewBox="0 0 100 100" fill="none">
-          <path d="M50 10 L90 82 H10 Z" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>
-          <path d="M50 34 L50 56" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
-          <circle cx="50" cy="71" r="5" fill="currentColor"/>
-        </svg>
-      `,
-      person: `
-        <svg viewBox="0 0 64 64" fill="none">
-          <circle cx="32" cy="18" r="10" stroke="currentColor" stroke-width="4"/>
-          <path d="M14 54c0-10 8-18 18-18s18 8 18 18" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-        </svg>
-      `,
-      megaphone: `
-        <svg viewBox="0 0 64 64" fill="none">
-          <path d="M10 28h12l18-10v28L22 36H10z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
-          <path d="M46 24c4 2 6 5 6 8s-2 6-6 8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-        </svg>
-      `,
-      emptyCircle: `
-        <svg viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6"/>
-        </svg>
-      `,
-      userRound: `
-        <svg viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="34" r="18" stroke="currentColor" stroke-width="6"/>
-          <path d="M20 82c0-18 14-30 30-30s30 12 30 30" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
-        </svg>
-      `
+      check: `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6"/><path d="M27 51l15 15 31-31" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+      clock: `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6"/><path d="M50 24v26l18 14" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+      qr: `<svg viewBox="0 0 100 100" fill="none"><rect x="10" y="10" width="26" height="26" stroke="currentColor" stroke-width="6"/><rect x="64" y="10" width="26" height="26" stroke="currentColor" stroke-width="6"/><rect x="10" y="64" width="26" height="26" stroke="currentColor" stroke-width="6"/><rect x="20" y="20" width="6" height="6" fill="currentColor"/><rect x="74" y="20" width="6" height="6" fill="currentColor"/><rect x="20" y="74" width="6" height="6" fill="currentColor"/><rect x="52" y="52" width="8" height="8" fill="currentColor"/><rect x="64" y="52" width="8" height="8" fill="currentColor"/><rect x="76" y="52" width="8" height="8" fill="currentColor"/><rect x="52" y="64" width="8" height="8" fill="currentColor"/><rect x="76" y="64" width="8" height="8" fill="currentColor"/><rect x="52" y="76" width="8" height="8" fill="currentColor"/><rect x="64" y="76" width="8" height="8" fill="currentColor"/></svg>`,
+      warning: `<svg viewBox="0 0 100 100" fill="none"><path d="M50 10 L90 82 H10 Z" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/><path d="M50 34 L50 56" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="71" r="5" fill="currentColor"/></svg>`,
+      person: `<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="18" r="10" stroke="currentColor" stroke-width="4"/><path d="M14 54c0-10 8-18 18-18s18 8 18 18" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
+      megaphone: `<svg viewBox="0 0 64 64" fill="none"><path d="M10 28h12l18-10v28L22 36H10z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M46 24c4 2 6 5 6 8s-2 6-6 8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
+      emptyCircle: `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6"/></svg>`,
+      userRound: `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="34" r="18" stroke="currentColor" stroke-width="6"/><path d="M20 82c0-18 14-30 30-30s30 12 30 30" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg>`
     };
 
     const STATE_CONFIG = {
       in_use: {
-        accent: "#FF8A00",
-        glow: "rgba(255,138,0,.18)",
-        titleJa: "利用中（未チェックイン）",
-        titleEn: "IN USE (NOT CHECKED IN)",
-        icon: SVG.userRound,
-        mode: "simple_warning",
-        simpleJa: "5分以内にチェックインがない場合、自動キャンセルになります。",
-        simpleEn: "This reservation will be automatically cancelled if check-in is not completed within 5 minutes.",
-        showRight: true,
-        showUnit: false,
-        showCheckout: false,
-        showSubPanel: false
+        accent:"#FF8A00", glow:"rgba(255,138,0,.18)",
+        titleJa:"利用中（未チェックイン）", titleEn:"IN USE (NOT CHECKED IN)",
+        icon:SVG.userRound, mode:"simple_warning",
+        simpleJa:"5分以内にチェックインがない場合、自動キャンセルになります。",
+        simpleEn:"This reservation will be automatically cancelled if check-in is not completed within 5 minutes.",
+        showRight:true, showUnit:false, showCheckout:false, showSubPanel:false
       },
-
       reserved: {
-        accent: "#FFD400",
-        glow: "rgba(255,212,0,.18)",
-        titleJa: "予定があります",
-        titleEn: "RESERVED SOON",
-        icon: SVG.clock,
-        mode: "simple_warning",
-        simpleJa: "次の予定までご利用いただけます",
-        simpleEn: "Available until the next reservation",
-        showRight: true,
-        showUnit: true,
-        showCheckout: false,
-        showSubPanel: true,
-        sub1Ja: "次の利用者",
-        sub1En: "NEXT USER",
-        sub2Ja: "次の予定",
-        sub2En: "NEXT RESERVATION",
-        sub1Icon: SVG.person,
-        sub2Icon: SVG.clock
+        accent:"#FFD400", glow:"rgba(255,212,0,.18)",
+        titleJa:"予定があります", titleEn:"RESERVED SOON",
+        icon:SVG.clock, mode:"simple_warning",
+        simpleJa:"次の予定までご利用いただけます",
+        simpleEn:"Available until the next reservation",
+        showRight:true, showUnit:true, showCheckout:false, showSubPanel:true,
+        sub1Ja:"次の利用者", sub1En:"NEXT USER",
+        sub2Ja:"次の予定", sub2En:"NEXT RESERVATION",
+        sub1Icon:SVG.person, sub2Icon:SVG.clock
       },
-
       free: {
-        accent: "#00C8FF",
-        glow: "rgba(0,200,255,.18)",
-        titleJa: "空いています",
-        titleEn: "AVAILABLE",
-        icon: SVG.emptyCircle,
-        mode: "simple_warning",
-        simpleJa: "現在ご利用いただけます",
-        simpleEn: "AVAILABLE NOW",
-        showRight: false,
-        showUnit: false,
-        showCheckout: false,
-        showSubPanel: true,
-        sub1Ja: "次の利用者",
-        sub1En: "NEXT USER",
-        sub2Ja: "次の予定",
-        sub2En: "NEXT RESERVATION",
-        sub1Icon: SVG.person,
-        sub2Icon: SVG.clock
+        accent:"#00C8FF", glow:"rgba(0,200,255,.18)",
+        titleJa:"空いています", titleEn:"AVAILABLE",
+        icon:SVG.emptyCircle, mode:"simple_warning",
+        simpleJa:"現在ご利用いただけます",
+        simpleEn:"AVAILABLE NOW",
+        showRight:false, showUnit:false, showCheckout:false, showSubPanel:true,
+        sub1Ja:"次の利用者", sub1En:"NEXT USER",
+        sub2Ja:"次の予定", sub2En:"NEXT RESERVATION",
+        sub1Icon:SVG.person, sub2Icon:SVG.clock
       },
-
       checked_in: {
-        accent: "#8DFF00",
-        glow: "rgba(141,255,0,.18)",
-        titleJa: "チェックイン済",
-        titleEn: "CHECKED IN",
-        icon: SVG.check,
-        mode: "hero_user",
-        showRight: true,
-        showUnit: true,
-        showCheckout: true,
-        showSubPanel: true,
-        sub1Ja: "次の利用者",
-        sub1En: "NEXT USER",
-        sub2Ja: "次の予定",
-        sub2En: "NEXT RESERVATION",
-        sub1Icon: SVG.person,
-        sub2Icon: SVG.clock
+        accent:"#8DFF00", glow:"rgba(141,255,0,.18)",
+        titleJa:"チェックイン済", titleEn:"CHECKED IN",
+        icon:SVG.check, mode:"hero_user",
+        showRight:true, showUnit:true, showCheckout:true, showSubPanel:true,
+        sub1Ja:"次の利用者", sub1En:"NEXT USER",
+        sub2Ja:"次の予定", sub2En:"NEXT RESERVATION",
+        sub1Icon:SVG.person, sub2Icon:SVG.clock
       },
-
       not_checked_in: {
-        accent: "#FF8A00",
-        glow: "rgba(255,138,0,.18)",
-        titleJa: "未チェックイン",
-        titleEn: "NOT CHECKED IN",
-        icon: SVG.warning,
-        mode: "qr_instruction",
-        instructionJa: "5分以内にQRコードで<br>チェックインしてください",
-        instructionEn: "Please check in with the QR code<br>within 5 minutes.",
-        instructionIcon: SVG.qr,
-        showRight: true,
-        showUnit: false,
-        showCheckout: false,
-        showSubPanel: true,
-        sub1Ja: "予約者",
-        sub1En: "RESERVED BY",
-        sub2Ja: "予定時間",
-        sub2En: "RESERVATION TIME",
-        sub1Icon: SVG.person,
-        sub2Icon: SVG.clock
+        accent:"#FF8A00", glow:"rgba(255,138,0,.18)",
+        titleJa:"未チェックイン", titleEn:"NOT CHECKED IN",
+        icon:SVG.warning, mode:"qr_instruction",
+        instructionJa:"5分以内にQRコードで<br>チェックインしてください",
+        instructionEn:"Please check in with the QR code<br>within 5 minutes.",
+        instructionIcon:SVG.qr,
+        showRight:true, showUnit:false, showCheckout:false, showSubPanel:true,
+        sub1Ja:"予約者", sub1En:"RESERVED BY",
+        sub2Ja:"予定時間", sub2En:"RESERVATION TIME",
+        sub1Icon:SVG.person, sub2Icon:SVG.clock
       }
     };
 
-    function normalizeState(raw) {
+    function normalizeState(raw){
       const s = String(raw || "").toLowerCase();
       if (s === "using_checked_in") return "checked_in";
       if (s === "using_not_checked_in") return "not_checked_in";
@@ -862,19 +729,19 @@
       return "free";
     }
 
-    function setAccent(accent, glow) {
+    function setAccent(accent, glow){
       document.documentElement.style.setProperty("--accent", accent);
       document.documentElement.style.setProperty("--accent-glow", glow);
     }
 
-    function formatLastUpdated(text) {
+    function formatLastUpdated(text){
       const s = String(text || "");
       const m = s.match(/^(\d{4}\/\d{2}\/\d{2})\s+(\d{2}:\d{2})$/);
       if (!m) return s || "--";
       return `${m[1]} <span class="updated-time">${m[2]}</span>`;
     }
 
-    function extractMinutes(text) {
+    function extractMinutes(text){
       const s = String(text || "");
       let m = s.match(/残り\s*([0-9]+)\s*分/);
       if (m) return Number(m[1]);
@@ -885,67 +752,59 @@
       return null;
     }
 
-    function buildMmSs(min) {
+    function buildMmSs(min){
       const n = Math.max(0, Number(min || 0));
-      return String(n).padStart(2, "0") + ":00";
+      return String(n).padStart(2,"0") + ":00";
     }
 
-    function buildUntilJa(text) {
-      const s = String(text || "");
-      const m = s.match(/(\d{2}:\d{2})/g);
+    function buildUntilJa(text){
+      const m = String(text || "").match(/(\d{2}:\d{2})/g);
       if (!m || !m.length) return "";
-      const t = m[m.length - 1];
-      return `〜 ${t} まで`;
+      return `〜 ${m[m.length - 1]} まで`;
     }
 
-    function buildUntilEn(text) {
-      const s = String(text || "");
-      const m = s.match(/(\d{2}:\d{2})/g);
+    function buildUntilEn(text){
+      const m = String(text || "").match(/(\d{2}:\d{2})/g);
       if (!m || !m.length) return "";
-      const t = m[m.length - 1];
-      return `UNTIL ${t}`;
+      return `UNTIL ${m[m.length - 1]}`;
     }
 
-    function extractName(value) {
+    function extractName(value){
       const s = String(value || "").trim();
       if (!s) return "—";
-      return s
-        .replace(/^受付:\s*/, "")
-        .replace(/^利用者:\s*/, "")
-        .replace(/^予約者:\s*/, "")
-        .trim() || "—";
+      return s.replace(/^受付:\s*/,"").replace(/^利用者:\s*/,"").replace(/^予約者:\s*/,"").trim() || "—";
     }
 
-    function messageJaFromData(data) {
-      return data.messageBoardTextJa || data.messageBoardText || "集中ブースの利用ルールが変更になりました。荷物の置きっぱなしはご遠慮ください。";
-    }
-
-    function messageEnFromData(data) {
-      return data.messageBoardTextEn || "The rules for using the focus booths have been updated. Please do not leave your belongings unattended.";
-    }
-
-    function getReservedBy(data) {
-      return extractName(data.currentUserName || data.currentUser || data.nextSubText || "");
-    }
-
-    function getReservationTime(data) {
-      return data.currentReservationText || data.currentText || data.nextText || "—";
-    }
-
-    function getNextUser(data) {
-      return extractName(data.nextUserName || data.nextSubText || "");
-    }
-
-    function getNextReservation(data) {
-      return data.nextText || "—";
-    }
-
-    function setSvg(el, svg, color) {
+    function setSvg(el, svg, color){
       el.innerHTML = svg;
       el.style.color = color;
     }
 
-    function applyState(data) {
+    function messageJaFromData(data){
+      return data.messageBoardTextJa || data.messageBoardText || "集中ブースの利用ルールが変更になりました。荷物の置きっぱなしはご遠慮ください。";
+    }
+
+    function messageEnFromData(data){
+      return data.messageBoardTextEn || "The rules for using the focus booths have been updated. Please do not leave your belongings unattended.";
+    }
+
+    function getReservedBy(data){
+      return extractName(data.currentUserName || data.currentUser || data.nextSubText || "");
+    }
+
+    function getReservationTime(data){
+      return data.currentReservationText || data.currentText || data.nextText || "—";
+    }
+
+    function getNextUser(data){
+      return extractName(data.nextUserName || data.nextSubText || "");
+    }
+
+    function getNextReservation(data){
+      return data.nextText || "—";
+    }
+
+    function applyState(data){
       const state = normalizeState(data.state);
       const cfg = STATE_CONFIG[state];
 
@@ -980,7 +839,7 @@
         heroSubJa.innerHTML = cfg.instructionJa;
         heroSubEn.innerHTML = cfg.instructionEn;
         instructionRow.classList.remove("hidden");
-      } else if (cfg.mode === "simple_warning") {
+      } else {
         simpleSubJa.textContent = cfg.simpleJa;
         simpleSubEn.textContent = cfg.simpleEn;
         simpleTextBlock.classList.remove("hidden");
@@ -990,66 +849,42 @@
       const timeUnit = document.getElementById("timeUnit");
       const checkoutBtn = document.getElementById("checkoutBtn");
 
-      if (cfg.showRight) {
-        mainRight.classList.remove("hidden");
-      } else {
-        mainRight.classList.add("hidden");
-      }
+      if (cfg.showRight) mainRight.classList.remove("hidden");
+      else mainRight.classList.add("hidden");
 
       const mins = extractMinutes(data.currentSubText || data.nextSubText || "");
-      const timeValue = mins !== null ? buildMmSs(mins) : "";
       document.getElementById("timeHeadJa").textContent = "残り時間";
       document.getElementById("timeHeadEn").textContent = "TIME REMAINING";
-      document.getElementById("timeValue").textContent = timeValue;
+      document.getElementById("timeValue").textContent = mins !== null ? buildMmSs(mins) : "";
       document.getElementById("timeSubJa").textContent = buildUntilJa(data.currentText || data.nextText || "");
       document.getElementById("timeSubEn").textContent = buildUntilEn(data.currentText || data.nextText || "");
 
-      if (cfg.showUnit) {
-        timeUnit.style.display = "block";
-        timeUnit.textContent = "min";
-      } else {
-        timeUnit.style.display = "none";
-      }
+      timeUnit.style.display = cfg.showUnit ? "block" : "none";
+      timeUnit.textContent = "min";
 
       if (state === "not_checked_in") {
-        document.getElementById("timeSubJa").textContent = `あと${String(mins || 0).padStart(2, "0")}分で自動キャンセルになります。`;
-        document.getElementById("timeSubEn").textContent = `Automatically cancelled in ${String(mins || 0).padStart(2, "0")} min.`;
-      }
-      if (state === "in_use") {
-        document.getElementById("timeSubJa").textContent = buildUntilJa(data.currentText || "");
-        document.getElementById("timeSubEn").textContent = buildUntilEn(data.currentText || "");
+        document.getElementById("timeSubJa").textContent = `あと${String(mins || 0).padStart(2,"0")}分で自動キャンセルになります。`;
+        document.getElementById("timeSubEn").textContent = `Automatically cancelled in ${String(mins || 0).padStart(2,"0")} min.`;
       }
 
-      if (cfg.showCheckout) {
-        checkoutBtn.style.display = "block";
-      } else {
-        checkoutBtn.style.display = "none";
-      }
+      checkoutBtn.style.display = cfg.showCheckout ? "block" : "none";
 
       const subPanel = document.getElementById("subPanel");
       if (cfg.showSubPanel) {
         subPanel.style.display = "block";
-
         document.getElementById("subLabelJa1").textContent = cfg.sub1Ja;
         document.getElementById("subLabelEn1").textContent = cfg.sub1En;
         document.getElementById("subLabelJa2").textContent = cfg.sub2Ja;
         document.getElementById("subLabelEn2").textContent = cfg.sub2En;
-
         setSvg(document.getElementById("subIcon1"), cfg.sub1Icon, cfg.accent);
         setSvg(document.getElementById("subIcon2"), cfg.sub2Icon, cfg.accent);
 
-        if (state === "reserved") {
-          document.getElementById("subValue1").textContent = getNextUser(data);
-          document.getElementById("subValue2").textContent = getNextReservation(data);
-        } else if (state === "free") {
-          document.getElementById("subValue1").textContent = getNextUser(data);
-          document.getElementById("subValue2").textContent = getNextReservation(data);
-        } else if (state === "checked_in") {
-          document.getElementById("subValue1").textContent = getNextUser(data);
-          document.getElementById("subValue2").textContent = getNextReservation(data);
-        } else if (state === "not_checked_in") {
+        if (state === "not_checked_in") {
           document.getElementById("subValue1").textContent = getReservedBy(data);
           document.getElementById("subValue2").textContent = getReservationTime(data);
+        } else {
+          document.getElementById("subValue1").textContent = getNextUser(data);
+          document.getElementById("subValue2").textContent = getNextReservation(data);
         }
       } else {
         subPanel.style.display = "none";
@@ -1059,14 +894,14 @@
       document.getElementById("messageEn").textContent = messageEnFromData(data);
     }
 
-    async function fetchData() {
+    async function fetchData(){
       const url = `${API_URL}?action=getracktabletjson&rackNo=${rackNo}&t=${Date.now()}`;
-      const res = await fetch(url, { method: "GET", cache: "no-store" });
+      const res = await fetch(url, { method:"GET", cache:"no-store" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     }
 
-    async function loadData() {
+    async function loadData(){
       try {
         const data = await fetchData();
         applyState(data);
@@ -1075,8 +910,7 @@
       }
     }
 
-    document.getElementById("refreshBtn").addEventListener("click", loadData);
-
+    document.getElementById("rackRefreshArea").addEventListener("click", loadData);
     document.getElementById("checkoutBtn").addEventListener("click", () => {
       alert("明日ここにチェックアウト処理を接続");
     });
