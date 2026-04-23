@@ -9,7 +9,6 @@
 :root{
   --accent:#8DFF00;
   --accent-glow:rgba(141,255,0,.2);
-  --text:#fff;
 }
 
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -24,24 +23,24 @@ body{
 /* ===== HEADER ===== */
 .header{
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  padding:10px 20px;
+  align-items:center;
+  padding:8px 18px;
   border-bottom:1px solid rgba(255,255,255,.2);
 }
 
 .left-header{
   display:flex;
   align-items:center;
-  gap:20px;
+  gap:14px;
 }
 
-/* ラックアイコン縦長 */
+/* ラックアイコン（囲み型） */
 .rack-box{
   width:90px;
-  height:140px;
+  height:90px;
   border:2px solid var(--accent);
-  border-radius:18px;
+  border-radius:16px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -50,12 +49,17 @@ body{
 }
 
 .rack-box img{
-  width:100%;
-  height:100%;
+  width:70%;
+  height:70%;
   object-fit:contain;
 }
 
-/* 更新表示 */
+/* ロゴ */
+.logo{
+  height:46px;
+}
+
+/* 更新 */
 .updated{
   text-align:right;
 }
@@ -65,7 +69,7 @@ body{
 }
 
 .updated-value{
-  font-size:26px;
+  font-size:24px;
   font-weight:900;
 }
 
@@ -75,20 +79,20 @@ body{
 
 /* ===== MAIN ===== */
 .main{
-  padding:14px;
+  padding:10px 14px;
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:8px;
 }
 
-/* ===== メインカード ===== */
+/* ===== MAIN CARD ===== */
 .main-card{
   border:2px solid var(--accent);
-  border-radius:20px;
-  padding:18px;
-  box-shadow:0 0 12px var(--accent-glow);
+  border-radius:18px;
+  padding:14px;
   display:flex;
   justify-content:space-between;
+  box-shadow:0 0 10px var(--accent-glow);
 }
 
 /* 左 */
@@ -97,60 +101,68 @@ body{
 }
 
 .state{
-  font-size:56px;
+  font-size:44px;
   font-weight:900;
 }
 
 .state-en{
+  font-size:20px;
   color:var(--accent);
-  font-size:26px;
-  margin-top:6px;
 }
 
 .user{
-  margin-top:14px;
-  font-size:52px;
+  margin-top:10px;
+  font-size:40px;
   font-weight:900;
 }
 
 /* 右 */
 .main-right{
-  width:260px;
+  width:230px;
   border-left:2px solid var(--accent);
-  padding-left:20px;
+  padding-left:14px;
 }
 
 .time{
-  font-size:56px;
+  font-size:48px;
   font-weight:900;
 }
 
-.sub{
-  margin-top:8px;
+.until{
+  margin-top:6px;
+  font-size:20px;
 }
 
+/* チェックアウト */
 .checkout{
-  margin-top:16px;
+  margin-top:10px;
   background:var(--accent);
   color:#000;
   border:none;
   width:100%;
-  height:90px;
-  font-size:30px;
+  height:80px;
+  font-size:24px;
   font-weight:900;
-  border-radius:14px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
 }
 
-/* ===== サブ ===== */
+/* ===== SUB ===== */
 .sub-panel{
   border:2px solid var(--accent);
-  border-radius:16px;
+  border-radius:14px;
   display:flex;
 }
 
 .sub-item{
   flex:1;
-  padding:14px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
 .sub-item + .sub-item{
@@ -159,35 +171,35 @@ body{
 
 .sub-title{
   color:var(--accent);
-  font-size:16px;
+  font-size:14px;
 }
 
 .sub-value{
-  font-size:28px;
+  font-size:22px;
   font-weight:900;
-  margin-top:6px;
 }
 
-/* ===== メッセージ ===== */
+/* ===== MESSAGE ===== */
 .message{
   border:2px solid var(--accent);
-  border-radius:16px;
-  padding:10px 14px;
+  border-radius:14px;
+  padding:8px 12px;
 }
 
 .message-title{
+  font-size:14px;
   color:var(--accent);
-  font-size:16px;
 }
 
 .message-ja{
-  font-size:22px;
-  margin-top:6px;
+  font-size:20px;
+  margin-top:4px;
 }
 
 .message-en{
+  font-size:14px;
+  margin-top:4px;
   color:var(--accent);
-  margin-top:6px;
 }
 
 </style>
@@ -200,59 +212,66 @@ body{
     <div class="rack-box" id="refresh">
       <img src="rack1.png">
     </div>
+
+    <img src="logo.png" class="logo">
   </div>
 
   <div class="updated">
     <div class="updated-label">LAST UPDATED</div>
-    <div class="updated-value" id="updated">--</div>
+    <div class="updated-value">2026/04/24 <span>12:30</span></div>
   </div>
 </div>
 
 <div class="main">
 
+  <!-- メイン -->
   <div class="main-card">
     <div class="main-left">
-      <div class="state" id="state">チェックイン済</div>
+      <div class="state">チェックイン済</div>
       <div class="state-en">CHECKED IN</div>
 
-      <div class="user" id="user">TESTさんが利用中</div>
+      <div class="user">山田太郎さんが利用中</div>
     </div>
 
     <div class="main-right">
-      <div class="time" id="time">35:00</div>
-      <div class="sub" id="until">〜13:05まで</div>
+      <div class="time">35:00</div>
+      <div class="until">〜13:05まで</div>
 
-      <button class="checkout">チェックアウト</button>
+      <div class="checkout">
+        ⬅
+        チェックアウト
+      </div>
     </div>
   </div>
 
+  <!-- 次 -->
   <div class="sub-panel">
     <div class="sub-item">
       <div class="sub-title">次の利用者</div>
-      <div class="sub-value">山田太郎</div>
+      <div class="sub-value">佐藤</div>
     </div>
+
     <div class="sub-item">
       <div class="sub-title">次の予定</div>
       <div class="sub-value">20:00〜20:40</div>
     </div>
   </div>
 
+  <!-- メッセージ -->
   <div class="message">
     <div class="message-title">MESSAGE BOARD</div>
     <div class="message-ja">
-      ラックの利用ルールが変更になりました。荷物の置きっぱなしはご遠慮ください。
+      荷物の放置は禁止です
     </div>
     <div class="message-en">
-      The rules have been updated.
+      Do not leave belongings unattended
     </div>
   </div>
 
 </div>
 
 <script>
-document.getElementById("refresh").onclick = () => {
-  location.reload();
-};
+document.getElementById("refresh").onclick = () => location.reload();
 </script>
 
 </body>
