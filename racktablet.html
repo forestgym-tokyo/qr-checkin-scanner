@@ -1,922 +1,259 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
-  <title>Rack Tablet</title>
-
-  <style>
-    :root{
-      --text:#ffffff;
-      --green:#8DFF00;
-      --cyan:#00C8FF;
-      --yellow:#FFD400;
-      --orange:#FF8A00;
-      --header-border:rgba(255,255,255,.16);
-      --accent:#8DFF00;
-      --accent-glow:rgba(141,255,0,.18);
-    }
-
-    *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-
-    html,body{
-      margin:0;
-      width:100%;
-      height:100%;
-      background:#000;
-      color:var(--text);
-      font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",system-ui,sans-serif;
-      overflow:hidden;
-    }
-
-    body{ background:linear-gradient(180deg,#030303 0%, #090909 100%); }
-
-    .app{
-      width:100%;
-      height:100%;
-      padding:10px 14px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      overflow:hidden;
-    }
-
-    .header{
-      display:grid;
-      grid-template-columns:90px 1fr;
-      gap:18px;
-      align-items:center;
-      min-height:60px;
-      padding-bottom:8px;
-      border-bottom:1px solid var(--header-border);
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      justify-content:flex-start;
-      min-width:0;
-    }
-
-    .brand-logo{
-      width:62px;
-      height:62px;
-      object-fit:contain;
-      display:block;
-    }
-
-    .updated{
-      display:flex;
-      align-items:center;
-      gap:16px;
-      min-width:0;
-    }
-
-    .updated-line{
-      width:1px;
-      height:50px;
-      background:rgba(255,255,255,.18);
-      flex:0 0 1px;
-    }
-
-    .updated-label{
-      font-size:13px;
-      line-height:1;
-      font-weight:700;
-      white-space:nowrap;
-    }
-
-    .updated-value{
-      margin-top:8px;
-      font-size:28px;
-      line-height:1;
-      font-weight:900;
-      white-space:nowrap;
-    }
-
-    .updated-time{ color:var(--accent); }
-
-    .main{
-      flex:1;
-      display:grid;
-      grid-template-columns:150px 1fr;
-      gap:14px;
-      min-height:0;
-      overflow:hidden;
-    }
-
-    .left-col{
-      min-width:0;
-      display:flex;
-      align-items:stretch;
-    }
-
-    .rack-card{
-      width:100%;
-      height:100%;
-      border:2px solid var(--accent);
-      border-radius:22px;
-      padding:10px 6px;
-      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-      box-shadow:0 0 16px var(--accent-glow);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-    }
-
-    .rack-image{
-      width:100%;
-      height:100%;
-      max-width:118px;
-      max-height:none;
-      object-fit:contain;
-      display:block;
-    }
-
-    .right-col{
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      overflow:hidden;
-    }
-
-    .main-card{
-      border:2px solid var(--accent);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 50% 20%, var(--accent-glow), transparent 45%),
-        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-      box-shadow:0 0 18px var(--accent-glow);
-      overflow:hidden;
-    }
-
-    .main-card-inner{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) 300px;
-      gap:18px;
-      min-height:390px;
-      padding:18px 20px;
-    }
-
-    .main-left{
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-    }
-
-    .title-row{
-      display:flex;
-      align-items:center;
-      gap:18px;
-      min-width:0;
-    }
-
-    .state-icon{
-      width:130px;
-      height:130px;
-      flex:0 0 130px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .state-icon svg{
-      width:100%;
-      height:100%;
-      display:block;
-    }
-
-    .state-heading{ min-width:0; }
-
-    .state-ja{
-      font-size:56px;
-      line-height:1;
-      font-weight:900;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .state-en{
-      margin-top:8px;
-      font-size:30px;
-      line-height:1;
-      font-weight:900;
-      color:var(--accent);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .divider{
-      margin:14px 0 18px;
-      height:2px;
-      background:var(--accent);
-      opacity:.95;
-    }
-
-    .hero-primary{
-      font-size:64px;
-      line-height:1.08;
-      font-weight:900;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      margin-top:6px;
-    }
-
-    .hero-sub-ja{
-      margin-top:10px;
-      font-size:30px;
-      line-height:1.25;
-      font-weight:900;
-      white-space:normal;
-    }
-
-    .hero-sub-en{
-      margin-top:8px;
-      font-size:22px;
-      line-height:1.3;
-      font-weight:800;
-      color:var(--accent);
-      white-space:normal;
-    }
-
-    .instruction-row{
-      display:grid;
-      grid-template-columns:110px 1fr;
-      gap:18px;
-      align-items:center;
-      margin-top:4px;
-    }
-
-    .instruction-icon{
-      width:110px;
-      height:110px;
-    }
-
-    .instruction-icon svg{
-      width:100%;
-      height:100%;
-      display:block;
-    }
-
-    .main-right{
-      min-width:0;
-      border-left:2px solid var(--accent);
-      padding-left:18px;
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-start;
-    }
-
-    .time-head-ja{
-      font-size:24px;
-      line-height:1;
-      font-weight:900;
-      color:var(--accent);
-      white-space:nowrap;
-    }
-
-    .time-head-en{
-      margin-top:7px;
-      font-size:18px;
-      line-height:1;
-      font-weight:800;
-      color:var(--accent);
-      white-space:nowrap;
-    }
-
-    .time-value-wrap{
-      display:flex;
-      align-items:flex-end;
-      gap:8px;
-      margin-top:14px;
-    }
-
-    .time-value{
-      font-size:70px;
-      line-height:1;
-      font-weight:900;
-      white-space:nowrap;
-      letter-spacing:.02em;
-    }
-
-    .time-unit{
-      font-size:26px;
-      line-height:1;
-      font-weight:900;
-      padding-bottom:8px;
-      display:none;
-    }
-
-    .time-sub{
-      margin-top:12px;
-      font-size:24px;
-      line-height:1.2;
-      font-weight:900;
-      white-space:normal;
-    }
-
-    .time-sub-en{
-      margin-top:8px;
-      font-size:18px;
-      line-height:1.25;
-      font-weight:800;
-      color:var(--accent);
-      white-space:normal;
-    }
-
-    .checkout-btn{
-      appearance:none;
-      margin-top:18px;
-      width:100%;
-      min-height:110px;
-      border:2px solid var(--accent);
-      background:var(--accent);
-      color:#0a0a0a;
-      border-radius:18px;
-      font-size:34px;
-      line-height:1;
-      font-weight:900;
-      cursor:pointer;
-      box-shadow:
-        0 0 0 2px rgba(255,255,255,.08) inset,
-        0 0 18px var(--accent-glow);
-      display:none;
-    }
-
-    .checkout-btn span{
-      display:block;
-      font-size:22px;
-      margin-top:10px;
-    }
-
-    .sub-panel{
-      border:2px solid var(--accent);
-      border-radius:18px;
-      background:rgba(255,255,255,.01);
-      box-shadow:0 0 12px var(--accent-glow);
-      min-height:104px;
-      overflow:hidden;
-      display:none;
-      margin-top:10px;
-    }
-
-    .sub-panel-inner{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      min-height:104px;
-    }
-
-    .sub-block{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      padding:16px 20px;
-      min-width:0;
-    }
-
-    .sub-block + .sub-block{ border-left:2px solid var(--accent); }
-
-    .sub-icon{
-      width:52px;
-      height:52px;
-      flex:0 0 52px;
-    }
-
-    .sub-icon svg{
-      width:100%;
-      height:100%;
-      display:block;
-    }
-
-    .sub-meta{ min-width:0; }
-
-    .sub-label-ja{
-      font-size:20px;
-      line-height:1;
-      font-weight:900;
-      color:var(--accent);
-      white-space:nowrap;
-    }
-
-    .sub-label-en{
-      margin-top:5px;
-      font-size:16px;
-      line-height:1;
-      font-weight:800;
-      color:var(--accent);
-      white-space:nowrap;
-    }
-
-    .sub-value{
-      margin-top:8px;
-      font-size:34px;
-      line-height:1;
-      font-weight:900;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .message-board{
-      width:100%;
-      border:2px solid var(--accent);
-      border-radius:18px;
-      background:
-        repeating-linear-gradient(
-          -30deg,
-          rgba(255,255,255,.02) 0px,
-          rgba(255,255,255,.02) 10px,
-          rgba(255,255,255,.00) 10px,
-          rgba(255,255,255,.00) 20px
-        );
-      box-shadow:0 0 12px var(--accent-glow);
-      min-height:88px;
-      display:flex;
-      flex-direction:column;
-      overflow:hidden;
-    }
-
-    .message-head{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-height:34px;
-      padding:0 14px;
-      border-bottom:1px solid rgba(255,255,255,.10);
-    }
-
-    .message-head-icon{
-      width:30px;
-      height:30px;
-      flex:0 0 30px;
-    }
-
-    .message-head-icon svg{
-      width:100%;
-      height:100%;
-      display:block;
-    }
-
-    .message-head-ja{
-      font-size:18px;
-      line-height:1;
-      font-weight:900;
-      white-space:nowrap;
-    }
-
-    .message-head-en{
-      font-size:14px;
-      line-height:1;
-      font-weight:800;
-      color:var(--accent);
-      white-space:nowrap;
-    }
-
-    .message-body{
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      padding:8px 16px 10px;
-      min-width:0;
-    }
-
-    .message-ja{
-      font-size:22px;
-      line-height:1.25;
-      font-weight:900;
-      white-space:normal;
-    }
-
-    .message-line{
-      margin:6px 0;
-      height:2px;
-      background:var(--accent);
-      opacity:.95;
-    }
-
-    .message-en{
-      font-size:16px;
-      line-height:1.25;
-      font-weight:800;
-      color:var(--accent);
-      white-space:normal;
-    }
-
-    .hidden{ display:none !important; }
-
-    @media (max-width:1400px){
-      .header{ grid-template-columns:80px 1fr; }
-      .main{ grid-template-columns:140px 1fr; }
-      .rack-image{ max-width:110px; }
-      .main-card-inner{ grid-template-columns:minmax(0,1fr) 280px; min-height:360px; }
-      .state-icon{ width:112px; height:112px; flex-basis:112px; }
-      .state-ja{ font-size:46px; }
-      .state-en{ font-size:25px; }
-      .hero-primary{ font-size:50px; }
-      .hero-sub-ja{ font-size:26px; }
-      .hero-sub-en{ font-size:18px; }
-      .time-value{ font-size:58px; }
-      .checkout-btn{ min-height:92px; font-size:28px; }
-      .sub-value{ font-size:28px; }
-      .message-board{ min-height:82px; }
-      .message-ja{ font-size:19px; }
-      .message-en{ font-size:14px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rack Tablet</title>
+
+<style>
+:root{
+  --accent:#8DFF00;
+  --accent-glow:rgba(141,255,0,.2);
+  --text:#fff;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  background:#000;
+  color:#fff;
+  font-family:sans-serif;
+  overflow:hidden;
+}
+
+/* ===== HEADER ===== */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 20px;
+  border-bottom:1px solid rgba(255,255,255,.2);
+}
+
+.left-header{
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+/* ラックアイコン縦長 */
+.rack-box{
+  width:90px;
+  height:140px;
+  border:2px solid var(--accent);
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 10px var(--accent-glow);
+  cursor:pointer;
+}
+
+.rack-box img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+/* 更新表示 */
+.updated{
+  text-align:right;
+}
+
+.updated-label{
+  font-size:12px;
+}
+
+.updated-value{
+  font-size:26px;
+  font-weight:900;
+}
+
+.updated-value span{
+  color:var(--accent);
+}
+
+/* ===== MAIN ===== */
+.main{
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* ===== メインカード ===== */
+.main-card{
+  border:2px solid var(--accent);
+  border-radius:20px;
+  padding:18px;
+  box-shadow:0 0 12px var(--accent-glow);
+  display:flex;
+  justify-content:space-between;
+}
+
+/* 左 */
+.main-left{
+  flex:1;
+}
+
+.state{
+  font-size:56px;
+  font-weight:900;
+}
+
+.state-en{
+  color:var(--accent);
+  font-size:26px;
+  margin-top:6px;
+}
+
+.user{
+  margin-top:14px;
+  font-size:52px;
+  font-weight:900;
+}
+
+/* 右 */
+.main-right{
+  width:260px;
+  border-left:2px solid var(--accent);
+  padding-left:20px;
+}
+
+.time{
+  font-size:56px;
+  font-weight:900;
+}
+
+.sub{
+  margin-top:8px;
+}
+
+.checkout{
+  margin-top:16px;
+  background:var(--accent);
+  color:#000;
+  border:none;
+  width:100%;
+  height:90px;
+  font-size:30px;
+  font-weight:900;
+  border-radius:14px;
+}
+
+/* ===== サブ ===== */
+.sub-panel{
+  border:2px solid var(--accent);
+  border-radius:16px;
+  display:flex;
+}
+
+.sub-item{
+  flex:1;
+  padding:14px;
+}
+
+.sub-item + .sub-item{
+  border-left:2px solid var(--accent);
+}
+
+.sub-title{
+  color:var(--accent);
+  font-size:16px;
+}
+
+.sub-value{
+  font-size:28px;
+  font-weight:900;
+  margin-top:6px;
+}
+
+/* ===== メッセージ ===== */
+.message{
+  border:2px solid var(--accent);
+  border-radius:16px;
+  padding:10px 14px;
+}
+
+.message-title{
+  color:var(--accent);
+  font-size:16px;
+}
+
+.message-ja{
+  font-size:22px;
+  margin-top:6px;
+}
+
+.message-en{
+  color:var(--accent);
+  margin-top:6px;
+}
+
+</style>
 </head>
 
 <body>
-  <div class="app">
-    <header class="header">
-      <div class="brand">
-        <img class="brand-logo" src="logo.png" alt="The Forest Gym">
-      </div>
 
-      <div class="updated">
-        <div class="updated-line"></div>
-        <div>
-          <div class="updated-label">LAST UPDATED</div>
-          <div class="updated-value" id="lastUpdated">--</div>
-        </div>
-      </div>
-    </header>
-
-    <main class="main">
-      <section class="left-col">
-        <div class="rack-card" id="rackRefreshArea">
-          <img class="rack-image" id="rackImage" src="rack1.png" alt="Rack">
-        </div>
-      </section>
-
-      <section class="right-col">
-        <section class="main-card">
-          <div class="main-card-inner">
-            <div class="main-left">
-              <div class="title-row">
-                <div class="state-icon" id="stateIcon"></div>
-                <div class="state-heading">
-                  <div class="state-ja" id="stateJa">--</div>
-                  <div class="state-en" id="stateEn">--</div>
-                </div>
-              </div>
-
-              <div class="divider"></div>
-
-              <div id="heroPrimary" class="hero-primary hidden"></div>
-
-              <div id="instructionRow" class="instruction-row hidden">
-                <div class="instruction-icon" id="instructionIcon"></div>
-                <div>
-                  <div id="heroSubJa" class="hero-sub-ja"></div>
-                  <div id="heroSubEn" class="hero-sub-en"></div>
-                </div>
-              </div>
-
-              <div id="simpleTextBlock" class="hidden">
-                <div id="simpleSubJa" class="hero-sub-ja"></div>
-                <div id="simpleSubEn" class="hero-sub-en"></div>
-              </div>
-            </div>
-
-            <div class="main-right" id="mainRight">
-              <div class="time-head-ja" id="timeHeadJa">残り時間</div>
-              <div class="time-head-en" id="timeHeadEn">TIME REMAINING</div>
-
-              <div class="time-value-wrap">
-                <div class="time-value" id="timeValue">--</div>
-                <div class="time-unit" id="timeUnit">min</div>
-              </div>
-
-              <div class="time-sub" id="timeSubJa"></div>
-              <div class="time-sub-en" id="timeSubEn"></div>
-
-              <button class="checkout-btn" id="checkoutBtn">
-                チェックアウト
-                <span>CHECK OUT</span>
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <section class="sub-panel" id="subPanel">
-          <div class="sub-panel-inner">
-            <div class="sub-block">
-              <div class="sub-icon" id="subIcon1"></div>
-              <div class="sub-meta">
-                <div class="sub-label-ja" id="subLabelJa1"></div>
-                <div class="sub-label-en" id="subLabelEn1"></div>
-                <div class="sub-value" id="subValue1"></div>
-              </div>
-            </div>
-
-            <div class="sub-block">
-              <div class="sub-icon" id="subIcon2"></div>
-              <div class="sub-meta">
-                <div class="sub-label-ja" id="subLabelJa2"></div>
-                <div class="sub-label-en" id="subLabelEn2"></div>
-                <div class="sub-value" id="subValue2"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="message-board">
-          <div class="message-head">
-            <div class="message-head-icon" id="messageHeadIcon"></div>
-            <div class="message-head-ja">メッセージボード</div>
-            <div class="message-head-en">MESSAGE BOARD</div>
-          </div>
-
-          <div class="message-body">
-            <div class="message-ja" id="messageJa"></div>
-            <div class="message-line"></div>
-            <div class="message-en" id="messageEn"></div>
-          </div>
-        </section>
-      </section>
-    </main>
+<div class="header">
+  <div class="left-header">
+    <div class="rack-box" id="refresh">
+      <img src="rack1.png">
+    </div>
   </div>
 
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-    const REFRESH_MS = 15000;
-    const DEFAULT_RACK_NO = 1;
+  <div class="updated">
+    <div class="updated-label">LAST UPDATED</div>
+    <div class="updated-value" id="updated">--</div>
+  </div>
+</div>
 
-    const params = new URLSearchParams(location.search);
-    const rackNo = Number(params.get("rackNo") || DEFAULT_RACK_NO);
+<div class="main">
 
-    const SVG = {
-      check: `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6"/><path d="M27 51l15 15 31-31" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-      clock: `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6"/><path d="M50 24v26l18 14" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-      qr: `<svg viewBox="0 0 100 100" fill="none"><rect x="10" y="10" width="26" height="26" stroke="currentColor" stroke-width="6"/><rect x="64" y="10" width="26" height="26" stroke="currentColor" stroke-width="6"/><rect x="10" y="64" width="26" height="26" stroke="currentColor" stroke-width="6"/><rect x="20" y="20" width="6" height="6" fill="currentColor"/><rect x="74" y="20" width="6" height="6" fill="currentColor"/><rect x="20" y="74" width="6" height="6" fill="currentColor"/><rect x="52" y="52" width="8" height="8" fill="currentColor"/><rect x="64" y="52" width="8" height="8" fill="currentColor"/><rect x="76" y="52" width="8" height="8" fill="currentColor"/><rect x="52" y="64" width="8" height="8" fill="currentColor"/><rect x="76" y="64" width="8" height="8" fill="currentColor"/><rect x="52" y="76" width="8" height="8" fill="currentColor"/><rect x="64" y="76" width="8" height="8" fill="currentColor"/></svg>`,
-      warning: `<svg viewBox="0 0 100 100" fill="none"><path d="M50 10 L90 82 H10 Z" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/><path d="M50 34 L50 56" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="71" r="5" fill="currentColor"/></svg>`,
-      person: `<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="18" r="10" stroke="currentColor" stroke-width="4"/><path d="M14 54c0-10 8-18 18-18s18 8 18 18" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
-      megaphone: `<svg viewBox="0 0 64 64" fill="none"><path d="M10 28h12l18-10v28L22 36H10z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M46 24c4 2 6 5 6 8s-2 6-6 8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
-      emptyCircle: `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6"/></svg>`,
-      userRound: `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="34" r="18" stroke="currentColor" stroke-width="6"/><path d="M20 82c0-18 14-30 30-30s30 12 30 30" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg>`
-    };
+  <div class="main-card">
+    <div class="main-left">
+      <div class="state" id="state">チェックイン済</div>
+      <div class="state-en">CHECKED IN</div>
 
-    const STATE_CONFIG = {
-      in_use: {
-        accent:"#FF8A00", glow:"rgba(255,138,0,.18)",
-        titleJa:"利用中（未チェックイン）", titleEn:"IN USE (NOT CHECKED IN)",
-        icon:SVG.userRound, mode:"simple_warning",
-        simpleJa:"5分以内にチェックインがない場合、自動キャンセルになります。",
-        simpleEn:"This reservation will be automatically cancelled if check-in is not completed within 5 minutes.",
-        showRight:true, showUnit:false, showCheckout:false, showSubPanel:false
-      },
-      reserved: {
-        accent:"#FFD400", glow:"rgba(255,212,0,.18)",
-        titleJa:"予定があります", titleEn:"RESERVED SOON",
-        icon:SVG.clock, mode:"simple_warning",
-        simpleJa:"次の予定までご利用いただけます",
-        simpleEn:"Available until the next reservation",
-        showRight:true, showUnit:true, showCheckout:false, showSubPanel:true,
-        sub1Ja:"次の利用者", sub1En:"NEXT USER",
-        sub2Ja:"次の予定", sub2En:"NEXT RESERVATION",
-        sub1Icon:SVG.person, sub2Icon:SVG.clock
-      },
-      free: {
-        accent:"#00C8FF", glow:"rgba(0,200,255,.18)",
-        titleJa:"空いています", titleEn:"AVAILABLE",
-        icon:SVG.emptyCircle, mode:"simple_warning",
-        simpleJa:"現在ご利用いただけます",
-        simpleEn:"AVAILABLE NOW",
-        showRight:false, showUnit:false, showCheckout:false, showSubPanel:true,
-        sub1Ja:"次の利用者", sub1En:"NEXT USER",
-        sub2Ja:"次の予定", sub2En:"NEXT RESERVATION",
-        sub1Icon:SVG.person, sub2Icon:SVG.clock
-      },
-      checked_in: {
-        accent:"#8DFF00", glow:"rgba(141,255,0,.18)",
-        titleJa:"チェックイン済", titleEn:"CHECKED IN",
-        icon:SVG.check, mode:"hero_user",
-        showRight:true, showUnit:true, showCheckout:true, showSubPanel:true,
-        sub1Ja:"次の利用者", sub1En:"NEXT USER",
-        sub2Ja:"次の予定", sub2En:"NEXT RESERVATION",
-        sub1Icon:SVG.person, sub2Icon:SVG.clock
-      },
-      not_checked_in: {
-        accent:"#FF8A00", glow:"rgba(255,138,0,.18)",
-        titleJa:"未チェックイン", titleEn:"NOT CHECKED IN",
-        icon:SVG.warning, mode:"qr_instruction",
-        instructionJa:"5分以内にQRコードで<br>チェックインしてください",
-        instructionEn:"Please check in with the QR code<br>within 5 minutes.",
-        instructionIcon:SVG.qr,
-        showRight:true, showUnit:false, showCheckout:false, showSubPanel:true,
-        sub1Ja:"予約者", sub1En:"RESERVED BY",
-        sub2Ja:"予定時間", sub2En:"RESERVATION TIME",
-        sub1Icon:SVG.person, sub2Icon:SVG.clock
-      }
-    };
+      <div class="user" id="user">TESTさんが利用中</div>
+    </div>
 
-    function normalizeState(raw){
-      const s = String(raw || "").toLowerCase();
-      if (s === "using_checked_in") return "checked_in";
-      if (s === "using_not_checked_in") return "not_checked_in";
-      if (s === "using") return "in_use";
-      if (s === "checked_in") return "checked_in";
-      if (s === "not_checked_in") return "not_checked_in";
-      if (s === "reserved") return "reserved";
-      if (s === "free") return "free";
-      if (s === "in_use") return "in_use";
-      return "free";
-    }
+    <div class="main-right">
+      <div class="time" id="time">35:00</div>
+      <div class="sub" id="until">〜13:05まで</div>
 
-    function setAccent(accent, glow){
-      document.documentElement.style.setProperty("--accent", accent);
-      document.documentElement.style.setProperty("--accent-glow", glow);
-    }
+      <button class="checkout">チェックアウト</button>
+    </div>
+  </div>
 
-    function formatLastUpdated(text){
-      const s = String(text || "");
-      const m = s.match(/^(\d{4}\/\d{2}\/\d{2})\s+(\d{2}:\d{2})$/);
-      if (!m) return s || "--";
-      return `${m[1]} <span class="updated-time">${m[2]}</span>`;
-    }
+  <div class="sub-panel">
+    <div class="sub-item">
+      <div class="sub-title">次の利用者</div>
+      <div class="sub-value">山田太郎</div>
+    </div>
+    <div class="sub-item">
+      <div class="sub-title">次の予定</div>
+      <div class="sub-value">20:00〜20:40</div>
+    </div>
+  </div>
 
-    function extractMinutes(text){
-      const s = String(text || "");
-      let m = s.match(/残り\s*([0-9]+)\s*分/);
-      if (m) return Number(m[1]);
-      m = s.match(/開始まで\s*([0-9]+)\s*分/);
-      if (m) return Number(m[1]);
-      m = s.match(/([0-9]+)\s*分/);
-      if (m) return Number(m[1]);
-      return null;
-    }
+  <div class="message">
+    <div class="message-title">MESSAGE BOARD</div>
+    <div class="message-ja">
+      ラックの利用ルールが変更になりました。荷物の置きっぱなしはご遠慮ください。
+    </div>
+    <div class="message-en">
+      The rules have been updated.
+    </div>
+  </div>
 
-    function buildMmSs(min){
-      const n = Math.max(0, Number(min || 0));
-      return String(n).padStart(2,"0") + ":00";
-    }
+</div>
 
-    function buildUntilJa(text){
-      const m = String(text || "").match(/(\d{2}:\d{2})/g);
-      if (!m || !m.length) return "";
-      return `〜 ${m[m.length - 1]} まで`;
-    }
+<script>
+document.getElementById("refresh").onclick = () => {
+  location.reload();
+};
+</script>
 
-    function buildUntilEn(text){
-      const m = String(text || "").match(/(\d{2}:\d{2})/g);
-      if (!m || !m.length) return "";
-      return `UNTIL ${m[m.length - 1]}`;
-    }
-
-    function extractName(value){
-      const s = String(value || "").trim();
-      if (!s) return "—";
-      return s.replace(/^受付:\s*/,"").replace(/^利用者:\s*/,"").replace(/^予約者:\s*/,"").trim() || "—";
-    }
-
-    function setSvg(el, svg, color){
-      el.innerHTML = svg;
-      el.style.color = color;
-    }
-
-    function messageJaFromData(data){
-      return data.messageBoardTextJa || data.messageBoardText || "集中ブースの利用ルールが変更になりました。荷物の置きっぱなしはご遠慮ください。";
-    }
-
-    function messageEnFromData(data){
-      return data.messageBoardTextEn || "The rules for using the focus booths have been updated. Please do not leave your belongings unattended.";
-    }
-
-    function getReservedBy(data){
-      return extractName(data.currentUserName || data.currentUser || data.nextSubText || "");
-    }
-
-    function getReservationTime(data){
-      return data.currentReservationText || data.currentText || data.nextText || "—";
-    }
-
-    function getNextUser(data){
-      return extractName(data.nextUserName || data.nextSubText || "");
-    }
-
-    function getNextReservation(data){
-      return data.nextText || "—";
-    }
-
-    function applyState(data){
-      const state = normalizeState(data.state);
-      const cfg = STATE_CONFIG[state];
-
-      setAccent(cfg.accent, cfg.glow);
-
-      document.getElementById("lastUpdated").innerHTML = formatLastUpdated(data.lastUpdatedText);
-      document.getElementById("rackImage").src = `rack${data.rackNo || rackNo}.png`;
-
-      document.getElementById("stateJa").textContent = cfg.titleJa;
-      document.getElementById("stateEn").textContent = cfg.titleEn;
-      setSvg(document.getElementById("stateIcon"), cfg.icon, cfg.accent);
-      setSvg(document.getElementById("messageHeadIcon"), SVG.megaphone, cfg.accent);
-
-      const heroPrimary = document.getElementById("heroPrimary");
-      const instructionRow = document.getElementById("instructionRow");
-      const instructionIcon = document.getElementById("instructionIcon");
-      const heroSubJa = document.getElementById("heroSubJa");
-      const heroSubEn = document.getElementById("heroSubEn");
-      const simpleTextBlock = document.getElementById("simpleTextBlock");
-      const simpleSubJa = document.getElementById("simpleSubJa");
-      const simpleSubEn = document.getElementById("simpleSubEn");
-
-      heroPrimary.classList.add("hidden");
-      instructionRow.classList.add("hidden");
-      simpleTextBlock.classList.add("hidden");
-
-      if (cfg.mode === "hero_user") {
-        heroPrimary.textContent = `${extractName(data.currentUserName || data.currentUser || "—")}が利用中`;
-        heroPrimary.classList.remove("hidden");
-      } else if (cfg.mode === "qr_instruction") {
-        setSvg(instructionIcon, cfg.instructionIcon, cfg.accent);
-        heroSubJa.innerHTML = cfg.instructionJa;
-        heroSubEn.innerHTML = cfg.instructionEn;
-        instructionRow.classList.remove("hidden");
-      } else {
-        simpleSubJa.textContent = cfg.simpleJa;
-        simpleSubEn.textContent = cfg.simpleEn;
-        simpleTextBlock.classList.remove("hidden");
-      }
-
-      const mainRight = document.getElementById("mainRight");
-      const timeUnit = document.getElementById("timeUnit");
-      const checkoutBtn = document.getElementById("checkoutBtn");
-
-      if (cfg.showRight) mainRight.classList.remove("hidden");
-      else mainRight.classList.add("hidden");
-
-      const mins = extractMinutes(data.currentSubText || data.nextSubText || "");
-      document.getElementById("timeHeadJa").textContent = "残り時間";
-      document.getElementById("timeHeadEn").textContent = "TIME REMAINING";
-      document.getElementById("timeValue").textContent = mins !== null ? buildMmSs(mins) : "";
-      document.getElementById("timeSubJa").textContent = buildUntilJa(data.currentText || data.nextText || "");
-      document.getElementById("timeSubEn").textContent = buildUntilEn(data.currentText || data.nextText || "");
-
-      timeUnit.style.display = cfg.showUnit ? "block" : "none";
-      timeUnit.textContent = "min";
-
-      if (state === "not_checked_in") {
-        document.getElementById("timeSubJa").textContent = `あと${String(mins || 0).padStart(2,"0")}分で自動キャンセルになります。`;
-        document.getElementById("timeSubEn").textContent = `Automatically cancelled in ${String(mins || 0).padStart(2,"0")} min.`;
-      }
-
-      checkoutBtn.style.display = cfg.showCheckout ? "block" : "none";
-
-      const subPanel = document.getElementById("subPanel");
-      if (cfg.showSubPanel) {
-        subPanel.style.display = "block";
-        document.getElementById("subLabelJa1").textContent = cfg.sub1Ja;
-        document.getElementById("subLabelEn1").textContent = cfg.sub1En;
-        document.getElementById("subLabelJa2").textContent = cfg.sub2Ja;
-        document.getElementById("subLabelEn2").textContent = cfg.sub2En;
-        setSvg(document.getElementById("subIcon1"), cfg.sub1Icon, cfg.accent);
-        setSvg(document.getElementById("subIcon2"), cfg.sub2Icon, cfg.accent);
-
-        if (state === "not_checked_in") {
-          document.getElementById("subValue1").textContent = getReservedBy(data);
-          document.getElementById("subValue2").textContent = getReservationTime(data);
-        } else {
-          document.getElementById("subValue1").textContent = getNextUser(data);
-          document.getElementById("subValue2").textContent = getNextReservation(data);
-        }
-      } else {
-        subPanel.style.display = "none";
-      }
-
-      document.getElementById("messageJa").textContent = messageJaFromData(data);
-      document.getElementById("messageEn").textContent = messageEnFromData(data);
-    }
-
-    async function fetchData(){
-      const url = `${API_URL}?action=getracktabletjson&rackNo=${rackNo}&t=${Date.now()}`;
-      const res = await fetch(url, { method:"GET", cache:"no-store" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
-    }
-
-    async function loadData(){
-      try {
-        const data = await fetchData();
-        applyState(data);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    document.getElementById("rackRefreshArea").addEventListener("click", loadData);
-    document.getElementById("checkoutBtn").addEventListener("click", () => {
-      alert("明日ここにチェックアウト処理を接続");
-    });
-
-    loadData();
-    setInterval(loadData, REFRESH_MS);
-  </script>
 </body>
 </html>
