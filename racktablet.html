@@ -397,7 +397,8 @@ function formatUpdated(text){
 }
 
 function applyData(data){
-  document.getElementById("rackImage").src = "rt-rack1.png";
+  document.getElementById("rackImage").src =
+  "rt-rack" + (data.rackNo || rackNo) + ".png";
   const rawState = String(data.state || "").toLowerCase();
 
   document.getElementById("updated").innerHTML =
