@@ -498,13 +498,24 @@ function applyData(data){
   else if(rawState === "free"){
     setAccent("#00C8FF");
 
-    document.getElementById("state").textContent = "空いています";
-    document.getElementById("stateEn").textContent = "AVAILABLE";
+  document.getElementById("state").textContent = "空いています";
+document.getElementById("stateEn").textContent = "AVAILABLE";
 
-    document.getElementById("user").textContent = "";
-    document.getElementById("subtext").textContent = "店内タブレットよりチェックインしてください";
+document.getElementById("user").textContent = "";
+document.getElementById("subtext").textContent =
+  "店内タブレットよりチェックインしてください";
 
-    mainRight.style.display = "none";
+/* ここ追加（リセット） */
+const subEn = document.getElementById("subtextEn");
+if (subEn) subEn.textContent = "";
+
+/* この状態だけ英語表示 */
+if (subEn) {
+  subEn.textContent =
+    "Please check in using the in-gym tablet";
+}
+
+mainRight.style.display = "none";
 
     document.getElementById("nextUserTitle").textContent = "次の利用者";
     document.getElementById("nextTimeTitle").textContent = "次の予定";
