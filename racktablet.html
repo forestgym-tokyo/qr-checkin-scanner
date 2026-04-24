@@ -497,9 +497,9 @@ function applyData(data){
     "次の予定の開始時間まではご利用いただけます";
 
   document.getElementById("time").textContent =
-    (data.remainingMin !== null && data.remainingMin !== undefined)
-      ? data.remainingMin + " min"
-      : "";
+  (data.remainingMin !== null && data.remainingMin !== undefined)
+    ? (data.remainingMin <= 0 ? "まもなく" : data.remainingMin + " min")
+    : "";
 
   document.getElementById("until").textContent = "開始まで";
 
