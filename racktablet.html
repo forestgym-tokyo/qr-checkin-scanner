@@ -514,7 +514,7 @@ function applyData(data){
       nextTime || "予定なし";
   }
 
- else if(rawState === "reserved"){
+ else if(rawState === "reserved" || rawState === "scheduled"){
   setAccent("#FFD400");
 
   document.getElementById("state").textContent = "予定があります";
