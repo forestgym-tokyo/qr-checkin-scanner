@@ -10,6 +10,7 @@
   --accent:#8DFF00;
   --accent-glow:rgba(141,255,0,.22);
 }
+
 *{box-sizing:border-box;margin:0;padding:0;}
 
 html,body{
@@ -18,7 +19,6 @@ html,body{
   font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif;
   overflow:hidden;
 }
-body{background:linear-gradient(180deg,#030303,#080808);}
 
 /* ===== HEADER ===== */
 .header{
@@ -28,23 +28,24 @@ body{background:linear-gradient(180deg,#030303,#080808);}
   align-items:center;
   gap:12px;
   padding:8px 16px;
-  border-bottom:1px solid rgba(255,255,255,.18);
+  border-bottom:1px solid rgba(255,255,255,.12);
 }
-.logo{height:48px;object-fit:contain;}
+
+.logo{height:48px;}
+
 .rack-box{
-  width:80px;height:80px;
-  border:2px solid var(--accent);
-  border-radius:16px;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 10px var(--accent-glow);
+  width:70px;height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   cursor:pointer;
 }
-.rack-box img{width:70%;height:70%;object-fit:contain;}
 
 .updated{
   justify-self:end;
   text-align:right;
 }
+
 .updated-label{font-size:12px;font-weight:800;}
 .updated-value{font-size:26px;font-weight:900;}
 .updated-value span{color:var(--accent);}
@@ -67,19 +68,15 @@ body{background:linear-gradient(180deg,#030303,#080808);}
   justify-content:space-between;
   gap:16px;
   box-shadow:0 0 10px var(--accent-glow);
-  width:100%;
 }
 
-.main-left{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-}
+.main-left{flex:1;}
 
 .state{
   font-size:54px;
   font-weight:900;
 }
+
 .state-en{
   font-size:22px;
   color:var(--accent);
@@ -92,39 +89,30 @@ body{background:linear-gradient(180deg,#030303,#080808);}
 }
 
 .subtext{
-  margin-top:10px;
-  font-size:28px;
-  font-weight:900;
-}
-.subtext-en{
-  margin-top:6px;
-  font-size:18px;
-  color:var(--accent);
+  margin-top:8px;
+  font-size:22px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
-/* ===== RIGHT ===== */
 .main-right{
   width:260px;
   border-left:2px solid var(--accent);
   padding-left:14px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
 }
 
 .time-label{color:var(--accent);font-size:18px;font-weight:900;}
-.time{font-size:64px;font-weight:900;margin-top:6px;}
-.time-unit{font-size:20px;}
-
-.until{margin-top:6px;font-size:20px;}
+.time{font-size:58px;font-weight:900;margin-top:4px;}
+.until{margin-top:4px;font-size:20px;}
 
 .checkout{
-  margin-top:12px;
+  margin-top:10px;
   background:var(--accent);
   color:#000;
   border:none;
   width:100%;
-  height:90px;
+  height:86px;
   font-size:26px;
   font-weight:900;
   border-radius:12px;
@@ -133,19 +121,18 @@ body{background:linear-gradient(180deg,#030303,#080808);}
   align-items:center;
   justify-content:center;
 }
-.checkout span{font-size:18px;margin-top:6px;}
+.checkout span{font-size:18px;}
 
 /* ===== SUB PANEL ===== */
 .sub-panel{
   border:2px solid var(--accent);
   border-radius:14px;
   display:flex;
-  width:100%;
 }
 
 .sub-item{
   flex:1;
-  padding:12px 14px;
+  padding:10px 12px;
 }
 .sub-item + .sub-item{
   border-left:2px solid var(--accent);
@@ -153,25 +140,37 @@ body{background:linear-gradient(180deg,#030303,#080808);}
 
 .sub-title{
   color:var(--accent);
-  font-size:16px;
+  font-size:14px;
 }
+
 .sub-value{
-  font-size:28px;
+  font-size:26px;
   font-weight:900;
-  margin-top:6px;
+  margin-top:4px;
 }
 
 /* ===== MESSAGE ===== */
 .message{
   border:2px solid var(--accent);
   border-radius:14px;
-  padding:10px 14px;
-  width:100%;
+  padding:8px 12px;
 }
-.message-title{font-size:14px;color:var(--accent);}
-.message-ja{font-size:22px;margin-top:6px;}
-.message-en{font-size:16px;margin-top:4px;color:var(--accent);}
 
+.message-title{
+  font-size:14px;
+  color:var(--accent);
+}
+
+.message-ja{
+  font-size:20px;
+  margin-top:4px;
+}
+
+.message-en{
+  font-size:14px;
+  margin-top:4px;
+  color:var(--accent);
+}
 </style>
 </head>
 
@@ -201,7 +200,6 @@ body{background:linear-gradient(180deg,#030303,#080808);}
 
       <div class="user" id="user"></div>
       <div class="subtext" id="subtext"></div>
-      <div class="subtext-en" id="subtextEn"></div>
     </div>
 
     <div class="main-right">
@@ -209,10 +207,10 @@ body{background:linear-gradient(180deg,#030303,#080808);}
       <div class="time" id="time">--</div>
       <div class="until" id="until"></div>
 
-      <button class="checkout" id="checkoutBtn">
+      <div class="checkout" id="checkoutBtn">
         チェックアウト
         <span>CHECK OUT</span>
-      </button>
+      </div>
     </div>
   </div>
 
@@ -247,29 +245,46 @@ function applyData(data){
 
   document.getElementById("rackImage").src = "rack" + (data.rackNo || 1) + ".png";
 
-  document.getElementById("state").textContent = data.headline || "";
-  document.getElementById("stateEn").textContent = "";
+  // 状態表示修正
+  if(data.state === "using_checked_in"){
+    document.getElementById("state").textContent = "チェックイン済";
+    document.getElementById("stateEn").textContent = "CHECKED IN";
+  } else {
+    document.getElementById("state").textContent = data.headline || "";
+    document.getElementById("stateEn").textContent = "";
+  }
 
+  // 利用者
   document.getElementById("user").textContent =
-    data.subText || "";
+    data.currentDisplayName ? data.currentDisplayName + "さんが利用中" : "";
 
-  document.getElementById("subtext").textContent = "";
-  document.getElementById("subtextEn").textContent = "";
+  document.getElementById("subtext").textContent = data.subText || "";
 
-  document.getElementById("time").textContent = "";
-  document.getElementById("until").textContent = "";
+  // 残り時間
+  document.getElementById("time").textContent = data.currentSubText || "";
+  document.getElementById("until").textContent = data.currentText || "";
 
+  // 次の利用者（さん付与）
   document.getElementById("nextUser").textContent =
-    data.nextDisplayName || "";
+    data.nextDisplayName ? data.nextDisplayName + "さん" : "";
 
   document.getElementById("nextTime").textContent =
     (data.nextStartText && data.nextEndText)
       ? data.nextStartText + " ～ " + data.nextEndText
       : "";
 
+  // メッセージ
   const msgs = data.messages || [];
   document.getElementById("messageJa").textContent = msgs[0] || "";
   document.getElementById("messageEn").textContent = msgs[1] || "";
+
+  // チェックアウト
+  const btn = document.getElementById("checkoutBtn");
+  if(data.canCheckout){
+    btn.style.display = "flex";
+  } else {
+    btn.style.display = "none";
+  }
 }
 
 async function loadData(){
