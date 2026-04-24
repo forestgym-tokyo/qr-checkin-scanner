@@ -472,28 +472,38 @@ function applyData(data){
   }
 
   else if(rawState === "using_not_checked_in" || rawState === "not_checked_in"){
-    setAccent("#FF8A00");
+  setAccent("#FF8A00");
 
-    document.getElementById("state").textContent = "未チェックイン";
-    document.getElementById("stateEn").textContent = "NOT CHECKED IN";
+  document.getElementById("state").textContent = "未チェックイン";
+  document.getElementById("stateEn").textContent = "NOT CHECKED IN";
 
-    document.getElementById("user").textContent = "";
-    document.getElementById("subtext").textContent =
-      "5分以内にQRコードでチェックインしてください";
+  document.getElementById("user").textContent = "";
+  document.getElementById("subtext").textContent =
+    "5分以内にQRコードでチェックインしてください";
 
-    document.getElementById("time").textContent =
-      data.currentSubText || "";
-
-    document.getElementById("until").textContent =
-      "自動キャンセル対象";
-
-    document.getElementById("nextUserTitle").textContent = "予約者";
-    document.getElementById("nextTimeTitle").textContent = "予定時間";
-    document.getElementById("nextUser").textContent =
-      currentName ? currentName + "さん" : "—";
-    document.getElementById("nextTime").textContent =
-      data.currentText || "—";
+  const subEn = document.getElementById("subtextEn");
+  if (subEn) {
+    subEn.textContent =
+      "Please check in with the QR code within 5 minutes";
   }
+
+  document.getElementById("time").textContent =
+    (data.remainingMin !== null && data.remainingMin !== undefined)
+      ? (data.remainingMin <= 0 ? "まもなく" : data.remainingMin + " min")
+      : "";
+
+  document.getElementById("until").textContent =
+    "自動キャンセルまで";
+
+  document.getElementById("nextUserTitle").textContent = "予約者";
+  document.getElementById("nextTimeTitle").textContent = "予定時間";
+
+  document.getElementById("nextUser").textContent =
+    currentName ? currentName + "さん" : "—";
+
+  document.getElementById("nextTime").textContent =
+    data.currentText || formatTimeRange(data.currentStartText, data.currentEndText) || "—";
+}
 
   else if(rawState === "free"){
     setAccent("#00C8FF");
