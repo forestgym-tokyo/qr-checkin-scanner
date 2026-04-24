@@ -8,48 +8,83 @@
 <style>
 :root{
   --accent:#8DFF00;
+  --accent-glow:rgba(141,255,0,.22);
 }
 
-*{box-sizing:border-box;margin:0;padding:0;}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-body{
+html,body{
+  width:100%;
+  height:100%;
   background:#000;
   color:#fff;
-  font-family:sans-serif;
+  font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif;
   overflow:hidden;
 }
 
 /* ===== HEADER ===== */
 .header{
+  height:70px;
   display:grid;
-  grid-template-columns:auto auto 1fr auto;
+  grid-template-columns:60px 90px 1fr 210px;
   align-items:center;
-  padding:10px 16px;
+  gap:12px;
+  padding:8px 14px;
+  border-bottom:1px solid rgba(255,255,255,.12);
 }
 
-.logo{height:48px;}
+.logo{
+  width:50px;
+  height:50px;
+  object-fit:contain;
+}
 
-/* ★ここだけ線消し */
 .rack-box{
-  width:70px;
-  height:70px;
+  width:78px;
+  height:54px;
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  border:none;
-  box-shadow:none;
-  outline:none;
-  background:none;
+  border:none !important;
+  box-shadow:none !important;
+  outline:none !important;
+  background:transparent !important;
+  overflow:hidden;
+}
+
+.rack-box img{
+  max-width:78px;
+  max-height:54px;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  border:none !important;
+  box-shadow:none !important;
+  outline:none !important;
+  background:transparent !important;
 }
 
 .updated{
+  justify-self:end;
   text-align:right;
 }
 
+.updated-label{
+  font-size:12px;
+  font-weight:800;
+  line-height:1;
+}
+
 .updated-value{
-  font-size:26px;
+  margin-top:5px;
+  font-size:24px;
   font-weight:900;
+  line-height:1;
 }
 
 .updated-value span{
@@ -58,121 +93,219 @@ body{
 
 /* ===== MAIN ===== */
 .main{
-  padding:10px;
-  display:flex;
-  flex-direction:column;
+  height:calc(100vh - 70px);
+  padding:10px 14px;
+  display:grid;
+  grid-template-rows:1fr 96px 82px;
   gap:10px;
 }
 
-/* ===== CARD ===== */
+/* ===== MAIN CARD ===== */
 .main-card{
   border:2px solid var(--accent);
-  border-radius:14px;
-  padding:12px;
-  display:flex;
-  justify-content:space-between;
+  border-radius:16px;
+  padding:14px 18px;
+  display:grid;
+  grid-template-columns:1fr 280px;
+  gap:18px;
+  box-shadow:0 0 10px var(--accent-glow);
+  min-height:0;
 }
 
-.main-left{flex:1;}
+.main-left{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
 
 .state{
-  font-size:52px;
+  font-size:54px;
+  line-height:1;
   font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .state-en{
-  font-size:20px;
+  margin-top:7px;
+  font-size:24px;
+  line-height:1;
+  font-weight:900;
   color:var(--accent);
+  white-space:nowrap;
 }
 
 .user{
-  margin-top:10px;
-  font-size:40px;
+  margin-top:18px;
+  font-size:44px;
+  line-height:1.1;
   font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .subtext{
-  font-size:22px;
-  margin-top:6px;
+  margin-top:8px;
+  font-size:20px;
+  line-height:1.2;
+  font-weight:800;
   white-space:nowrap;
   overflow:hidden;
+  text-overflow:ellipsis;
+  color:rgba(255,255,255,.92);
 }
 
 /* ===== RIGHT ===== */
 .main-right{
-  width:250px;
   border-left:2px solid var(--accent);
-  padding-left:12px;
+  padding-left:16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-width:0;
+}
+
+.time-label{
+  color:var(--accent);
+  font-size:18px;
+  font-weight:900;
+  line-height:1;
 }
 
 .time{
-  font-size:56px;
+  margin-top:8px;
+  font-size:54px;
+  line-height:1;
   font-weight:900;
+  white-space:nowrap;
 }
 
 .until{
+  margin-top:8px;
   font-size:18px;
-  margin-top:4px;
+  line-height:1.2;
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .checkout{
-  margin-top:10px;
+  margin-top:12px;
   background:var(--accent);
   color:#000;
   width:100%;
-  height:80px;
+  height:78px;
   font-size:24px;
   font-weight:900;
   border:none;
-  border-radius:10px;
+  border-radius:12px;
   display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+.checkout span{
+  margin-top:4px;
+  font-size:16px;
 }
 
 /* ===== SUB ===== */
 .sub-panel{
   border:2px solid var(--accent);
-  border-radius:12px;
-  display:flex;
+  border-radius:14px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  box-shadow:0 0 10px var(--accent-glow);
+  overflow:hidden;
 }
 
 .sub-item{
-  flex:1;
-  padding:10px;
+  padding:10px 14px;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
 }
 
 .sub-item + .sub-item{
   border-left:2px solid var(--accent);
 }
 
-.sub-value{
-  font-size:24px;
+.sub-title{
+  color:var(--accent);
+  font-size:14px;
   font-weight:900;
+  line-height:1;
+}
+
+.sub-value{
+  margin-top:8px;
+  font-size:26px;
+  line-height:1;
+  font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 /* ===== MESSAGE ===== */
 .message{
   border:2px solid var(--accent);
-  border-radius:12px;
-  padding:10px;
+  border-radius:14px;
+  padding:8px 12px;
+  box-shadow:0 0 10px var(--accent-glow);
+  overflow:hidden;
 }
 
-.message-ja{font-size:20px;}
-.message-en{font-size:14px;color:var(--accent);}
+.message-title{
+  color:var(--accent);
+  font-size:13px;
+  font-weight:900;
+  line-height:1;
+}
+
+.message-ja{
+  margin-top:6px;
+  font-size:20px;
+  line-height:1.15;
+  font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.message-en{
+  margin-top:4px;
+  font-size:14px;
+  line-height:1.15;
+  font-weight:800;
+  color:var(--accent);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  <img src="logo.png" class="logo">
+  <img src="logo.png" class="logo" alt="The Forest Gym">
 
   <div class="rack-box" id="refresh">
-    <img id="rackImage" src="rack1.png">
+    <img id="rackImage" src="rack1.png" alt="Rack">
   </div>
 
   <div></div>
 
   <div class="updated">
+    <div class="updated-label">LAST UPDATED</div>
     <div class="updated-value" id="updated">--</div>
   </div>
 </div>
@@ -187,27 +320,32 @@ body{
       <div class="subtext" id="subtext"></div>
     </div>
 
-    <div class="main-right">
+    <div class="main-right" id="mainRight">
+      <div class="time-label">残り時間</div>
       <div class="time" id="time"></div>
       <div class="until" id="until"></div>
 
       <button class="checkout" id="checkoutBtn">
         チェックアウト
+        <span>CHECK OUT</span>
       </button>
     </div>
   </div>
 
   <div class="sub-panel">
     <div class="sub-item">
+      <div class="sub-title" id="nextUserTitle">次の利用者</div>
       <div class="sub-value" id="nextUser"></div>
     </div>
 
     <div class="sub-item">
+      <div class="sub-title" id="nextTimeTitle">次の予定</div>
       <div class="sub-value" id="nextTime"></div>
     </div>
   </div>
 
   <div class="message">
+    <div class="message-title">MESSAGE BOARD</div>
     <div class="message-ja" id="messageJa"></div>
     <div class="message-en" id="messageEn"></div>
   </div>
@@ -218,48 +356,176 @@ body{
 const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 const rackNo = new URLSearchParams(location.search).get("rackNo") || 1;
 
+function setAccent(color){
+  document.documentElement.style.setProperty("--accent", color);
+  if(color === "#00C8FF"){
+    document.documentElement.style.setProperty("--accent-glow", "rgba(0,200,255,.22)");
+  }else if(color === "#FFD400"){
+    document.documentElement.style.setProperty("--accent-glow", "rgba(255,212,0,.22)");
+  }else if(color === "#FF8A00"){
+    document.documentElement.style.setProperty("--accent-glow", "rgba(255,138,0,.22)");
+  }else{
+    document.documentElement.style.setProperty("--accent-glow", "rgba(141,255,0,.22)");
+  }
+}
+
+function cleanName(text){
+  const s = String(text || "").trim();
+  if(!s) return "";
+  return s
+    .replace(/^状況：/, "")
+    .replace(/さんチェックイン済$/, "")
+    .replace(/さん未チェックイン$/, "")
+    .replace(/さんが利用中$/, "")
+    .replace(/さん$/, "")
+    .trim();
+}
+
+function extractCurrentName(data){
+  if(data.currentDisplayName) return cleanName(data.currentDisplayName);
+  if(data.currentUserName) return cleanName(data.currentUserName);
+  if(data.subText) return cleanName(data.subText);
+  return "";
+}
+
+function formatTimeRange(start,end){
+  return start && end ? start + "～" + end : "";
+}
+
+function formatUpdated(text){
+  return String(text || "--").replace(/(\d{1,2}:\d{2})/, "<span>$1</span>");
+}
+
 function applyData(data){
+  const rawState = String(data.state || "").toLowerCase();
 
   document.getElementById("updated").innerHTML =
-    (data.nowText || "").replace(/(\d{2}:\d{2})/, "<span>$1</span>");
+    formatUpdated(data.nowText || data.lastUpdatedText);
 
-  document.getElementById("rackImage").src = "rack" + rackNo + ".png";
+  document.getElementById("rackImage").src =
+    "rack" + (data.rackNo || rackNo) + ".png";
 
-  // 状態（固定）
-  if (data.state === "using_checked_in") {
+  const currentName = extractCurrentName(data);
+  const nextName = cleanName(data.nextDisplayName || "");
+  const nextTime = formatTimeRange(data.nextStartText, data.nextEndText);
+
+  const checkoutBtn = document.getElementById("checkoutBtn");
+  const mainRight = document.getElementById("mainRight");
+
+  checkoutBtn.style.display = "none";
+  mainRight.style.display = "flex";
+
+  if(rawState === "using_checked_in" || rawState === "checked_in"){
+    setAccent("#8DFF00");
+
     document.getElementById("state").textContent = "チェックイン済";
     document.getElementById("stateEn").textContent = "CHECKED IN";
-  } else {
-    document.getElementById("state").textContent = "";
-    document.getElementById("stateEn").textContent = "";
+
+    document.getElementById("user").textContent =
+      currentName ? currentName + "さんが利用中" : "利用中";
+
+    document.getElementById("subtext").textContent = "";
+
+    document.getElementById("time").textContent =
+      data.currentSubText || "";
+
+    document.getElementById("until").textContent =
+      data.currentText || "";
+
+    checkoutBtn.style.display = data.canCheckout ? "flex" : "none";
+
+    document.getElementById("nextUserTitle").textContent = "次の利用者";
+    document.getElementById("nextTimeTitle").textContent = "次の予定";
+    document.getElementById("nextUser").textContent =
+      nextName ? nextName + "さん" : "—";
+    document.getElementById("nextTime").textContent =
+      nextTime || "予定なし";
   }
 
-  document.getElementById("user").textContent =
-    data.currentDisplayName ? data.currentDisplayName + "さんが利用中" : "";
+  else if(rawState === "using_not_checked_in" || rawState === "not_checked_in"){
+    setAccent("#FF8A00");
 
-  document.getElementById("subtext").textContent = data.subText || "";
+    document.getElementById("state").textContent = "未チェックイン";
+    document.getElementById("stateEn").textContent = "NOT CHECKED IN";
 
-  document.getElementById("time").textContent = data.currentSubText || "";
-  document.getElementById("until").textContent = data.currentText || "";
+    document.getElementById("user").textContent = "";
+    document.getElementById("subtext").textContent =
+      "5分以内にQRコードでチェックインしてください";
 
-  document.getElementById("nextUser").textContent =
-    data.nextDisplayName ? data.nextDisplayName + "さん" : "";
+    document.getElementById("time").textContent =
+      data.currentSubText || "";
 
-  document.getElementById("nextTime").textContent =
-    (data.nextStartText && data.nextEndText)
-      ? data.nextStartText + "～" + data.nextEndText
-      : "";
+    document.getElementById("until").textContent =
+      "自動キャンセル対象";
+
+    document.getElementById("nextUserTitle").textContent = "予約者";
+    document.getElementById("nextTimeTitle").textContent = "予定時間";
+    document.getElementById("nextUser").textContent =
+      currentName ? currentName + "さん" : "—";
+    document.getElementById("nextTime").textContent =
+      data.currentText || "—";
+  }
+
+  else if(rawState === "free"){
+    setAccent("#00C8FF");
+
+    document.getElementById("state").textContent = "空いています";
+    document.getElementById("stateEn").textContent = "AVAILABLE";
+
+    document.getElementById("user").textContent = "";
+    document.getElementById("subtext").textContent = "現在ご利用いただけます";
+
+    mainRight.style.display = "none";
+
+    document.getElementById("nextUserTitle").textContent = "次の利用者";
+    document.getElementById("nextTimeTitle").textContent = "次の予定";
+    document.getElementById("nextUser").textContent =
+      nextName ? nextName + "さん" : "—";
+    document.getElementById("nextTime").textContent =
+      nextTime || "予定なし";
+  }
+
+  else if(rawState === "reserved"){
+    setAccent("#FFD400");
+
+    document.getElementById("state").textContent = "予定があります";
+    document.getElementById("stateEn").textContent = "RESERVED SOON";
+
+    document.getElementById("user").textContent = "";
+    document.getElementById("subtext").textContent =
+      "次の予定までご利用いただけます";
+
+    document.getElementById("time").textContent =
+      data.currentSubText || "";
+
+    document.getElementById("until").textContent =
+      nextTime ? nextTime + " まで" : "";
+
+    document.getElementById("nextUserTitle").textContent = "次の利用者";
+    document.getElementById("nextTimeTitle").textContent = "次の予定";
+    document.getElementById("nextUser").textContent =
+      nextName ? nextName + "さん" : "—";
+    document.getElementById("nextTime").textContent =
+      nextTime || "予定なし";
+  }
+
+  else{
+    setAccent("#8DFF00");
+    document.getElementById("state").textContent = "";
+    document.getElementById("stateEn").textContent = "";
+    document.getElementById("user").textContent = "";
+    document.getElementById("subtext").textContent = "";
+  }
 
   const msgs = data.messages || [];
   document.getElementById("messageJa").textContent = msgs[0] || "";
   document.getElementById("messageEn").textContent = msgs[1] || "";
-
-  document.getElementById("checkoutBtn").style.display =
-    data.canCheckout ? "block" : "none";
 }
 
 async function loadData(){
-  const res = await fetch(API_URL + "?action=getracktabletjson&rackNo=" + rackNo + "&t=" + Date.now());
+  const res = await fetch(API_URL + "?action=getracktabletjson&rackNo=" + rackNo + "&t=" + Date.now(), {
+    cache:"no-store"
+  });
   const data = await res.json();
   applyData(data);
 }
@@ -268,6 +534,10 @@ loadData();
 setInterval(loadData,15000);
 
 document.getElementById("refresh").onclick = loadData;
+
+document.getElementById("checkoutBtn").onclick = function(){
+  alert("チェックアウト処理は次に接続");
+};
 </script>
 
 </body>
