@@ -29,14 +29,18 @@ body{
 
 .logo{height:48px;}
 
+/* ★ここだけ線消し */
 .rack-box{
-  width:70px;height:70px;
+  width:70px;
+  height:70px;
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
   border:none;
   box-shadow:none;
+  outline:none;
+  background:none;
 }
 
 .updated{
@@ -221,16 +225,12 @@ function applyData(data){
 
   document.getElementById("rackImage").src = "rack" + rackNo + ".png";
 
-  const s = (data.state || "").toLowerCase();
-
-  if (s.includes("checked")) {
+  // 状態（固定）
+  if (data.state === "using_checked_in") {
     document.getElementById("state").textContent = "チェックイン済";
     document.getElementById("stateEn").textContent = "CHECKED IN";
-  } else if (s.includes("free")) {
-    document.getElementById("state").textContent = "空いています";
-    document.getElementById("stateEn").textContent = "AVAILABLE";
   } else {
-    document.getElementById("state").textContent = "予定あり";
+    document.getElementById("state").textContent = "";
     document.getElementById("stateEn").textContent = "";
   }
 
@@ -254,8 +254,8 @@ function applyData(data){
   document.getElementById("messageJa").textContent = msgs[0] || "";
   document.getElementById("messageEn").textContent = msgs[1] || "";
 
-  const btn = document.getElementById("checkoutBtn");
-  btn.style.display = data.canCheckout ? "block" : "none";
+  document.getElementById("checkoutBtn").style.display =
+    data.canCheckout ? "block" : "none";
 }
 
 async function loadData(){
