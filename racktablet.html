@@ -492,14 +492,20 @@ function applyData(data){
   document.getElementById("state").textContent = "予定があります";
   document.getElementById("stateEn").textContent = "RESERVED SOON";
 
-  document.getElementById("user").textContent = "";
-  document.getElementById("subtext").textContent =
-    "次の予定の開始時間まではご利用いただけます";
+ document.getElementById("user").textContent = "";
+document.getElementById("subtext").textContent =
+  "次の予定の開始時間まではご利用いただけます";
 
-  document.getElementById("time").textContent =
+const subEn = document.getElementById("subtextEn");
+if (subEn) {
+  subEn.textContent =
+    "Available until the next reservation starts";
+}
+
+document.getElementById("time").textContent =
   (data.remainingMin !== null && data.remainingMin !== undefined)
     ? (data.remainingMin <= 0 ? "まもなく" : data.remainingMin + " min")
-    : "";
+    : ""; 
 
   document.getElementById("until").textContent = "開始まで";
 
