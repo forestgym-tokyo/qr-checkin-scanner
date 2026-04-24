@@ -402,8 +402,8 @@ function applyData(data){
   document.getElementById("updated").innerHTML =
     formatUpdated(data.nowText || data.lastUpdatedText);
 
-  document.getElementById("rackImage").src =
-    "rack" + (data.rackNo || rackNo) + ".png";
+ document.getElementById("rackImage").src =
+  "images/rt-rack" + rackNo + ".png";
 
   const currentName = extractCurrentName(data);
   const nextName = cleanName(data.nextDisplayName || "");
