@@ -485,41 +485,42 @@ function applyData(data){
       nextTime || "予定なし";
   }
 
-  else if(rawState === "reserved"){
-    setAccent("#FFD400");
+ else if(rawState === "reserved"){
+  setAccent("#FFD400");
 
-    document.getElementById("state").textContent = "予定があります";
-    document.getElementById("stateEn").textContent = "RESERVED SOON";
+  document.getElementById("state").textContent = "予定があります";
+  document.getElementById("stateEn").textContent = "RESERVED SOON";
 
-    document.getElementById("user").textContent = "";
-    document.getElementById("subtext").textContent =
-      "次の予定までご利用いただけます";
+  document.getElementById("user").textContent = "";
+  document.getElementById("subtext").textContent =
+    "次の予定までご利用いただけます";
 
-    document.getElementById("time").textContent =
-      data.currentSubText || "";
+  document.getElementById("time").textContent =
+    (data.remainingMin !== null && data.remainingMin !== undefined)
+      ? data.remainingMin + " min"
+      : "";
 
-    document.getElementById("until").textContent =
-      nextTime ? nextTime + " まで" : "";
+  document.getElementById("until").textContent = "開始まで";
 
-    document.getElementById("nextUserTitle").textContent = "次の利用者";
-    document.getElementById("nextTimeTitle").textContent = "次の予定";
-    document.getElementById("nextUser").textContent =
-      nextName ? nextName + "さん" : "—";
-    document.getElementById("nextTime").textContent =
-      nextTime || "予定なし";
-  }
+  document.getElementById("nextUserTitle").textContent = "次の利用者";
+  document.getElementById("nextTimeTitle").textContent = "次の予定";
+  document.getElementById("nextUser").textContent =
+    nextName ? nextName + "さん" : "—";
+  document.getElementById("nextTime").textContent =
+    nextTime || "予定なし";
+}
 
-  else{
-    setAccent("#8DFF00");
-    document.getElementById("state").textContent = "";
-    document.getElementById("stateEn").textContent = "";
-    document.getElementById("user").textContent = "";
-    document.getElementById("subtext").textContent = "";
-  }
+else{
+  setAccent("#8DFF00");
+  document.getElementById("state").textContent = "";
+  document.getElementById("stateEn").textContent = "";
+  document.getElementById("user").textContent = "";
+  document.getElementById("subtext").textContent = "";
+}
 
-  const msgs = data.messages || [];
-  document.getElementById("messageJa").textContent = msgs[0] || "";
-  document.getElementById("messageEn").textContent = msgs[1] || "";
+const msgs = data.messages || [];
+document.getElementById("messageJa").textContent = msgs[0] || "";
+document.getElementById("messageEn").textContent = msgs[1] || "";
 }
 
 async function loadData(){
