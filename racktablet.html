@@ -426,7 +426,7 @@ function applyData(data){
 
  document.getElementById("time").textContent =
   (data.remainingMin !== null && data.remainingMin !== undefined)
-    ? String(data.remainingMin).padStart(2,"0") + ":00"
+    ? data.remainingMin + " min"
     : "";
 
     document.getElementById("until").textContent =
