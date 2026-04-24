@@ -8,149 +8,276 @@
 <style>
 :root{
   --accent:#8DFF00;
-  --accent-glow:rgba(141,255,0,.2);
+  --accent-glow:rgba(141,255,0,.22);
 }
 
-*{box-sizing:border-box;margin:0;padding:0;}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-body{
+html,body{
+  width:100%;
+  height:100%;
   background:#000;
   color:#fff;
-  font-family:sans-serif;
+  font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif;
   overflow:hidden;
+}
+
+body{
+  background:linear-gradient(180deg,#030303,#080808);
 }
 
 /* ===== HEADER ===== */
 .header{
-  display:flex;
-  justify-content:space-between;
+  height:64px;
+  display:grid;
+  grid-template-columns:80px 1fr;
   align-items:center;
-  padding:8px 18px;
-  border-bottom:1px solid rgba(255,255,255,.2);
+  gap:16px;
+  padding:8px 16px;
+  border-bottom:1px solid rgba(255,255,255,.18);
 }
 
-.left-header{
+.logo{
+  height:48px;
+  width:48px;
+  object-fit:contain;
+}
+
+.updated{
   display:flex;
   align-items:center;
   gap:14px;
 }
 
-.logo{
-  height:46px;
-}
-
-.rack-box{
-  width:90px;
-  height:90px;
-  border:2px solid var(--accent);
-  border-radius:16px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 0 10px var(--accent-glow);
-  cursor:pointer;
-}
-
-.rack-box img{
-  width:70%;
-  height:70%;
-}
-
-.updated{
-  text-align:right;
+.updated:before{
+  content:"";
+  display:block;
+  width:1px;
+  height:42px;
+  background:var(--accent);
 }
 
 .updated-label{
-  font-size:12px;
+  font-size:13px;
+  font-weight:800;
+  line-height:1;
 }
 
 .updated-value{
-  font-size:24px;
+  margin-top:6px;
+  font-size:28px;
   font-weight:900;
+  line-height:1;
 }
 
 .updated-value span{
   color:var(--accent);
 }
 
-/* ===== MAIN ===== */
+/* ===== LAYOUT ===== */
 .main{
+  height:calc(100vh - 64px);
   padding:10px 14px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
+  display:grid;
+  grid-template-columns:150px 1fr;
+  gap:12px;
 }
 
+.rack-box{
+  height:100%;
+  border:2px solid var(--accent);
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 14px var(--accent-glow);
+  cursor:pointer;
+}
+
+.rack-box img{
+  width:118px;
+  max-height:100%;
+  object-fit:contain;
+}
+
+.content{
+  height:100%;
+  display:grid;
+  grid-template-rows:1fr 106px 88px;
+  gap:10px;
+  min-width:0;
+}
+
+/* ===== MAIN CARD ===== */
 .main-card{
   border:2px solid var(--accent);
-  border-radius:18px;
-  padding:14px;
-  display:flex;
-  justify-content:space-between;
-  box-shadow:0 0 10px var(--accent-glow);
+  border-radius:20px;
+  display:grid;
+  grid-template-columns:1fr 300px;
+  gap:16px;
+  padding:18px 20px;
+  box-shadow:0 0 14px var(--accent-glow);
+  min-height:0;
+  overflow:hidden;
 }
 
 .main-left{
-  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
 }
 
 .state{
-  font-size:44px;
+  font-size:56px;
+  line-height:1;
   font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .state-en{
-  font-size:20px;
+  margin-top:8px;
+  font-size:26px;
+  line-height:1;
+  font-weight:900;
   color:var(--accent);
+  white-space:nowrap;
+}
+
+.line{
+  height:2px;
+  background:var(--accent);
+  margin:18px 0;
 }
 
 .user{
-  margin-top:10px;
-  font-size:40px;
+  font-size:48px;
+  line-height:1.15;
   font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.subtext{
+  margin-top:12px;
+  font-size:28px;
+  line-height:1.25;
+  font-weight:900;
+  color:#fff;
+}
+
+.subtext-en{
+  margin-top:8px;
+  font-size:20px;
+  line-height:1.25;
+  font-weight:800;
+  color:var(--accent);
 }
 
 .main-right{
-  width:230px;
   border-left:2px solid var(--accent);
-  padding-left:14px;
+  padding-left:18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-width:0;
+}
+
+.time-label{
+  color:var(--accent);
+  font-size:24px;
+  font-weight:900;
+  line-height:1;
+}
+
+.time-label-en{
+  margin-top:6px;
+  color:var(--accent);
+  font-size:17px;
+  font-weight:800;
+  line-height:1;
+}
+
+.time-row{
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  margin-top:14px;
 }
 
 .time{
-  font-size:48px;
+  font-size:62px;
+  line-height:1;
   font-weight:900;
+  white-space:nowrap;
+}
+
+.time-unit{
+  font-size:24px;
+  font-weight:900;
+  padding-bottom:7px;
 }
 
 .until{
+  margin-top:12px;
+  font-size:22px;
+  line-height:1.2;
+  font-weight:900;
+}
+
+.until-en{
   margin-top:6px;
-  font-size:20px;
+  color:var(--accent);
+  font-size:17px;
+  line-height:1.2;
+  font-weight:800;
 }
 
 .checkout{
-  margin-top:10px;
+  margin-top:18px;
   background:var(--accent);
   color:#000;
   border:none;
   width:100%;
-  height:80px;
-  font-size:24px;
+  min-height:96px;
+  font-size:30px;
   font-weight:900;
-  border-radius:12px;
-  display:flex;
+  border-radius:14px;
+  display:none;
   align-items:center;
   justify-content:center;
-  gap:10px;
+  flex-direction:column;
+  cursor:pointer;
 }
 
+.checkout span{
+  font-size:20px;
+  margin-top:6px;
+}
+
+/* ===== SUB PANEL ===== */
 .sub-panel{
   border:2px solid var(--accent);
-  border-radius:14px;
-  display:flex;
+  border-radius:16px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  box-shadow:0 0 12px var(--accent-glow);
+  overflow:hidden;
 }
 
 .sub-item{
-  flex:1;
-  padding:10px 12px;
+  padding:14px 18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-width:0;
 }
 
 .sub-item + .sub-item{
@@ -159,140 +286,312 @@ body{
 
 .sub-title{
   color:var(--accent);
+  font-size:18px;
+  font-weight:900;
+  line-height:1;
+}
+
+.sub-title-en{
+  margin-left:8px;
   font-size:14px;
+  font-weight:800;
 }
 
 .sub-value{
-  font-size:22px;
+  margin-top:10px;
+  font-size:30px;
+  line-height:1;
   font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
+/* ===== MESSAGE ===== */
 .message{
   border:2px solid var(--accent);
-  border-radius:14px;
-  padding:8px 12px;
+  border-radius:16px;
+  padding:8px 14px;
+  box-shadow:0 0 12px var(--accent-glow);
+  overflow:hidden;
 }
 
 .message-title{
   font-size:14px;
+  font-weight:900;
   color:var(--accent);
+  line-height:1;
 }
 
 .message-ja{
+  margin-top:6px;
   font-size:20px;
-  margin-top:4px;
+  line-height:1.2;
+  font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .message-en{
-  font-size:14px;
   margin-top:4px;
+  font-size:15px;
+  line-height:1.2;
+  font-weight:800;
   color:var(--accent);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
+.hidden{
+  display:none !important;
+}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  <div class="left-header">
-    <img src="logo.png" class="logo">
-
-    <div class="rack-box" id="refresh">
-      <img id="rackImage" src="rack1.png">
-    </div>
-  </div>
+  <img src="logo.png" class="logo" alt="The Forest Gym">
 
   <div class="updated">
-    <div class="updated-label">LAST UPDATED</div>
-    <div class="updated-value" id="updated">--</div>
+    <div>
+      <div class="updated-label">LAST UPDATED</div>
+      <div class="updated-value" id="updated">--</div>
+    </div>
   </div>
 </div>
 
 <div class="main">
+  <div class="rack-box" id="refresh">
+    <img id="rackImage" src="rack1.png" alt="Rack">
+  </div>
 
-  <div class="main-card">
-    <div class="main-left">
-      <div class="state" id="state">--</div>
-      <div class="state-en" id="stateEn">--</div>
-      <div class="user" id="user">--</div>
-    </div>
+  <div class="content">
+    <div class="main-card">
+      <div class="main-left">
+        <div class="state" id="state">--</div>
+        <div class="state-en" id="stateEn">--</div>
+        <div class="line"></div>
+        <div class="user" id="user"></div>
+        <div class="subtext" id="subtext"></div>
+        <div class="subtext-en" id="subtextEn"></div>
+      </div>
 
-    <div class="main-right">
-      <div class="time" id="time">--</div>
-      <div class="until" id="until">--</div>
+      <div class="main-right" id="mainRight">
+        <div class="time-label" id="timeLabel">残り時間</div>
+        <div class="time-label-en" id="timeLabelEn">TIME REMAINING</div>
 
-      <div class="checkout">
-        チェックアウト
+        <div class="time-row">
+          <div class="time" id="time">--</div>
+          <div class="time-unit" id="timeUnit">min</div>
+        </div>
+
+        <div class="until" id="until"></div>
+        <div class="until-en" id="untilEn"></div>
+
+        <button class="checkout" id="checkoutBtn">
+          チェックアウト
+          <span>CHECK OUT</span>
+        </button>
       </div>
     </div>
-  </div>
 
-  <div class="sub-panel">
-    <div class="sub-item">
-      <div class="sub-title">次の利用者</div>
-      <div class="sub-value" id="nextUser">--</div>
+    <div class="sub-panel" id="subPanel">
+      <div class="sub-item">
+        <div class="sub-title" id="subTitle1">次の利用者 <span class="sub-title-en">NEXT USER</span></div>
+        <div class="sub-value" id="nextUser">--</div>
+      </div>
+
+      <div class="sub-item">
+        <div class="sub-title" id="subTitle2">次の予定 <span class="sub-title-en">NEXT RESERVATION</span></div>
+        <div class="sub-value" id="nextTime">--</div>
+      </div>
     </div>
 
-    <div class="sub-item">
-      <div class="sub-title">次の予定</div>
-      <div class="sub-value" id="nextTime">--</div>
+    <div class="message">
+      <div class="message-title">メッセージボード　MESSAGE BOARD</div>
+      <div class="message-ja" id="messageJa">--</div>
+      <div class="message-en" id="messageEn">--</div>
     </div>
   </div>
-
-  <div class="message">
-    <div class="message-title">MESSAGE BOARD</div>
-    <div class="message-ja" id="messageJa">--</div>
-    <div class="message-en" id="messageEn">--</div>
-  </div>
-
 </div>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 const rackNo = new URLSearchParams(location.search).get("rackNo") || 1;
 
-function convertMin(text){
-  const m = text.match(/(\d+)/);
-  if(!m) return "--";
-  return m[1].padStart(2,"0") + ":00";
+const COLORS = {
+  free: "#00C8FF",
+  reserved: "#FFD400",
+  using_checked_in: "#8DFF00",
+  checked_in: "#8DFF00",
+  using_not_checked_in: "#FF8A00",
+  not_checked_in: "#FF8A00",
+  using: "#FF8A00",
+  in_use: "#FF8A00"
+};
+
+function setAccent(color){
+  document.documentElement.style.setProperty("--accent", color);
+  document.documentElement.style.setProperty("--accent-glow", colorToGlow(color));
+}
+
+function colorToGlow(hex){
+  if(hex === "#00C8FF") return "rgba(0,200,255,.22)";
+  if(hex === "#FFD400") return "rgba(255,212,0,.22)";
+  if(hex === "#FF8A00") return "rgba(255,138,0,.22)";
+  return "rgba(141,255,0,.22)";
+}
+
+function formatUpdated(nowText){
+  const s = String(nowText || "--");
+  return s.replace(/(\d{1,2}:\d{2})/, "<span>$1</span>");
+}
+
+function extractMinute(text){
+  const s = String(text || "");
+  const m = s.match(/([0-9]+)\s*分/);
+  return m ? Number(m[1]) : null;
+}
+
+function mmss(min){
+  if(min === null || min === undefined) return "--";
+  return String(min).padStart(2,"0") + ":00";
+}
+
+function makeTimeRange(start, end){
+  if(start && end) return start + " ～ " + end;
+  return "";
+}
+
+function normalizeState(state){
+  const s = String(state || "");
+  if(s === "using_checked_in") return "checked_in";
+  if(s === "using_not_checked_in") return "not_checked_in";
+  return s;
+}
+
+function cleanName(name){
+  const s = String(name || "").trim();
+  if(!s) return "";
+  return s.replace(/さん$/, "");
+}
+
+function getMessages(data){
+  const arr = Array.isArray(data.messages) ? data.messages.filter(Boolean) : [];
+  return {
+    ja: arr[0] || "",
+    en: arr[1] || ""
+  };
 }
 
 function applyData(data){
+  const rawState = data.state || "free";
+  const state = normalizeState(rawState);
+  const accent = COLORS[rawState] || COLORS[state] || "#8DFF00";
+  setAccent(accent);
 
-  document.getElementById("updated").innerHTML =
-    data.lastUpdatedText.replace(/(\d{2}:\d{2})/, "<span>$1</span>");
+  document.getElementById("updated").innerHTML = formatUpdated(data.nowText || data.lastUpdatedText);
+  document.getElementById("rackImage").src = "rack" + (data.rackNo || rackNo) + ".png";
 
-  document.getElementById("rackImage").src = "rack" + data.rackNo + ".png";
+  const headline = String(data.headline || "");
+  const lines = headline.split(/\n/);
+  const jaHeadline = lines[0] || "";
+  const enHeadline = lines[1] || "";
 
-  document.getElementById("state").textContent = data.state;
-  document.getElementById("stateEn").textContent = data.state.toUpperCase();
+  document.getElementById("state").textContent = jaHeadline || state;
+  document.getElementById("stateEn").textContent = enHeadline || state.toUpperCase();
 
-  document.getElementById("user").textContent =
-    data.currentUserName + "さんが利用中";
+  const mainRight = document.getElementById("mainRight");
+  const checkoutBtn = document.getElementById("checkoutBtn");
+  const user = document.getElementById("user");
+  const subtext = document.getElementById("subtext");
+  const subtextEn = document.getElementById("subtextEn");
+  const subPanel = document.getElementById("subPanel");
 
-  document.getElementById("time").textContent =
-    convertMin(data.currentSubText);
+  mainRight.classList.remove("hidden");
+  checkoutBtn.style.display = "none";
+  user.textContent = "";
+  subtext.textContent = "";
+  subtextEn.textContent = "";
+  subPanel.classList.remove("hidden");
 
-  document.getElementById("until").textContent =
-    "〜" + data.currentText.split("〜")[1] + "まで";
+  const currentName = cleanName(data.currentDisplayName || data.currentUserName || "");
+  const nextName = cleanName(data.nextDisplayName || "");
+  const nextTime = makeTimeRange(data.nextStartText, data.nextEndText);
 
-  document.getElementById("nextUser").textContent =
-    data.nextUserName;
+  if(state === "checked_in"){
+    user.textContent = (currentName || "利用者") + "さんが利用中";
+    checkoutBtn.style.display = data.canCheckout === false ? "none" : "flex";
 
-  document.getElementById("nextTime").textContent =
-    data.nextText;
+    document.getElementById("subTitle1").innerHTML = '次の利用者 <span class="sub-title-en">NEXT USER</span>';
+    document.getElementById("subTitle2").innerHTML = '次の予定 <span class="sub-title-en">NEXT RESERVATION</span>';
+    document.getElementById("nextUser").textContent = nextName ? nextName + "さん" : "—";
+    document.getElementById("nextTime").textContent = nextTime || "予定なし";
+  }
+  else if(state === "not_checked_in"){
+    subtext.textContent = "5分以内にQRコードでチェックインしてください";
+    subtextEn.textContent = "Please check in with the QR code within 5 minutes.";
 
-  document.getElementById("messageJa").textContent =
-    data.messageBoardTextJa;
+    document.getElementById("subTitle1").innerHTML = '予約者 <span class="sub-title-en">RESERVED BY</span>';
+    document.getElementById("subTitle2").innerHTML = '予定時間 <span class="sub-title-en">RESERVATION TIME</span>';
+    document.getElementById("nextUser").textContent = currentName ? currentName + "さん" : "—";
+    document.getElementById("nextTime").textContent = makeTimeRange(data.nextStartText, data.nextEndText) || data.subText || "—";
+  }
+  else if(state === "reserved"){
+    subtext.textContent = "次の予定までご利用いただけます";
+    subtextEn.textContent = "Available until the next reservation.";
 
-  document.getElementById("messageEn").textContent =
-    data.messageBoardTextEn;
+    document.getElementById("subTitle1").innerHTML = '次の利用者 <span class="sub-title-en">NEXT USER</span>';
+    document.getElementById("subTitle2").innerHTML = '次の予定 <span class="sub-title-en">NEXT RESERVATION</span>';
+    document.getElementById("nextUser").textContent = nextName ? nextName + "さん" : "—";
+    document.getElementById("nextTime").textContent = nextTime || "予定なし";
+  }
+  else if(state === "free"){
+    subtext.textContent = "現在ご利用いただけます";
+    subtextEn.textContent = "AVAILABLE NOW";
+    mainRight.classList.add("hidden");
+
+    document.getElementById("subTitle1").innerHTML = '次の利用者 <span class="sub-title-en">NEXT USER</span>';
+    document.getElementById("subTitle2").innerHTML = '次の予定 <span class="sub-title-en">NEXT RESERVATION</span>';
+    document.getElementById("nextUser").textContent = nextName ? nextName + "さん" : "—";
+    document.getElementById("nextTime").textContent = nextTime || "予定なし";
+  }
+  else{
+    subtext.textContent = data.subText || "";
+    document.getElementById("nextUser").textContent = nextName ? nextName + "さん" : "—";
+    document.getElementById("nextTime").textContent = nextTime || "予定なし";
+  }
+
+  const mins = extractMinute(data.subText || data.currentSubText || "");
+  document.getElementById("time").textContent = mmss(mins);
+  document.getElementById("timeUnit").style.display =
+    (state === "reserved" || state === "checked_in") ? "block" : "none";
+
+  if(state === "not_checked_in"){
+    document.getElementById("until").textContent =
+      mins !== null ? "あと" + String(mins).padStart(2,"0") + "分で自動キャンセルになります。" : "";
+    document.getElementById("untilEn").textContent =
+      mins !== null ? "Automatically cancelled in " + String(mins).padStart(2,"0") + " min." : "";
+  }else{
+    document.getElementById("until").textContent =
+      data.nextEndText ? "〜 " + data.nextEndText + " まで" : "";
+    document.getElementById("untilEn").textContent =
+      data.nextEndText ? "UNTIL " + data.nextEndText : "";
+  }
+
+  const msgs = getMessages(data);
+  document.getElementById("messageJa").textContent = msgs.ja || "—";
+  document.getElementById("messageEn").textContent = msgs.en || "";
 }
 
 async function loadData(){
   try{
-    const res = await fetch(API_URL + "?action=getracktabletjson&rackNo=" + rackNo + "&t=" + Date.now());
+    const res = await fetch(API_URL + "?action=getracktabletjson&rackNo=" + rackNo + "&t=" + Date.now(), {
+      cache:"no-store"
+    });
     const data = await res.json();
     applyData(data);
   }catch(e){
@@ -304,6 +603,10 @@ loadData();
 setInterval(loadData, 15000);
 
 document.getElementById("refresh").onclick = loadData;
+
+document.getElementById("checkoutBtn").onclick = function(){
+  alert("チェックアウト処理は次に接続");
+};
 </script>
 
 </body>
