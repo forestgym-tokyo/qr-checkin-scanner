@@ -426,8 +426,10 @@ function applyData(data){
 
     document.getElementById("subtext").textContent = "";
 
-    document.getElementById("time").textContent =
-      data.currentSubText || "";
+ document.getElementById("time").textContent =
+  (data.remainingMin !== null && data.remainingMin !== undefined)
+    ? String(data.remainingMin).padStart(2,"0") + ":00"
+    : "";
 
     document.getElementById("until").textContent =
       data.currentText || "";
