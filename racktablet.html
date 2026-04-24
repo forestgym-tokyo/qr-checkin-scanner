@@ -443,35 +443,41 @@ function applyData(data){
   mainRight.style.display = "flex";
 
   if(rawState === "using_checked_in" || rawState === "checked_in"){
-    setAccent("#8DFF00");
+  setAccent("#8DFF00");
 
-    document.getElementById("state").textContent = "チェックイン済";
-    document.getElementById("stateEn").textContent = "CHECKED IN";
+  document.getElementById("state").textContent = "チェックイン済";
+  document.getElementById("stateEn").textContent = "CHECKED IN";
 
-    document.getElementById("user").textContent =
-      currentName ? currentName + "さんが利用中" : "利用中";
+  document.getElementById("user").textContent =
+    currentName ? currentName + "さんが利用中" : "利用中";
 
-    document.getElementById("subtext").textContent = "";
+  document.getElementById("subtext").textContent = "";
 
- document.getElementById("time").textContent =
-  (data.remainingMin !== null && data.remainingMin !== undefined)
-    ? data.remainingMin + " min"
-    : "";
-
-    document.getElementById("until").textContent =
-      data.currentText || "";
-
-    checkoutBtn.style.display = data.canCheckout ? "flex" : "none";
-
-    document.getElementById("nextUserTitle").textContent = "次の利用者";
-    document.getElementById("nextTimeTitle").textContent = "次の予定";
-    document.getElementById("nextUser").textContent =
-      nextName ? nextName + "さん" : "—";
-    document.getElementById("nextTime").textContent =
-      nextTime || "予定なし";
+  const subEn = document.getElementById("subtextEn");
+  if (subEn) {
+    subEn.textContent =
+      currentName ? "In use by " + currentName : "Currently in use";
   }
 
-  else if(rawState === "using_not_checked_in" || rawState === "not_checked_in"){
+  document.getElementById("time").textContent =
+    (data.remainingMin !== null && data.remainingMin !== undefined)
+      ? data.remainingMin + " min"
+      : "";
+
+  document.getElementById("until").textContent =
+    data.currentText || "";
+
+  checkoutBtn.style.display = data.canCheckout ? "flex" : "none";
+
+  document.getElementById("nextUserTitle").textContent = "次の利用者";
+  document.getElementById("nextTimeTitle").textContent = "次の予定";
+  document.getElementById("nextUser").textContent =
+    nextName ? nextName + "さん" : "—";
+  document.getElementById("nextTime").textContent =
+    nextTime || "予定なし";
+}
+
+else if(rawState === "using_not_checked_in" || rawState === "not_checked_in"){
   setAccent("#FF8A00");
 
   document.getElementById("state").textContent = "未チェックイン";
@@ -505,56 +511,52 @@ function applyData(data){
     data.currentText || formatTimeRange(data.currentStartText, data.currentEndText) || "—";
 }
 
-  else if(rawState === "free"){
-    setAccent("#00C8FF");
+else if(rawState === "free"){
+  setAccent("#00C8FF");
 
   document.getElementById("state").textContent = "空いています";
-document.getElementById("stateEn").textContent = "AVAILABLE";
+  document.getElementById("stateEn").textContent = "AVAILABLE";
 
-document.getElementById("user").textContent = "";
-document.getElementById("subtext").textContent =
-  "店内タブレットよりチェックインしてください";
+  document.getElementById("user").textContent = "";
+  document.getElementById("subtext").textContent =
+    "店内タブレットよりチェックインしてください";
 
-/* ここ追加（リセット） */
-const subEn = document.getElementById("subtextEn");
-if (subEn) subEn.textContent = "";
-
-/* この状態だけ英語表示 */
-if (subEn) {
-  subEn.textContent =
-    "Please check in using the in-gym tablet";
-}
-
-mainRight.style.display = "none";
-
-    document.getElementById("nextUserTitle").textContent = "次の利用者";
-    document.getElementById("nextTimeTitle").textContent = "次の予定";
-    document.getElementById("nextUser").textContent =
-      nextName ? nextName + "さん" : "—";
-    document.getElementById("nextTime").textContent =
-      nextTime || "予定なし";
+  const subEn = document.getElementById("subtextEn");
+  if (subEn) {
+    subEn.textContent =
+      "Please check in using the in-gym tablet";
   }
 
- else if(rawState === "reserved" || rawState === "scheduled"){
+  mainRight.style.display = "none";
+
+  document.getElementById("nextUserTitle").textContent = "次の利用者";
+  document.getElementById("nextTimeTitle").textContent = "次の予定";
+  document.getElementById("nextUser").textContent =
+    nextName ? nextName + "さん" : "—";
+  document.getElementById("nextTime").textContent =
+    nextTime || "予定なし";
+}
+
+else if(rawState === "reserved" || rawState === "scheduled"){
   setAccent("#FFD400");
 
   document.getElementById("state").textContent = "予定があります";
   document.getElementById("stateEn").textContent = "RESERVED SOON";
 
- document.getElementById("user").textContent = "";
-document.getElementById("subtext").textContent =
-  "次の予定の開始までご利用いただけます";
+  document.getElementById("user").textContent = "";
+  document.getElementById("subtext").textContent =
+    "次の予定の開始までご利用いただけます";
 
-const subEn = document.getElementById("subtextEn");
-if (subEn) {
-  subEn.textContent =
-    "Available until the next reservation starts";
-}
+  const subEn = document.getElementById("subtextEn");
+  if (subEn) {
+    subEn.textContent =
+      "Available until the next reservation starts";
+  }
 
-document.getElementById("time").textContent =
-  (data.remainingMin !== null && data.remainingMin !== undefined)
-    ? (data.remainingMin <= 0 ? "まもなく" : data.remainingMin + " min")
-    : ""; 
+  document.getElementById("time").textContent =
+    (data.remainingMin !== null && data.remainingMin !== undefined)
+      ? (data.remainingMin <= 0 ? "まもなく" : data.remainingMin + " min")
+      : "";
 
   document.getElementById("until").textContent = "開始まで";
 
@@ -572,6 +574,9 @@ else{
   document.getElementById("stateEn").textContent = "";
   document.getElementById("user").textContent = "";
   document.getElementById("subtext").textContent = "";
+
+  const subEn = document.getElementById("subtextEn");
+  if (subEn) subEn.textContent = "";
 }
 
 const msgs = data.messages || [];
