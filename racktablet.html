@@ -8,27 +8,23 @@
 <style>
 :root{
   --accent:#8DFF00;
-  --accent-glow:rgba(141,255,0,.22);
 }
 
 *{box-sizing:border-box;margin:0;padding:0;}
 
-html,body{
-  width:100%;height:100%;
-  background:#000;color:#fff;
-  font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif;
+body{
+  background:#000;
+  color:#fff;
+  font-family:sans-serif;
   overflow:hidden;
 }
 
 /* ===== HEADER ===== */
 .header{
-  height:70px;
   display:grid;
   grid-template-columns:auto auto 1fr auto;
   align-items:center;
-  gap:12px;
-  padding:8px 16px;
-  border-bottom:1px solid rgba(255,255,255,.12);
+  padding:10px 16px;
 }
 
 .logo{height:48px;}
@@ -39,138 +35,125 @@ html,body{
   align-items:center;
   justify-content:center;
   cursor:pointer;
+  border:none;
+  box-shadow:none;
 }
 
 .updated{
-  justify-self:end;
   text-align:right;
 }
 
-.updated-label{font-size:12px;font-weight:800;}
-.updated-value{font-size:26px;font-weight:900;}
-.updated-value span{color:var(--accent);}
+.updated-value{
+  font-size:26px;
+  font-weight:900;
+}
+
+.updated-value span{
+  color:var(--accent);
+}
 
 /* ===== MAIN ===== */
 .main{
-  height:calc(100vh - 70px);
-  padding:10px 14px;
+  padding:10px;
   display:flex;
   flex-direction:column;
   gap:10px;
 }
 
-/* ===== MAIN CARD ===== */
+/* ===== CARD ===== */
 .main-card{
   border:2px solid var(--accent);
-  border-radius:18px;
-  padding:14px 18px;
+  border-radius:14px;
+  padding:12px;
   display:flex;
   justify-content:space-between;
-  gap:16px;
-  box-shadow:0 0 10px var(--accent-glow);
 }
 
 .main-left{flex:1;}
 
 .state{
-  font-size:54px;
+  font-size:52px;
   font-weight:900;
 }
 
 .state-en{
-  font-size:22px;
+  font-size:20px;
   color:var(--accent);
 }
 
 .user{
-  margin-top:12px;
-  font-size:44px;
+  margin-top:10px;
+  font-size:40px;
   font-weight:900;
 }
 
 .subtext{
-  margin-top:8px;
   font-size:22px;
+  margin-top:6px;
   white-space:nowrap;
   overflow:hidden;
-  text-overflow:ellipsis;
 }
 
+/* ===== RIGHT ===== */
 .main-right{
-  width:260px;
+  width:250px;
   border-left:2px solid var(--accent);
-  padding-left:14px;
+  padding-left:12px;
 }
 
-.time-label{color:var(--accent);font-size:18px;font-weight:900;}
-.time{font-size:58px;font-weight:900;margin-top:4px;}
-.until{margin-top:4px;font-size:20px;}
+.time{
+  font-size:56px;
+  font-weight:900;
+}
+
+.until{
+  font-size:18px;
+  margin-top:4px;
+}
 
 .checkout{
   margin-top:10px;
   background:var(--accent);
   color:#000;
-  border:none;
   width:100%;
-  height:86px;
-  font-size:26px;
+  height:80px;
+  font-size:24px;
   font-weight:900;
-  border-radius:12px;
+  border:none;
+  border-radius:10px;
   display:none;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
 }
-.checkout span{font-size:18px;}
 
-/* ===== SUB PANEL ===== */
+/* ===== SUB ===== */
 .sub-panel{
   border:2px solid var(--accent);
-  border-radius:14px;
+  border-radius:12px;
   display:flex;
 }
 
 .sub-item{
   flex:1;
-  padding:10px 12px;
+  padding:10px;
 }
+
 .sub-item + .sub-item{
   border-left:2px solid var(--accent);
 }
 
-.sub-title{
-  color:var(--accent);
-  font-size:14px;
-}
-
 .sub-value{
-  font-size:26px;
+  font-size:24px;
   font-weight:900;
-  margin-top:4px;
 }
 
 /* ===== MESSAGE ===== */
 .message{
   border:2px solid var(--accent);
-  border-radius:14px;
-  padding:8px 12px;
+  border-radius:12px;
+  padding:10px;
 }
 
-.message-title{
-  font-size:14px;
-  color:var(--accent);
-}
-
-.message-ja{
-  font-size:20px;
-  margin-top:4px;
-}
-
-.message-en{
-  font-size:14px;
-  margin-top:4px;
-  color:var(--accent);
-}
+.message-ja{font-size:20px;}
+.message-en{font-size:14px;color:var(--accent);}
 </style>
 </head>
 
@@ -186,7 +169,6 @@ html,body{
   <div></div>
 
   <div class="updated">
-    <div class="updated-label">LAST UPDATED</div>
     <div class="updated-value" id="updated">--</div>
   </div>
 </div>
@@ -195,41 +177,35 @@ html,body{
 
   <div class="main-card">
     <div class="main-left">
-      <div class="state" id="state">--</div>
-      <div class="state-en" id="stateEn">--</div>
-
+      <div class="state" id="state"></div>
+      <div class="state-en" id="stateEn"></div>
       <div class="user" id="user"></div>
       <div class="subtext" id="subtext"></div>
     </div>
 
     <div class="main-right">
-      <div class="time-label">残り時間</div>
-      <div class="time" id="time">--</div>
+      <div class="time" id="time"></div>
       <div class="until" id="until"></div>
 
-      <div class="checkout" id="checkoutBtn">
+      <button class="checkout" id="checkoutBtn">
         チェックアウト
-        <span>CHECK OUT</span>
-      </div>
+      </button>
     </div>
   </div>
 
   <div class="sub-panel">
     <div class="sub-item">
-      <div class="sub-title">次の利用者</div>
-      <div class="sub-value" id="nextUser">--</div>
+      <div class="sub-value" id="nextUser"></div>
     </div>
 
     <div class="sub-item">
-      <div class="sub-title">次の予定</div>
-      <div class="sub-value" id="nextTime">--</div>
+      <div class="sub-value" id="nextTime"></div>
     </div>
   </div>
 
   <div class="message">
-    <div class="message-title">MESSAGE BOARD</div>
-    <div class="message-ja" id="messageJa">--</div>
-    <div class="message-en" id="messageEn">--</div>
+    <div class="message-ja" id="messageJa"></div>
+    <div class="message-en" id="messageEn"></div>
   </div>
 
 </div>
@@ -241,50 +217,45 @@ const rackNo = new URLSearchParams(location.search).get("rackNo") || 1;
 function applyData(data){
 
   document.getElementById("updated").innerHTML =
-    (data.nowText || "--").replace(/(\d{2}:\d{2})/, "<span>$1</span>");
+    (data.nowText || "").replace(/(\d{2}:\d{2})/, "<span>$1</span>");
 
-  document.getElementById("rackImage").src = "rack" + (data.rackNo || 1) + ".png";
+  document.getElementById("rackImage").src = "rack" + rackNo + ".png";
 
-  // 状態表示修正
-  if(data.state === "using_checked_in"){
+  const s = (data.state || "").toLowerCase();
+
+  if (s.includes("checked")) {
     document.getElementById("state").textContent = "チェックイン済";
     document.getElementById("stateEn").textContent = "CHECKED IN";
+  } else if (s.includes("free")) {
+    document.getElementById("state").textContent = "空いています";
+    document.getElementById("stateEn").textContent = "AVAILABLE";
   } else {
-    document.getElementById("state").textContent = data.headline || "";
+    document.getElementById("state").textContent = "予定あり";
     document.getElementById("stateEn").textContent = "";
   }
 
-  // 利用者
   document.getElementById("user").textContent =
     data.currentDisplayName ? data.currentDisplayName + "さんが利用中" : "";
 
   document.getElementById("subtext").textContent = data.subText || "";
 
-  // 残り時間
   document.getElementById("time").textContent = data.currentSubText || "";
   document.getElementById("until").textContent = data.currentText || "";
 
-  // 次の利用者（さん付与）
   document.getElementById("nextUser").textContent =
     data.nextDisplayName ? data.nextDisplayName + "さん" : "";
 
   document.getElementById("nextTime").textContent =
     (data.nextStartText && data.nextEndText)
-      ? data.nextStartText + " ～ " + data.nextEndText
+      ? data.nextStartText + "～" + data.nextEndText
       : "";
 
-  // メッセージ
   const msgs = data.messages || [];
   document.getElementById("messageJa").textContent = msgs[0] || "";
   document.getElementById("messageEn").textContent = msgs[1] || "";
 
-  // チェックアウト
   const btn = document.getElementById("checkoutBtn");
-  if(data.canCheckout){
-    btn.style.display = "flex";
-  } else {
-    btn.style.display = "none";
-  }
+  btn.style.display = data.canCheckout ? "block" : "none";
 }
 
 async function loadData(){
