@@ -69,7 +69,11 @@ html,body{
   box-shadow:none !important;
   outline:none !important;
   background:transparent !important;
-  overflow:hidden;
+  overflow:visible;     /* ←変更（はみ出し許可） */
+
+  position:relative;    /* ←追加 */
+  top:-80px;            /* ←上に持ち上げる（調整OK） */
+  z-index:10;           /* ←手前に出す */
 }
 
 .rack-box img{
@@ -83,7 +87,6 @@ html,body{
   outline:none !important;
   background:transparent !important;
 }
-
 .updated{
   justify-self:end;
   text-align:right;
