@@ -471,8 +471,8 @@ function applyData(data){
 
   checkoutBtn.style.display = data.canCheckout ? "flex" : "none";
 
-  document.getElementById("nextUserTitle").textContent = "次の利用者 / Next User";
-  document.getElementById("nextTimeTitle").textContent = "次の予定"/ Next Reservation;
+  document.getElementById("nextUserTitle").textContent = "次の利用者";
+  document.getElementById("nextTimeTitle").textContent = "次の予定";
   document.getElementById("nextUser").textContent =
     nextName ? nextName + "さん" : "—";
   document.getElementById("nextTime").textContent =
