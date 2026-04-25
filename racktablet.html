@@ -531,8 +531,8 @@ else if(rawState === "free"){
 
   mainRight.style.display = "none";
 
-  document.getElementById("nextUserTitle").textContent = "次の利用者";
-  document.getElementById("nextTimeTitle").textContent = "次の予定";
+  document.getElementById("nextUserTitle").textContent = "次の利用者 / Next User";
+  document.getElementById("nextTimeTitle").textContent = "次の予定/ Next Reservation";
   document.getElementById("nextUser").textContent =
     nextName ? nextName + "さん" : "—";
   document.getElementById("nextTime").textContent =
@@ -562,8 +562,8 @@ else if(rawState === "reserved" || rawState === "scheduled"){
 
   document.getElementById("until").textContent = "開始まで";
 
-  document.getElementById("nextUserTitle").textContent = "次の利用者";
-  document.getElementById("nextTimeTitle").textContent = "次の予定";
+  document.getElementById("nextUserTitle").textContent = "次の利用者/ Next User";
+  document.getElementById("nextTimeTitle").textContent = "次の予定/ Next Reservation";
   document.getElementById("nextUser").textContent =
     nextName ? nextName + "さん" : "—";
   document.getElementById("nextTime").textContent =
