@@ -595,13 +595,47 @@ async function loadData(){
 }
 
 loadData();
-setInterval(loadData,15000);
+setInterval(loadData, 15000);
 
 document.getElementById("refresh").onclick = loadData;
 
 document.getElementById("checkoutBtn").onclick = function(){
-  alert("チェックアウト処理は次に接続");
+  checkoutRack(rackNo);
 };
+
+async function checkoutRack(rackNo) {
+  if (!rackNo) {
+    alert("ラック番号が取得できません。");
+    return;
+  }
+
+  if (!confirm("ラック" + rackNo + "をチェックアウトしますか？")) {
+    return;
+  }
+
+  try {
+    const params = new URLSearchParams();
+    params.append("action", "checkoutFromRackTablet");
+    params.append("rackNo", rackNo);
+
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: params
+    });
+
+    const data = await res.json();
+
+    if (data && data.ok) {
+      alert(data.message || "チェックアウトしました。");
+      loadData();
+    } else {
+      alert((data && data.message) || "チェックアウトできませんでした。");
+    }
+
+  } catch (e) {
+    alert("通信エラーが発生しました。");
+  }
+}
 </script>
 
 </body>
