@@ -605,11 +605,7 @@ document.getElementById("checkoutBtn").onclick = function(){
 
 async function checkoutRack(rackNo) {
   if (!rackNo) {
-    alert("ラック番号が取得できません。");
-    return;
-  }
-
-  if (!confirm("ラック" + rackNo + "をチェックアウトしますか？")) {
+    alert("ラック番号が取得できません。\nRack number not found.");
     return;
   }
 
@@ -626,14 +622,17 @@ async function checkoutRack(rackNo) {
     const data = await res.json();
 
     if (data && data.ok) {
-      alert(data.message || "チェックアウトしました。");
+      alert("チェックアウトしました。\nChecked out successfully.");
       loadData();
     } else {
-      alert((data && data.message) || "チェックアウトできませんでした。");
+      alert(
+        (data && data.message ? data.message : "チェックアウトできませんでした。") +
+        "\nCheckout failed."
+      );
     }
 
   } catch (e) {
-    alert("通信エラーが発生しました。");
+    alert("通信エラーが発生しました。\nNetwork error occurred.");
   }
 }
 </script>
