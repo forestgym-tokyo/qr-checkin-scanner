@@ -147,9 +147,16 @@ let verifiedAuthCode = "";
 
 const params = new URLSearchParams(location.search);
 const rackNo = params.get("rackNo") || "";
+const fromTablet = params.get("from") === "tablet";
 
 document.getElementById("rackLabel").innerText =
   rackNo ? "Rack №" + rackNo : "最短ラック自動選定";
+
+if (fromTablet) {
+  verifiedAuthCode = "";
+  document.getElementById("authArea").style.display = "none";
+  document.getElementById("queueArea").style.display = "block";
+}
 
 function validateAuthCode(){
   const code = document.getElementById("authCode").value.trim();
