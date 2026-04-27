@@ -98,8 +98,18 @@ button{
 </div>
 
 <script>
+// ★ ここが重要（from判定）
+const params = new URLSearchParams(location.search);
+const fromTablet = params.get("from") === "tablet";
+
 function goTop(){
-  location.href = "tablet.html?t=" + Date.now();
+  if (fromTablet) {
+    // タブレット → スケジュール画面
+    location.href = "tablet.html?t=" + Date.now();
+  } else {
+    // スマホ → queueトップ（認証画面）
+    location.href = "queue.html?t=" + Date.now();
+  }
 }
 
 function closePage(){
