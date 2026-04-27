@@ -800,7 +800,7 @@
       const r = normalizeRack(raw);
 
       const checkinUrl = r.checkinUrl || `${CHECKIN_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}`;
-      const queueUrl = r.queueUrl || `${QUEUE_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}`;
+      const queueUrl = r.queueUrl || `${QUEUE_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}&from=tablet&t=${Date.now()}`;
 
       const useButton = (r.showUseNowButton && r.state !== "maintenance")
         ? `
