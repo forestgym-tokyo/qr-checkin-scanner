@@ -17,8 +17,6 @@ body{
   margin:0 auto;
   padding:40px 20px;
 }
-
-/* 見出し */
 .page-title{
   font-size:28px;
   font-weight:700;
@@ -30,8 +28,6 @@ body{
   color:#cfd6df;
   margin-bottom:22px;
 }
-
-/* 説明 */
 .lead{
   color:#d7dbe2;
   line-height:1.8;
@@ -43,16 +39,12 @@ body{
   font-size:13px;
   margin-top:6px;
 }
-
-/* カード */
 .card{
   background:rgba(255,255,255,0.05);
   border-radius:20px;
   padding:24px;
   backdrop-filter:blur(12px);
 }
-
-/* ラベル */
 .form-label{
   display:block;
   font-size:13px;
@@ -60,8 +52,6 @@ body{
   margin-bottom:6px;
   margin-top:14px;
 }
-
-/* 入力 */
 input{
   width:100%;
   padding:16px;
@@ -72,8 +62,6 @@ input{
   color:#fff;
   box-sizing:border-box;
 }
-
-/* ボタン */
 button{
   width:100%;
   padding:16px;
@@ -96,7 +84,6 @@ button{
 
 <div class="wrap">
 
-  <!-- 認証画面 -->
   <div id="authArea">
     <div class="page-title">認証コード入力</div>
     <div class="lead">
@@ -114,16 +101,15 @@ button{
     </div>
   </div>
 
-  <!-- 既存フォーム -->
   <div id="queueArea" style="display:none;">
 
     <div class="page-title">順番待ち / Queue</div>
-    <div class="rack-label" id="rackLabel">Rack №-</div>
+    <div class="rack-label" id="rackLabel">最短ラック自動選定</div>
 
     <div class="lead">
-      このラックの順番待ち受付です。順番が来たらメールで通知されます。
+      最も早く利用可能なラックを自動でご案内します。順番が来たらメールで通知されます。
       <div class="lead-en">
-        This is the waitlist for this rack. You will be notified by email when your turn comes.
+        The earliest available rack will be selected automatically. You will be notified by email when your turn comes.
       </div>
     </div>
 
@@ -160,8 +146,10 @@ const GAS_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2
 let verifiedAuthCode = "";
 
 const params = new URLSearchParams(location.search);
-const rackNo = params.get("rackNo") || "1";
-document.getElementById("rackLabel").innerText = "Rack №" + rackNo;
+const rackNo = params.get("rackNo") || "";
+
+document.getElementById("rackLabel").innerText =
+  rackNo ? "Rack №" + rackNo : "最短ラック自動選定";
 
 function validateAuthCode(){
   const code = document.getElementById("authCode").value.trim();
@@ -185,6 +173,9 @@ function validateAuthCode(){
     }else{
       alert(res.message || "認証失敗");
     }
+  })
+  .catch(()=>{
+    alert("通信エラー");
   });
 }
 
@@ -202,18 +193,23 @@ function queueNow(forceConfirm){
   const btn = document.getElementById("queueBtn");
   btn.disabled = true;
 
+  let body =
+    "action=registerQueue"
+    + "&authCode=" + encodeURIComponent(verifiedAuthCode)
+    + "&memberNo=" + encodeURIComponent(memberNo)
+    + "&memberName=" + encodeURIComponent(memberName)
+    + "&displayName=" + encodeURIComponent(displayName)
+    + "&email=" + encodeURIComponent(email)
+    + "&confirmedShortSlot=" + encodeURIComponent(forceConfirm ? "true" : "false");
+
+  if (rackNo) {
+    body += "&rackNo=" + encodeURIComponent(rackNo);
+  }
+
   fetch(GAS_URL, {
     method: "POST",
     headers: {"Content-Type": "application/x-www-form-urlencoded"},
-    body:
-      "action=registerQueue"
-      + "&authCode=" + encodeURIComponent(verifiedAuthCode)
-      + "&rackNo=" + encodeURIComponent(rackNo)
-      + "&memberNo=" + encodeURIComponent(memberNo)
-      + "&memberName=" + encodeURIComponent(memberName)
-      + "&displayName=" + encodeURIComponent(displayName)
-      + "&email=" + encodeURIComponent(email)
-      + "&confirmedShortSlot=false"
+    body: body
   })
   .then(r => r.json())
   .then(res=>{
@@ -225,7 +221,7 @@ function queueNow(forceConfirm){
     }
 
     alert("受付完了");
-    location.href="complete.html";
+    location.href="complete.html?t=" + Date.now();
   })
   .catch(()=>{
     btn.disabled = false;
@@ -234,7 +230,7 @@ function queueNow(forceConfirm){
 }
 
 function back(){
-  location.href="complete.html";
+  location.href="complete.html?t=" + Date.now();
 }
 </script>
 
