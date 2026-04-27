@@ -26,14 +26,12 @@ html,body{
   overflow:hidden;
 }
 
-/* 日本語（メイン） */
 #subtext{
   font-size:30px;
   font-weight:900;
   line-height:1.2;
 }
 
-/* 英文（サブ） */
 #subtextEn{
   color:var(--accent);
   font-size:22px;
@@ -59,8 +57,8 @@ html,body{
 }
 
 .rack-box{
-  width:234px;   /* 78×3 */
-  height:162px;  /* 54×3 */
+  width:234px;
+  height:162px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -69,11 +67,10 @@ html,body{
   box-shadow:none !important;
   outline:none !important;
   background:transparent !important;
-  overflow:visible;     /* ←変更（はみ出し許可） */
-
-  position:relative;    /* ←追加 */
-  top:-35px;            /* ←上に持ち上げる（調整OK） */
-  z-index:10;           /* ←手前に出す */
+  overflow:visible;
+  position:relative;
+  top:-35px;
+  z-index:10;
 }
 
 .rack-box img{
@@ -87,6 +84,7 @@ html,body{
   outline:none !important;
   background:transparent !important;
 }
+
 .updated{
   justify-self:end;
   text-align:right;
@@ -118,7 +116,6 @@ html,body{
   gap:10px;
 }
 
-/* ===== MAIN CARD ===== */
 .main-card{
   border:2px solid var(--accent);
   border-radius:16px;
@@ -176,7 +173,6 @@ html,body{
   color:rgba(255,255,255,.92);
 }
 
-/* ===== RIGHT ===== */
 .main-right{
   border-left:2px solid var(--accent);
   padding-left:16px;
@@ -308,18 +304,106 @@ html,body{
   overflow:hidden;
   text-overflow:ellipsis;
 }
-  #subtext{
-  font-size:30px !important;
-  font-weight:900;
-  line-height:1.2;
+
+/* ===== NO CHECKIN LAYOUT ===== */
+.no-checkin-layout{
+  width:100%;
+  height:100%;
+  display:grid;
+  grid-template-rows:1fr 1.25fr;
+  gap:18px;
 }
 
-#subtextEn{
-  color:var(--accent);
-  font-size:22px;
-  font-weight:900;
-  margin-top:6px;
+.no-checkin-main{
+  border:3px solid #59d36b;
+  border-radius:24px;
+  background:rgba(0,40,28,.72);
+  overflow:hidden;
+  display:flex;
+  align-items:center;
 }
+
+.no-checkin-marquee{
+  white-space:nowrap;
+  display:inline-block;
+  padding-left:100%;
+  animation:noCheckinScroll 18s linear infinite;
+  font-size:42px;
+  font-weight:900;
+  color:#fff;
+}
+
+.no-checkin-marquee .accent{
+  color:#ffd84d;
+}
+
+@keyframes noCheckinScroll{
+  0%{ transform:translateX(0); }
+  100%{ transform:translateX(-100%); }
+}
+
+.no-checkin-hours{
+  border:3px solid rgba(255,255,255,.25);
+  border-radius:24px;
+  background:rgba(0,38,30,.78);
+  padding:22px 34px;
+}
+
+.no-checkin-hours-title{
+  text-align:center;
+  font-size:34px;
+  font-weight:900;
+}
+
+.no-checkin-hours-title span{
+  display:block;
+  font-size:22px;
+  color:#69d46d;
+}
+
+.no-checkin-hours-grid{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:1fr 1px 1fr;
+  gap:20px;
+  align-items:center;
+}
+
+.no-checkin-divider{
+  height:100px;
+  background:rgba(255,255,255,.3);
+}
+
+.no-checkin-hour-box{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.no-checkin-hour-box img{
+  width:90px;
+  height:90px;
+  object-fit:contain;
+}
+
+.no-checkin-hour-label{
+  font-size:28px;
+  font-weight:900;
+}
+
+.no-checkin-hour-label.weekday{
+  color:#6bdd63;
+}
+
+.no-checkin-hour-label.weekend{
+  color:#ff3b30;
+}
+
+.no-checkin-hour-time{
+  font-size:46px;
+  font-weight:900;
+}
+</style>
 </style>
 </head>
 
