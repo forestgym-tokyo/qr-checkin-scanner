@@ -89,77 +89,104 @@ button{
 .back{
   background:#444;
 }
-
-/* モーダル */
-.modal{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.7);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.modal-box{
-  background:#1a1d24;
-  padding:30px;
-  border-radius:18px;
-  text-align:center;
-  width:90%;
-  max-width:420px;
-}
-.secondary{
-  background:#666;
-}
 </style>
 </head>
 
 <body>
 
 <div class="wrap">
-  <div class="page-title">順番待ち / Queue</div>
-  <div class="rack-label" id="rackLabel">Rack №-</div>
 
-  <div class="lead">
-    このラックの順番待ち受付です。順番が来たらメールで通知されます。
-    <div class="lead-en">
-      This is the waitlist for this rack. You will be notified by email when your turn comes.
+  <!-- 認証画面 -->
+  <div id="authArea">
+    <div class="page-title">認証コード入力</div>
+    <div class="lead">
+      店内タブレットに表示されている認証コードを入力してください
+      <div class="lead-en">Enter the authentication code shown on the in-gym tablet</div>
+    </div>
+
+    <div class="card">
+      <label class="form-label">認証コード / ACCESS CODE</label>
+      <input id="authCode" maxlength="4">
+
+      <button class="primary" onclick="validateAuthCode()">
+        認証 / Verify
+      </button>
     </div>
   </div>
 
-  <div class="card">
+  <!-- 既存フォーム -->
+  <div id="queueArea" style="display:none;">
 
-    <label class="form-label">会員番号（数字のみ6桁） / Member ID(6 digits only)</label>
-    <input id="memberNo">
+    <div class="page-title">順番待ち / Queue</div>
+    <div class="rack-label" id="rackLabel">Rack №-</div>
 
-    <label class="form-label">お名前 / Name</label>
-    <input id="memberName">
+    <div class="lead">
+      このラックの順番待ち受付です。順番が来たらメールで通知されます。
+      <div class="lead-en">
+        This is the waitlist for this rack. You will be notified by email when your turn comes.
+      </div>
+    </div>
 
-    <label class="form-label">表示名 / Display Name</label>
-    <input id="displayName">
+    <div class="card">
 
-    <label class="form-label">メールアドレス / Email</label>
-    <input id="email" type="email">
+      <label class="form-label">会員番号（数字のみ6桁）</label>
+      <input id="memberNo">
 
-    <button class="primary" id="queueBtn" onclick="queueNow(false)">
-      順番待ち登録 / Join Waitlist
-    </button>
+      <label class="form-label">お名前</label>
+      <input id="memberName">
 
-    <button class="back" onclick="back()">
-      戻る / Back
-    </button>
+      <label class="form-label">表示名</label>
+      <input id="displayName">
 
+      <label class="form-label">メールアドレス</label>
+      <input id="email" type="email">
+
+      <button class="primary" id="queueBtn" onclick="queueNow(false)">
+        順番待ち登録
+      </button>
+
+      <button class="back" onclick="back()">
+        戻る
+      </button>
+
+    </div>
   </div>
+
 </div>
 
 <script>
 const GAS_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 
+let verifiedAuthCode = "";
+
 const params = new URLSearchParams(location.search);
 const rackNo = params.get("rackNo") || "1";
 document.getElementById("rackLabel").innerText = "Rack №" + rackNo;
+
+function validateAuthCode(){
+  const code = document.getElementById("authCode").value.trim();
+
+  if(!code){
+    alert("認証コードを入力してください");
+    return;
+  }
+
+  fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    body: "action=validateAuthCode&authCode=" + encodeURIComponent(code)
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.ok){
+      verifiedAuthCode = code;
+      document.getElementById("authArea").style.display="none";
+      document.getElementById("queueArea").style.display="block";
+    }else{
+      alert(res.message || "認証失敗");
+    }
+  });
+}
 
 function queueNow(forceConfirm){
   const memberNo = document.getElementById("memberNo").value.trim();
@@ -168,7 +195,7 @@ function queueNow(forceConfirm){
   const email = document.getElementById("email").value.trim();
 
   if(!memberNo || !memberName || !displayName || !email){
-    alert("入力してください / Please fill in all fields");
+    alert("入力してください");
     return;
   }
 
@@ -177,33 +204,32 @@ function queueNow(forceConfirm){
 
   fetch(GAS_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
-    },
+    headers: {"Content-Type": "application/x-www-form-urlencoded"},
     body:
       "action=registerQueue"
+      + "&authCode=" + encodeURIComponent(verifiedAuthCode)
       + "&rackNo=" + encodeURIComponent(rackNo)
       + "&memberNo=" + encodeURIComponent(memberNo)
       + "&memberName=" + encodeURIComponent(memberName)
       + "&displayName=" + encodeURIComponent(displayName)
       + "&email=" + encodeURIComponent(email)
-      + "&confirmedShortSlot=" + encodeURIComponent(forceConfirm ? "true" : "false")
+      + "&confirmedShortSlot=false"
   })
   .then(r => r.json())
   .then(res=>{
     btn.disabled = false;
 
     if (!res || !res.ok) {
-      alert(res.message || "登録に失敗しました / Failed");
+      alert(res.message || "失敗");
       return;
     }
 
-    alert("受付完了 / Registered");
+    alert("受付完了");
     location.href="tablet.html";
   })
   .catch(()=>{
     btn.disabled = false;
-    alert("通信エラー / Network error");
+    alert("通信エラー");
   });
 }
 
