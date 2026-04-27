@@ -470,14 +470,29 @@ html,body{
 const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 const rackNo = new URLSearchParams(location.search).get("rackNo") || 1;
 
+function safeSet(id, value){
+  const el = document.getElementById(id);
+  if(el) el.textContent = value;
+}
+
+function safeHtml(id, value){
+  const el = document.getElementById(id);
+  if(el) el.innerHTML = value;
+}
+
 function setAccent(color){
   document.documentElement.style.setProperty("--accent", color);
+
   if(color === "#00C8FF"){
     document.documentElement.style.setProperty("--accent-glow", "rgba(0,200,255,.22)");
   }else if(color === "#FFD400"){
     document.documentElement.style.setProperty("--accent-glow", "rgba(255,212,0,.22)");
   }else if(color === "#FF8A00"){
     document.documentElement.style.setProperty("--accent-glow", "rgba(255,138,0,.22)");
+  }else if(color === "#7A3EFF"){
+    document.documentElement.style.setProperty("--accent-glow", "rgba(122,62,255,.25)");
+  }else if(color === "#9E9E9E"){
+    document.documentElement.style.setProperty("--accent-glow", "rgba(158,158,158,.22)");
   }else{
     document.documentElement.style.setProperty("--accent-glow", "rgba(141,255,0,.22)");
   }
@@ -510,23 +525,36 @@ function formatUpdated(text){
   return String(text || "--").replace(/(\d{1,2}:\d{2})/, "<span>$1</span>");
 }
 
+function restoreMainLeft(){
+  const mainLeft = document.querySelector(".main-left");
+  if(!mainLeft) return;
+
+  if(!document.getElementById("state")){
+    mainLeft.innerHTML = `
+      <div class="state" id="state"></div>
+      <div class="state-en" id="stateEn"></div>
+      <div class="user" id="user"></div>
+      <div class="subtext" id="subtext"></div>
+      <div id="subtextEn"></div>
+    `;
+  }
+}
+
 function applyData(data){
-  document.getElementById("rackImage").src =
-    "rt-rack" + (data.rackNo || rackNo) + ".png";
+  const rackImage = document.getElementById("rackImage");
+  if(rackImage){
+    rackImage.src = "rt-rack" + (data.rackNo || rackNo) + ".png";
+  }
 
   let rawState = String(data.state || "").toLowerCase();
 
-  // 繰上げ利用案内中を最優先
-  if (data.priorityCheckin) {
+  if(data.priorityCheckin){
     rawState = "priority_checkin";
-  }
-  // チェックイン不要時間帯は free のときだけ表示
-  else if (data.noCheckinRequired && rawState === "free") {
+  }else if(data.noCheckinRequired && rawState === "free"){
     rawState = "no_checkin_required";
   }
 
-  document.getElementById("updated").innerHTML =
-    formatUpdated(data.nowText || data.lastUpdatedText);
+  safeHtml("updated", formatUpdated(data.nowText || data.lastUpdatedText));
 
   const currentName = extractCurrentName(data);
   const nextName = cleanName(data.nextDisplayName || "");
@@ -535,228 +563,213 @@ function applyData(data){
   const checkoutBtn = document.getElementById("checkoutBtn");
   const mainRight = document.getElementById("mainRight");
 
-  checkoutBtn.style.display = "none";
-  mainRight.style.display = "flex";
+  if(checkoutBtn) checkoutBtn.style.display = "none";
+  if(mainRight) mainRight.style.display = "flex";
+
+  if(rawState !== "no_checkin_required"){
+    restoreMainLeft();
+  }
 
   if(rawState === "priority_checkin"){
     setAccent("#7A3EFF");
 
-    document.getElementById("state").textContent = "繰上げ利用案内中";
-    document.getElementById("stateEn").textContent = "PRIORITY WINDOW FOR NEXT USER";
+    safeSet("state", "繰上げ利用案内中");
+    safeSet("stateEn", "PRIORITY WINDOW FOR NEXT USER");
+    safeSet("user", "");
+    safeSet("subtext", "この時間は次の予約者が優先です");
+    safeSet("subtextEn", "Priority is given to the next user");
 
-    document.getElementById("user").textContent = "";
-    document.getElementById("subtext").textContent =
-      "この時間は次の予約者が優先です";
+    safeSet("time", data.priorityRemainingMin ? data.priorityRemainingMin + " min" : "");
+    safeSet("until", "残り時間");
 
-    const subEn = document.getElementById("subtextEn");
-    if (subEn) {
-      subEn.textContent = "Priority is given to the next user";
-    }
-
-    document.getElementById("time").textContent =
-      data.priorityRemainingMin
-        ? data.priorityRemainingMin + " min"
-        : "";
-
-    document.getElementById("until").textContent = "残り時間";
-
-    document.getElementById("nextUserTitle").textContent = "次の利用者 / Next User";
-    document.getElementById("nextTimeTitle").textContent = "次の予定 / Next Reservation";
-    document.getElementById("nextUser").textContent =
-      nextName ? nextName + "さん" : "—";
-    document.getElementById("nextTime").textContent =
-      nextTime || "予定なし";
+    safeSet("nextUserTitle", "次の利用者 / Next User");
+    safeSet("nextTimeTitle", "次の予定 / Next Reservation");
+    safeSet("nextUser", nextName ? nextName + "さん" : "—");
+    safeSet("nextTime", nextTime || "予定なし");
   }
 
   else if(rawState === "using_checked_in" || rawState === "checked_in"){
     setAccent("#8DFF00");
 
-    document.getElementById("state").textContent = "チェックイン済";
-    document.getElementById("stateEn").textContent = "CHECKED IN";
+    safeSet("state", "チェックイン済");
+    safeSet("stateEn", "CHECKED IN");
+    safeSet("user", currentName ? currentName + "さんが利用中" : "利用中");
+    safeSet("subtext", "");
+    safeSet("subtextEn", currentName ? "In use by " + currentName : "Currently in use");
 
-    document.getElementById("user").textContent =
-      currentName ? currentName + "さんが利用中" : "利用中";
-
-    document.getElementById("subtext").textContent = "";
-
-    const subEn = document.getElementById("subtextEn");
-    if (subEn) {
-      subEn.textContent =
-        currentName ? "In use by " + currentName : "Currently in use";
-    }
-
-    document.getElementById("time").textContent =
+    safeSet("time",
       (data.remainingMin !== null && data.remainingMin !== undefined)
         ? data.remainingMin + " min"
-        : "";
+        : ""
+    );
 
-    document.getElementById("until").textContent =
-      data.currentText || "";
+    safeSet("until", data.currentText || "");
 
-    checkoutBtn.style.display = data.canCheckout ? "flex" : "none";
+    if(checkoutBtn){
+      checkoutBtn.style.display = data.canCheckout ? "flex" : "none";
+    }
 
-    document.getElementById("nextUserTitle").textContent = "次の利用者";
-    document.getElementById("nextTimeTitle").textContent = "次の予定";
-    document.getElementById("nextUser").textContent =
-      nextName ? nextName + "さん" : "—";
-    document.getElementById("nextTime").textContent =
-      nextTime || "予定なし";
+    safeSet("nextUserTitle", "次の利用者");
+    safeSet("nextTimeTitle", "次の予定");
+    safeSet("nextUser", nextName ? nextName + "さん" : "—");
+    safeSet("nextTime", nextTime || "予定なし");
   }
 
   else if(rawState === "using_not_checked_in" || rawState === "not_checked_in"){
     setAccent("#FF8A00");
 
-    document.getElementById("state").textContent = "未チェックイン";
-    document.getElementById("stateEn").textContent = "NOT CHECKED IN";
+    safeSet("state", "未チェックイン");
+    safeSet("stateEn", "NOT CHECKED IN");
+    safeSet("user", "");
+    safeSet("subtext", "QRコードでチェックインしてください");
+    safeSet("subtextEn", "Please check in with the QR code within 5 minutes");
 
-    document.getElementById("user").textContent = "";
-    document.getElementById("subtext").textContent =
-      "QRコードでチェックインしてください";
-
-    const subEn = document.getElementById("subtextEn");
-    if (subEn) {
-      subEn.textContent =
-        "Please check in with the QR code within 5 minutes";
-    }
-
-    document.getElementById("time").textContent =
+    safeSet("time",
       (data.remainingMin !== null && data.remainingMin !== undefined)
         ? (data.remainingMin <= 0 ? "まもなく" : data.remainingMin + " min")
-        : "";
+        : ""
+    );
 
-    document.getElementById("until").textContent =
-      "自動キャンセルまで";
+    safeSet("until", "自動キャンセルまで");
 
-    document.getElementById("nextUserTitle").textContent = "予約者";
-    document.getElementById("nextTimeTitle").textContent = "予定時間";
-
-    document.getElementById("nextUser").textContent =
-      currentName ? currentName + "さん" : "—";
-
-    document.getElementById("nextTime").textContent =
-      data.currentText || formatTimeRange(data.currentStartText, data.currentEndText) || "—";
+    safeSet("nextUserTitle", "予約者");
+    safeSet("nextTimeTitle", "予定時間");
+    safeSet("nextUser", currentName ? currentName + "さん" : "—");
+    safeSet("nextTime", data.currentText || formatTimeRange(data.currentStartText, data.currentEndText) || "—");
   }
 
   else if(rawState === "no_checkin_required"){
     setAccent("#9E9E9E");
 
-    document.getElementById("state").textContent =
-      "ただいまの時間はチェックイン不要でご利用いただけます";
-    document.getElementById("stateEn").textContent =
-      "NO CHECK-IN REQUIRED";
+    if(mainRight) mainRight.style.display = "none";
 
-    document.getElementById("user").textContent = "";
-    document.getElementById("subtext").textContent =
-      "そのままご利用ください";
+    const mainLeft = document.querySelector(".main-left");
+    if(mainLeft){
+      mainLeft.innerHTML = `
+        <div class="no-checkin-layout">
 
-    const subEn = document.getElementById("subtextEn");
-    if (subEn) {
-      subEn.textContent = "Please use freely.";
+          <div class="no-checkin-main">
+            <div class="no-checkin-marquee">
+              ただいまの時間は<span class="accent">チェックイン不要</span>です。そのままご利用ください。 / 
+              <span class="accent">No check-in</span> is required at this time. Please use freely.
+            </div>
+          </div>
+
+          <div class="no-checkin-hours">
+            <div class="no-checkin-hours-title">
+              チェックインが必要な時間帯
+              <span>CHECK-IN HOURS</span>
+            </div>
+
+            <div class="no-checkin-hours-grid">
+
+              <div class="no-checkin-hour-box">
+                <img src="calender-weekday.png" alt="Weekdays">
+                <div>
+                  <div class="no-checkin-hour-label weekday">WEEKDAYS</div>
+                  <div class="no-checkin-hour-time">12:00 – 22:00</div>
+                </div>
+              </div>
+
+              <div class="no-checkin-divider"></div>
+
+              <div class="no-checkin-hour-box">
+                <img src="calender-weekend.png" alt="Weekends and Holidays">
+                <div>
+                  <div class="no-checkin-hour-label weekend">WEEKENDS & HOLIDAYS</div>
+                  <div class="no-checkin-hour-time">07:00 – 22:00</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      `;
     }
-
-    document.getElementById("time").textContent = "";
-    document.getElementById("until").textContent = "";
-
-    document.getElementById("nextUserTitle").textContent =
-      "チェックインが必要な時間帯";
-    document.getElementById("nextTimeTitle").textContent =
-      "CHECK-IN HOURS";
-
-    document.getElementById("nextUser").textContent =
-      "Weekdays: 12:00 – 22:00";
-    document.getElementById("nextTime").textContent =
-      "Weekends & Holidays: 07:00 – 22:00";
   }
 
   else if(rawState === "free"){
     setAccent("#00C8FF");
 
-    document.getElementById("state").textContent = "空いています";
-    document.getElementById("stateEn").textContent = "AVAILABLE";
+    safeSet("state", "空いています");
+    safeSet("stateEn", "AVAILABLE");
+    safeSet("user", "");
+    safeSet("subtext", "店内タブレットよりチェックインしてください");
+    safeSet("subtextEn", "Please check in using the in-gym tablet");
 
-    document.getElementById("user").textContent = "";
-    document.getElementById("subtext").textContent =
-      "店内タブレットよりチェックインしてください";
+    if(mainRight) mainRight.style.display = "none";
 
-    const subEn = document.getElementById("subtextEn");
-    if (subEn) {
-      subEn.textContent =
-        "Please check in using the in-gym tablet";
-    }
-
-    mainRight.style.display = "none";
-
-    document.getElementById("nextUserTitle").textContent = "次の利用者 / Next User";
-    document.getElementById("nextTimeTitle").textContent = "次の予定 / Next Reservation";
-    document.getElementById("nextUser").textContent =
-      nextName ? nextName + "さん" : "—";
-    document.getElementById("nextTime").textContent =
-      nextTime || "予定なし";
+    safeSet("nextUserTitle", "次の利用者 / Next User");
+    safeSet("nextTimeTitle", "次の予定 / Next Reservation");
+    safeSet("nextUser", nextName ? nextName + "さん" : "—");
+    safeSet("nextTime", nextTime || "予定なし");
   }
 
   else if(rawState === "reserved" || rawState === "scheduled"){
     setAccent("#FFD400");
 
-    document.getElementById("state").textContent = "予定があります";
-    document.getElementById("stateEn").textContent = "RESERVED SOON";
+    safeSet("state", "予定があります");
+    safeSet("stateEn", "RESERVED SOON");
+    safeSet("user", "");
+    safeSet("subtext", "次の予定の開始までご利用いただけます");
+    safeSet("subtextEn", "Available until the next reservation starts");
 
-    document.getElementById("user").textContent = "";
-    document.getElementById("subtext").textContent =
-      "次の予定の開始までご利用いただけます";
-
-    const subEn = document.getElementById("subtextEn");
-    if (subEn) {
-      subEn.textContent =
-        "Available until the next reservation starts";
-    }
-
-    document.getElementById("time").textContent =
+    safeSet("time",
       (data.remainingMin !== null && data.remainingMin !== undefined)
         ? (data.remainingMin <= 0 ? "まもなく" : data.remainingMin + " min")
-        : "";
+        : ""
+    );
 
-    document.getElementById("until").textContent = "開始まで";
+    safeSet("until", "開始まで");
 
-    document.getElementById("nextUserTitle").textContent = "次の利用者 / Next User";
-    document.getElementById("nextTimeTitle").textContent = "次の予定 / Next Reservation";
-    document.getElementById("nextUser").textContent =
-      nextName ? nextName + "さん" : "—";
-    document.getElementById("nextTime").textContent =
-      nextTime || "予定なし";
+    safeSet("nextUserTitle", "次の利用者 / Next User");
+    safeSet("nextTimeTitle", "次の予定 / Next Reservation");
+    safeSet("nextUser", nextName ? nextName + "さん" : "—");
+    safeSet("nextTime", nextTime || "予定なし");
   }
 
   else{
     setAccent("#8DFF00");
-    document.getElementById("state").textContent = "";
-    document.getElementById("stateEn").textContent = "";
-    document.getElementById("user").textContent = "";
-    document.getElementById("subtext").textContent = "";
 
-    const subEn = document.getElementById("subtextEn");
-    if (subEn) subEn.textContent = "";
+    safeSet("state", "");
+    safeSet("stateEn", "");
+    safeSet("user", "");
+    safeSet("subtext", "");
+    safeSet("subtextEn", "");
   }
 
   const msgs = data.messages || [];
-  document.getElementById("messageJa").textContent = msgs[0] || "";
-  document.getElementById("messageEn").textContent = msgs[1] || "";
+  safeSet("messageJa", msgs[0] || "");
+  safeSet("messageEn", msgs[1] || "");
 }
 
 async function loadData(){
-  const res = await fetch(API_URL + "?action=getracktabletjson&rackNo=" + rackNo + "&t=" + Date.now(), {
-    cache:"no-store"
-  });
-  const data = await res.json();
-  applyData(data);
+  try{
+    const res = await fetch(API_URL + "?action=getracktabletjson&rackNo=" + rackNo + "&t=" + Date.now(), {
+      cache:"no-store"
+    });
+    const data = await res.json();
+    applyData(data);
+  }catch(e){
+    console.log("loadData error", e);
+  }
 }
 
 loadData();
 setInterval(loadData, 15000);
 
-document.getElementById("refresh").onclick = loadData;
+const refreshBtn = document.getElementById("refresh");
+if(refreshBtn){
+  refreshBtn.onclick = loadData;
+}
 
-document.getElementById("checkoutBtn").onclick = function(){
-  checkoutRack(rackNo);
-};
+const checkoutButton = document.getElementById("checkoutBtn");
+if(checkoutButton){
+  checkoutButton.onclick = function(){
+    checkoutRack(rackNo);
+  };
+}
 
 async function checkoutRack(rackNo) {
   if (!rackNo) {
