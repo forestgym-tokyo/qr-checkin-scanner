@@ -228,7 +228,7 @@ function queueNow(forceConfirm){
     }
 
     alert("受付完了");
-    location.href="complete.html?t=" + Date.now();
+    location.href = "complete.html?from=" + (fromTablet ? "tablet" : "mobile") + "&t=" + Date.now();
   })
   .catch(()=>{
     btn.disabled = false;
@@ -237,7 +237,7 @@ function queueNow(forceConfirm){
 }
 
 function back(){
-  location.href="complete.html?t=" + Date.now();
+  location.href = "complete.html?from=" + (fromTablet ? "tablet" : "mobile") + "&t=" + Date.now();
 }
 </script>
 
