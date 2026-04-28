@@ -305,19 +305,55 @@ html,body{
   text-overflow:ellipsis;
 }
 
-/* ===== NO CHECKIN LAYOUT ===== */
+/* ===== NO CHECKIN MODE - FINAL ===== */
+/* ヘッダーとMESSAGE BOARDはそのまま。中央だけ専用UIにする */
+
+.main.no-checkin-mode{
+  grid-template-rows: 300px 82px !important;
+  gap:10px !important;
+  align-content:start !important;
+}
+
+.main.no-checkin-mode .main-card{
+  width:100% !important;
+  height:300px !important;
+  grid-template-columns:1fr !important;
+  padding:0 !important;
+  border:none !important;
+  box-shadow:none !important;
+  background:transparent !important;
+  overflow:hidden !important;
+}
+
+.main.no-checkin-mode .main-right{
+  display:none !important;
+}
+
+.main.no-checkin-mode .sub-panel{
+  display:none !important;
+}
+
+.main.no-checkin-mode .main-left{
+  width:100% !important;
+  height:300px !important;
+  display:block !important;
+  overflow:hidden !important;
+}
+
 .no-checkin-layout{
   width:100%;
-  height:100%;
+  height:300px;
   display:grid;
-  grid-template-rows:1fr 1.25fr;
-  gap:18px;
+  grid-template-rows:72px 218px;
+  gap:10px;
 }
 
 .no-checkin-main{
-  border:3px solid #59d36b;
-  border-radius:24px;
-  background:rgba(0,40,28,.72);
+  width:100%;
+  height:72px;
+  border:none !important;
+  border-radius:14px;
+  background:rgba(0,28,18,.92);
   overflow:hidden;
   display:flex;
   align-items:center;
@@ -327,14 +363,15 @@ html,body{
   white-space:nowrap;
   display:inline-block;
   padding-left:100%;
-  animation:noCheckinScroll 18s linear infinite;
-  font-size:42px;
+  animation:noCheckinScroll 16s linear infinite;
+  font-size:34px;
+  line-height:1;
   font-weight:900;
   color:#fff;
 }
 
 .no-checkin-marquee .accent{
-  color:#ffd84d;
+  color:#8DFF00;
 }
 
 @keyframes noCheckinScroll{
@@ -343,67 +380,84 @@ html,body{
 }
 
 .no-checkin-hours{
-  border:3px solid rgba(255,255,255,.25);
-  border-radius:24px;
-  background:rgba(0,38,30,.78);
-  padding:22px 34px;
+  width:100%;
+  height:218px;
+  border:none !important;
+  border-radius:14px;
+  background:rgba(0,28,18,.92);
+  padding:14px 24px;
+  overflow:hidden;
 }
 
 .no-checkin-hours-title{
   text-align:center;
-  font-size:34px;
+  font-size:24px;
+  line-height:1;
   font-weight:900;
+  color:#fff;
 }
 
 .no-checkin-hours-title span{
   display:block;
-  font-size:22px;
-  color:#69d46d;
+  margin-top:4px;
+  font-size:16px;
+  color:#8DFF00;
+  font-weight:900;
 }
 
 .no-checkin-hours-grid{
-  margin-top:20px;
+  margin-top:14px;
   display:grid;
-  grid-template-columns:1fr 1px 1fr;
-  gap:20px;
+  grid-template-columns:1fr 2px 1fr;
+  gap:22px;
   align-items:center;
 }
 
 .no-checkin-divider{
-  height:100px;
-  background:rgba(255,255,255,.3);
+  height:120px;
+  background:#8DFF00;
+  opacity:.7;
 }
 
 .no-checkin-hour-box{
   display:flex;
   align-items:center;
+  justify-content:center;
   gap:16px;
+  min-width:0;
 }
 
 .no-checkin-hour-box img{
-  width:90px;
-  height:90px;
+  width:82px;
+  height:82px;
   object-fit:contain;
+  flex-shrink:0;
 }
 
 .no-checkin-hour-label{
-  font-size:28px;
+  font-size:24px;
+  line-height:1;
   font-weight:900;
+  white-space:nowrap;
 }
 
 .no-checkin-hour-label.weekday{
-  color:#6bdd63;
+  color:#8DFF00;
 }
 
 .no-checkin-hour-label.weekend{
-  color:#ff3b30;
+  color:#ff2b2b;
 }
 
 .no-checkin-hour-time{
-  font-size:46px;
+  margin-top:8px;
+  font-size:38px;
+  line-height:1;
   font-weight:900;
+  color:#fff;
+  white-space:nowrap;
 }
-</style>
+
 </style>
 </head>
 
@@ -583,7 +637,7 @@ function applyData(data){
   }
 
   if(rawState === "no_checkin_required"){
-    setAccent("#9E9E9E");
+    setAccent("#8DFF00");
     setNoCheckinMode(true);
 
     const mainLeft = document.querySelector(".main-left");
