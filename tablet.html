@@ -796,8 +796,11 @@
       `;
     }
 
+   <script>
     function renderRack(raw) {
       const r = normalizeRack(raw);
+
+      const waitingCount = Number(r.waitingCount || raw?.waitingCount || 0);
 
       const checkinUrl = r.checkinUrl || `${CHECKIN_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}`;
       const queueUrl = r.queueUrl || `${QUEUE_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}&from=tablet&t=${Date.now()}`;
@@ -854,13 +857,13 @@
 
               <div class="waiting-row">
                 <div class="label ${r.ui.waitingLabelClass}">
-                  ${esc(r.waitingLabelJa)} / ${esc(r.waitingLabelEn)}
+                  ${esc(r.waitingLabelJa || "順番待ち")} / ${esc(r.waitingLabelEn || "WAITING")}
                 </div>
                 <div class="waiting-count">
                   <svg class="person-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-4.14 0-7.5 2.46-7.5 5.5A1.5 1.5 0 0 0 6 21h12a1.5 1.5 0 0 0 1.5-1.5C19.5 16.46 16.14 14 12 14Z"/>
                   </svg>
-                  <span>${r.waitingCount}名</span>
+                  <span>${waitingCount}名</span>
                 </div>
               </div>
 
@@ -876,88 +879,96 @@
     }
 
     function renderAll(data) {
-  const authCodeEl = document.getElementById("authCode");
-  const todayLabelEl = document.getElementById("todayLabel");
-  const lastUpdatedEl = document.getElementById("lastUpdated");
-  const rackGridEl = document.getElementById("rackGrid");
+      const authCodeEl = document.getElementById("authCode");
+      const todayLabelEl = document.getElementById("todayLabel");
+      const lastUpdatedEl = document.getElementById("lastUpdated");
+      const rackGridEl = document.getElementById("rackGrid");
 
-  if (authCodeEl) {
-    authCodeEl.textContent = txt(data && data.authCode, "----");
-  }
+      if (authCodeEl) {
+        authCodeEl.textContent = txt(data && data.authCode, "----");
+      }
 
-  if (todayLabelEl) {
-    todayLabelEl.textContent = txt(data && data.todayLabel, "----/--/--");
-  }
+      if (todayLabelEl) {
+        todayLabelEl.textContent = txt(data && data.todayLabel, "----/--/--");
+      }
 
-  if (lastUpdatedEl) {
-    const updatedText =
-      data?.lastUpdatedText ||
-      data?.lastUpdated ||
-      data?.updatedAt ||
-      "--";
-    lastUpdatedEl.textContent = `最終更新 / LAST UPDATED: ${txt(updatedText, "--")}`;
-  }
+      if (lastUpdatedEl) {
+        const updatedText =
+          data?.lastUpdatedText ||
+          data?.lastUpdated ||
+          data?.updatedAt ||
+          "--";
 
-  const racks = Array.isArray(data?.racks) ? data.racks.slice() : [];
-  racks.sort((a, b) => (Number(a?.rackNo) || 0) - (Number(b?.rackNo) || 0));
+        lastUpdatedEl.textContent = `最終更新 / LAST UPDATED: ${txt(updatedText, "--")}`;
+      }
 
-  if (rackGridEl) {
-    rackGridEl.innerHTML = racks.map(renderRack).join("");
-  }
-}
+      const racks = Array.isArray(data?.racks) ? data.racks.slice() : [];
 
-async function fetchData() {
-  const url = `${API_URL}?action=getscheduletabletjson&t=${Date.now()}`;
+      racks.sort(function(a, b) {
+        return (Number(a?.rackNo) || 0) - (Number(b?.rackNo) || 0);
+      });
 
-  const res = await fetch(url, {
-    method: "GET",
-    cache: "no-store"
-  });
+      if (rackGridEl) {
+        rackGridEl.innerHTML = racks.map(renderRack).join("");
+      }
+    }
 
-  if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`);
-  }
+    async function fetchData() {
+      const url = `${API_URL}?action=getscheduletabletjson&t=${Date.now()}`;
 
-  const data = await res.json();
+      const res = await fetch(url, {
+        method: "GET",
+        cache: "no-store"
+      });
 
-  if (!data || typeof data !== "object") {
-    throw new Error("invalid json");
-  }
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
 
-  return data;
-}
+      const data = await res.json();
 
-async function loadData() {
-  try {
-    hideError();
-    const data = await fetchData();
-    console.log("schedule data:", data);
-    renderAll(data);
-  } catch (e) {
-    console.error(e);
-    showError("データ取得失敗。GASレスポンスまたは通信状態をご確認ください。");
-  }
-}
+      if (!data || typeof data !== "object") {
+        throw new Error("invalid json");
+      }
+
+      return data;
+    }
+
+    async function loadData() {
+      try {
+        hideError();
+        const data = await fetchData();
+        console.log("schedule data:", data);
+        renderAll(data);
+      } catch (e) {
+        console.error(e);
+        showError("データ取得失敗。GASレスポンスまたは通信状態をご確認ください。");
+      }
+    }
 
     function setupEvents() {
       const qrCard = document.getElementById("qrCard");
 
-      qrCard.addEventListener("click", () => {
-        location.href = QR_PAGE_URL;
-      });
-
-      qrCard.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
+      if (qrCard) {
+        qrCard.addEventListener("click", () => {
           location.href = QR_PAGE_URL;
-        }
-      });
+        });
+
+        qrCard.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            location.href = QR_PAGE_URL;
+          }
+        });
+      }
 
       document.addEventListener("click", (e) => {
         const btn = e.target.closest("[data-url]");
         if (!btn) return;
+
         const url = btn.getAttribute("data-url");
         if (!url) return;
+
         location.href = url;
       });
     }
