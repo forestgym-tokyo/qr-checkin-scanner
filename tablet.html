@@ -12,7 +12,6 @@
       --line:rgba(255,255,255,.08);
       --text:#ffffff;
       --muted:rgba(255,255,255,.62);
-      --muted2:rgba(255,255,255,.42);
       --green:#78c53a;
       --green2:#5fab24;
       --whiteBadge:#d9dde2;
@@ -20,14 +19,10 @@
       --blue:#3f82c8;
       --yellow:#d6b428;
       --danger:#d9534f;
-      --radius:24px;
       --shadow:0 14px 36px rgba(0,0,0,.34);
     }
 
-    *{
-      box-sizing:border-box;
-      -webkit-tap-highlight-color:transparent;
-    }
+    *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
     html,body{
       margin:0;
@@ -38,9 +33,7 @@
       overflow-x:hidden;
     }
 
-    body{
-      min-height:100vh;
-    }
+    body{ min-height:100vh; }
 
     .app{
       width:100%;
@@ -49,10 +42,9 @@
       padding:10px 18px 10px;
     }
 
-    /* ===== HEADER ===== */
     .header{
       display:grid;
-      grid-template-columns: 300px 1fr;
+      grid-template-columns:300px 1fr;
       gap:18px;
       align-items:center;
       margin-bottom:10px;
@@ -103,7 +95,6 @@
       white-space:nowrap;
     }
 
-    /* ===== TOP ===== */
     .top-row{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -130,7 +121,6 @@
       display:flex;
       flex-direction:column;
       justify-content:center;
-      gap:0;
       min-width:0;
     }
 
@@ -182,9 +172,7 @@
       justify-content:flex-start;
     }
 
-    .qr-card:active{
-      transform:scale(.997);
-    }
+    .qr-card:active{ transform:scale(.997); }
 
     .qr-icon{
       width:54px;
@@ -209,7 +197,6 @@
       font-weight:800;
     }
 
-    /* ===== UPDATE ===== */
     .update-row{
       min-height:28px;
       display:flex;
@@ -243,11 +230,8 @@
       font-weight:700;
     }
 
-    .error-box.show{
-      display:block;
-    }
+    .error-box.show{ display:block; }
 
-    /* ===== GRID ===== */
     .rack-grid{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -255,9 +239,7 @@
     }
 
     .rack-card{
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01)),
-        var(--panel2);
+      background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01)), var(--panel2);
       border:1px solid var(--line);
       border-radius:24px;
       box-shadow:var(--shadow);
@@ -331,50 +313,15 @@
       white-space:nowrap;
     }
 
-    .badge-ja{
-      font-size:16px;
-      line-height:1;
-      font-weight:900;
-    }
+    .badge-ja{ font-size:16px; line-height:1; font-weight:900; }
+    .badge-en{ font-size:11px; line-height:1; font-weight:800; letter-spacing:.02em; opacity:.95; }
 
-    .badge-en{
-      font-size:11px;
-      line-height:1;
-      font-weight:800;
-      letter-spacing:.02em;
-      opacity:.95;
-    }
-
-    .badge.free{
-      background:rgba(120,197,58,.16);
-      color:#ebffd7;
-      border-color:rgba(120,197,58,.3);
-    }
-    .badge.using{
-      background:rgba(255,255,255,.08);
-      color:#f4f6f8;
-      border-color:rgba(255,255,255,.14);
-    }
-    .badge.reserved{
-      background:rgba(208,138,32,.16);
-      color:#ffe0ae;
-      border-color:rgba(208,138,32,.3);
-    }
-    .badge.maintenance{
-      background:rgba(63,130,200,.16);
-      color:#d8ebff;
-      border-color:rgba(63,130,200,.3);
-    }
-    .badge.gap{
-      background:rgba(214,180,40,.16);
-      color:#fff2ac;
-      border-color:rgba(214,180,40,.3);
-    }
-    .badge.waiting{
-      background:rgba(120,197,58,.16);
-      color:#ebffd7;
-      border-color:rgba(120,197,58,.3);
-    }
+    .badge.free{ background:rgba(120,197,58,.16); color:#ebffd7; border-color:rgba(120,197,58,.3); }
+    .badge.using{ background:rgba(255,255,255,.08); color:#f4f6f8; border-color:rgba(255,255,255,.14); }
+    .badge.reserved{ background:rgba(208,138,32,.16); color:#ffe0ae; border-color:rgba(208,138,32,.3); }
+    .badge.maintenance{ background:rgba(63,130,200,.16); color:#d8ebff; border-color:rgba(63,130,200,.3); }
+    .badge.gap{ background:rgba(214,180,40,.16); color:#fff2ac; border-color:rgba(214,180,40,.3); }
+    .badge.waiting{ background:rgba(120,197,58,.16); color:#ebffd7; border-color:rgba(120,197,58,.3); }
 
     .rack-info{
       min-width:0;
@@ -424,10 +371,6 @@
       margin:10px 0 10px;
     }
 
-    .schedule-block{
-      margin-top:0;
-    }
-
     .schedule-main{
       font-size:22px;
       line-height:1.18;
@@ -449,9 +392,7 @@
       text-overflow:ellipsis;
     }
 
-    .waiting-row{
-      margin-top:10px;
-    }
+    .waiting-row{ margin-top:10px; }
 
     .waiting-count{
       margin-top:4px;
@@ -498,9 +439,7 @@
       transition:transform .04s ease, opacity .15s ease;
     }
 
-    .btn:active{
-      transform:scale(.995);
-    }
+    .btn:active{ transform:scale(.995); }
 
     .btn-use{
       width:100%;
@@ -566,35 +505,18 @@
     }
 
     @media (max-width:1200px){
-      .header{
-        grid-template-columns:260px 1fr;
-      }
-      .title-wrap{
-        padding:0 70px 0 0;
-      }
-      .title-main{
-        font-size:32px;
-      }
-      .title-sub{
-        font-size:14px;
-      }
-      .rack-top{
-        grid-template-columns:160px 1fr;
-      }
-      .rack-image-wrap img{
-        width:118px;
-        height:118px;
-        flex-basis:118px;
-      }
-      .status-main{
-        font-size:22px;
-      }
-      .schedule-main{
-        font-size:20px;
-      }
+      .header{ grid-template-columns:260px 1fr; }
+      .title-wrap{ padding:0 70px 0 0; }
+      .title-main{ font-size:32px; }
+      .title-sub{ font-size:14px; }
+      .rack-top{ grid-template-columns:160px 1fr; }
+      .rack-image-wrap img{ width:118px; height:118px; flex-basis:118px; }
+      .status-main{ font-size:22px; }
+      .schedule-main{ font-size:20px; }
     }
   </style>
 </head>
+
 <body>
   <div class="app">
     <header class="header">
@@ -611,371 +533,4 @@
       <div class="top-card access-card">
         <div class="access-inner">
           <div class="access-label-row">
-            <div class="card-ja">認証コード</div>
-            <div class="card-en">/ ACCESS CODE</div>
-          </div>
-          <div class="access-code" id="authCode">----</div>
-          <div class="access-date" id="todayLabel">----/--/--</div>
-        </div>
-      </div>
-
-      <div class="top-card qr-card" id="qrCard" role="button" tabindex="0" aria-label="QRでチェックイン">
-        <svg class="qr-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-          <path d="M10 23V12a2 2 0 0 1 2-2h11" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-          <path d="M54 23V12a2 2 0 0 0-2-2H41" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-          <path d="M10 41v11a2 2 0 0 0 2 2h11" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-          <path d="M54 41v11a2 2 0 0 1-2 2H41" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-          <rect x="18" y="18" width="10" height="10" stroke="currentColor" stroke-width="4"/>
-          <rect x="36" y="18" width="10" height="10" stroke="currentColor" stroke-width="4"/>
-          <rect x="18" y="36" width="10" height="10" stroke="currentColor" stroke-width="4"/>
-          <path d="M36 36h10v10h-5m-7-5h5v10" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div>
-          <div class="qr-ja">QRでチェックイン</div>
-          <div class="qr-en">CHECK IN WITH QR</div>
-        </div>
-      </div>
-    </section>
-
-    <div class="update-row">
-      <svg class="refresh-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M20 7v5h-5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M4 17v-5h5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M6.8 9.2A8 8 0 0 1 20 12" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
-        <path d="M17.2 14.8A8 8 0 0 1 4 12" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
-      </svg>
-      <div id="lastUpdated">最終更新 / LAST UPDATED: --</div>
-    </div>
-
-    <div class="error-box" id="errorBox"></div>
-
-    <section class="rack-grid" id="rackGrid"></section>
-
-    <footer class="footer">Copyright©2026 A-nauts Co., Ltd. All rights reserved.</footer>
-  </div>
-
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-    const QR_PAGE_URL = "index.html";
-    const CHECKIN_PAGE_URL = "checkin.html";
-    const QUEUE_PAGE_URL = "queue.html";
-    const REFRESH_MS = 15000;
-
-    const STATE_UI = {
-      free: {
-        badgeClass: "free",
-        badgeTextJa: "空き",
-        badgeTextEn: "AVAILABLE",
-        cardClass: "state-free",
-        currentLabelClass: "green",
-        nextLabelClass: "green",
-        waitingLabelClass: "green"
-      },
-      using: {
-        badgeClass: "using",
-        badgeTextJa: "利用中",
-        badgeTextEn: "IN USE",
-        cardClass: "state-using",
-        currentLabelClass: "white",
-        nextLabelClass: "green",
-        waitingLabelClass: "white"
-      },
-      reserved: {
-        badgeClass: "reserved",
-        badgeTextJa: "予約あり",
-        badgeTextEn: "RESERVED",
-        cardClass: "state-reserved",
-        currentLabelClass: "orange",
-        nextLabelClass: "orange",
-        waitingLabelClass: "orange"
-      },
-      maintenance: {
-        badgeClass: "maintenance",
-        badgeTextJa: "メンテ中",
-        badgeTextEn: "MAINTENANCE",
-        cardClass: "state-maintenance",
-        currentLabelClass: "blue",
-        nextLabelClass: "blue",
-        waitingLabelClass: "blue"
-      },
-      gap: {
-        badgeClass: "gap",
-        badgeTextJa: "すき間利用可",
-        badgeTextEn: "SHORT USE",
-        cardClass: "state-gap",
-        currentLabelClass: "yellow",
-        nextLabelClass: "orange",
-        waitingLabelClass: "yellow"
-      },
-      waiting: {
-        badgeClass: "waiting",
-        badgeTextJa: "順番待ち",
-        badgeTextEn: "WAITING",
-        cardClass: "state-waiting",
-        currentLabelClass: "green",
-        nextLabelClass: "green",
-        waitingLabelClass: "green"
-      }
-    };
-
-    function esc(str) {
-      return String(str ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
-    }
-
-    function withBr(str) {
-      return esc(str).replace(/\n/g, "<br>");
-    }
-
-    function txt(v, fallback = "—") {
-      const s = String(v ?? "").trim();
-      return s ? s : fallback;
-    }
-
-    function showError(msg) {
-      const el = document.getElementById("errorBox");
-      el.textContent = msg;
-      el.classList.add("show");
-    }
-
-    function hideError() {
-      const el = document.getElementById("errorBox");
-      el.textContent = "";
-      el.classList.remove("show");
-    }
-
-    function normalizeRack(raw) {
-      const state = String(raw.state || "free").toLowerCase().trim();
-      const ui = STATE_UI[state] || STATE_UI.free;
-
-      return {
-        rackNo: Number(raw.rackNo) || 0,
-        state,
-        ui,
-        badgeTextJa: txt(raw.badgeTextJa, raw.badgeText, ui.badgeTextJa),
-        badgeTextEn: txt(raw.badgeTextEn, ui.badgeTextEn),
-
-        currentLabelJa: txt(raw.currentLabelJa, "現在"),
-        currentLabelEn: txt(raw.currentLabelEn, "CURRENT"),
-        currentText: txt(raw.currentText),
-        currentSubText: txt(raw.currentSubText, ""),
-
-        nextLabelJa: txt(raw.nextLabelJa, "次の予定"),
-        nextLabelEn: txt(raw.nextLabelEn, "NEXT"),
-        nextText: txt(raw.nextText, ""),
-        nextSubText: txt(raw.nextSubText, ""),
-
-        waitingLabelJa: txt(raw.waitingLabelJa, "順番待ち"),
-        waitingLabelEn: txt(raw.waitingLabelEn, "WAITING"),
-        waitingCount: Number.isFinite(Number(raw.waitingCount)) ? Number(raw.waitingCount) : 0,
-
-        noteText: txt(raw.noteText, ""),
-
-        showUseNowButton: Boolean(raw.showUseNowButton),
-        useNowLabelJa: txt(raw.useNowLabelJa, "すぐに利用"),
-        useNowLabelEn: txt(raw.useNowLabelEn, "USE NOW"),
-
-        showQueueButton: Boolean(raw.showQueueButton),
-        queueButtonText: txt(raw.queueButtonText, "順番待ち"),
-
-        checkinUrl: txt(raw.checkinUrl, ""),
-        queueUrl: txt(raw.queueUrl, "")
-      };
-    }
-
-    function renderBadge(r) {
-      return `
-        <div class="badge ${r.ui.badgeClass}">
-          <div class="badge-ja">${esc(r.badgeTextJa)}</div>
-          <div class="badge-en">${esc(r.badgeTextEn)}</div>
-        </div>
-      `;
-    }
-
-   <script>
-    function renderRack(raw) {
-      const r = normalizeRack(raw);
-
-      const waitingCount = Number(r.waitingCount || raw?.waitingCount || 0);
-
-      const checkinUrl = r.checkinUrl || `${CHECKIN_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}`;
-      const queueUrl = r.queueUrl || `${QUEUE_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}&from=tablet&t=${Date.now()}`;
-
-      const useButton = (r.showUseNowButton && r.state !== "maintenance")
-        ? `
-          <button class="btn btn-use" data-url="${esc(checkinUrl)}" data-kind="use">
-            <div>
-              <div class="btn-use-ja">${esc(r.useNowLabelJa)}</div>
-              <div class="btn-use-en">${esc(r.useNowLabelEn)}</div>
-            </div>
-            <div class="btn-arrow">›</div>
-          </button>
-        `
-        : "";
-
-      const queueButton = (r.showQueueButton && r.state !== "maintenance")
-        ? `
-          <button class="btn btn-queue" data-url="${esc(queueUrl)}" data-kind="queue">
-            <span>${esc(r.queueButtonText)}</span>
-            <span>›</span>
-          </button>
-        `
-        : "";
-
-      return `
-        <article class="rack-card ${r.ui.cardClass}">
-          <div class="rack-top">
-            <div class="rack-visual">
-              <div class="rack-image-wrap">
-                <img src="rack${r.rackNo}.png?t=1" alt="Rack ${r.rackNo}">
-              </div>
-              <div class="badge-under">
-                ${renderBadge(r)}
-              </div>
-            </div>
-
-            <div class="rack-info">
-              <div class="label ${r.ui.currentLabelClass}">
-                ${esc(r.currentLabelJa)} / ${esc(r.currentLabelEn)}
-              </div>
-              <div class="status-main">${withBr(r.currentText)}</div>
-              ${r.currentSubText ? `<div class="status-sub">${withBr(r.currentSubText)}</div>` : ""}
-
-              <div class="divider"></div>
-
-              <div class="schedule-block">
-                <div class="label ${r.ui.nextLabelClass}">
-                  ${esc(r.nextLabelJa)} / ${esc(r.nextLabelEn)}
-                </div>
-                <div class="schedule-main">${withBr(r.nextText || "予定なし")}</div>
-                ${r.nextSubText ? `<div class="schedule-sub">${withBr(r.nextSubText)}</div>` : ""}
-              </div>
-
-              <div class="waiting-row">
-                <div class="label ${r.ui.waitingLabelClass}">
-                  ${esc(r.waitingLabelJa || "順番待ち")} / ${esc(r.waitingLabelEn || "WAITING")}
-                </div>
-                <div class="waiting-count">
-                  <svg class="person-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-4.14 0-7.5 2.46-7.5 5.5A1.5 1.5 0 0 0 6 21h12a1.5 1.5 0 0 0 1.5-1.5C19.5 16.46 16.14 14 12 14Z"/>
-                  </svg>
-                  <span>${waitingCount}名</span>
-                </div>
-              </div>
-
-              ${r.noteText ? `<div class="note">${withBr(r.noteText)}</div>` : ""}
-            </div>
-          </div>
-
-          <div class="bottom-actions">
-            ${useButton || queueButton || '<div style="height:54px;"></div>'}
-          </div>
-        </article>
-      `;
-    }
-
-    function renderAll(data) {
-      const authCodeEl = document.getElementById("authCode");
-      const todayLabelEl = document.getElementById("todayLabel");
-      const lastUpdatedEl = document.getElementById("lastUpdated");
-      const rackGridEl = document.getElementById("rackGrid");
-
-      if (authCodeEl) {
-        authCodeEl.textContent = txt(data && data.authCode, "----");
-      }
-
-      if (todayLabelEl) {
-        todayLabelEl.textContent = txt(data && data.todayLabel, "----/--/--");
-      }
-
-      if (lastUpdatedEl) {
-        const updatedText =
-          data?.lastUpdatedText ||
-          data?.lastUpdated ||
-          data?.updatedAt ||
-          "--";
-
-        lastUpdatedEl.textContent = `最終更新 / LAST UPDATED: ${txt(updatedText, "--")}`;
-      }
-
-      const racks = Array.isArray(data?.racks) ? data.racks.slice() : [];
-
-      racks.sort(function(a, b) {
-        return (Number(a?.rackNo) || 0) - (Number(b?.rackNo) || 0);
-      });
-
-      if (rackGridEl) {
-        rackGridEl.innerHTML = racks.map(renderRack).join("");
-      }
-    }
-
-    async function fetchData() {
-      const url = `${API_URL}?action=getscheduletabletjson&t=${Date.now()}`;
-
-      const res = await fetch(url, {
-        method: "GET",
-        cache: "no-store"
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
-
-      const data = await res.json();
-
-      if (!data || typeof data !== "object") {
-        throw new Error("invalid json");
-      }
-
-      return data;
-    }
-
-    async function loadData() {
-      try {
-        hideError();
-        const data = await fetchData();
-        console.log("schedule data:", data);
-        renderAll(data);
-      } catch (e) {
-        console.error(e);
-        showError("データ取得失敗。GASレスポンスまたは通信状態をご確認ください。");
-      }
-    }
-
-    function setupEvents() {
-      const qrCard = document.getElementById("qrCard");
-
-      if (qrCard) {
-        qrCard.addEventListener("click", () => {
-          location.href = QR_PAGE_URL;
-        });
-
-        qrCard.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            location.href = QR_PAGE_URL;
-          }
-        });
-      }
-
-      document.addEventListener("click", (e) => {
-        const btn = e.target.closest("[data-url]");
-        if (!btn) return;
-
-        const url = btn.getAttribute("data-url");
-        if (!url) return;
-
-        location.href = url;
-      });
-    }
-
-    setupEvents();
-    loadData();
-    setInterval(loadData, REFRESH_MS);
-  </script>
-</body>
-</html>
+            <div class="card-ja">
