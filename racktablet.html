@@ -470,33 +470,16 @@ html,body{
 const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 const rackNo = new URLSearchParams(location.search).get("rackNo") || 1;
 
-/* ===== 安全代入 ===== */
 function safeSet(id, value){
   const el = document.getElementById(id);
   if(el) el.textContent = value;
 }
+
 function safeHtml(id, value){
   const el = document.getElementById(id);
   if(el) el.innerHTML = value;
 }
 
-/* ===== 枠制御 ===== */
-function removeMainCardStyle(){
-  const el = document.querySelector(".main-card");
-  if(el){
-    el.style.border = "none";
-    el.style.boxShadow = "none";
-  }
-}
-function restoreMainCardStyle(){
-  const el = document.querySelector(".main-card");
-  if(el){
-    el.style.border = "2px solid var(--accent)";
-    el.style.boxShadow = "0 0 10px var(--accent-glow)";
-  }
-}
-
-/* ===== accent ===== */
 function setAccent(color){
   document.documentElement.style.setProperty("--accent", color);
 
@@ -515,16 +498,23 @@ function setAccent(color){
   }
 }
 
-/* ===== util ===== */
 function cleanName(text){
-  return String(text || "")
+  const s = String(text || "").trim();
+  if(!s) return "";
+  return s
     .replace(/^状況：/, "")
-    .replace(/さん.*$/, "")
+    .replace(/さんチェックイン済$/, "")
+    .replace(/さん未チェックイン$/, "")
+    .replace(/さんが利用中$/, "")
+    .replace(/さん$/, "")
     .trim();
 }
 
 function extractCurrentName(data){
-  return cleanName(data.currentDisplayName || data.currentUserName || data.subText);
+  if(data.currentDisplayName) return cleanName(data.currentDisplayName);
+  if(data.currentUserName) return cleanName(data.currentUserName);
+  if(data.subText) return cleanName(data.subText);
+  return "";
 }
 
 function formatTimeRange(start,end){
@@ -535,7 +525,6 @@ function formatUpdated(text){
   return String(text || "--").replace(/(\d{1,2}:\d{2})/, "<span>$1</span>");
 }
 
-/* ===== 復元 ===== */
 function restoreMainLeft(){
   const mainLeft = document.querySelector(".main-left");
   if(!mainLeft) return;
@@ -551,11 +540,22 @@ function restoreMainLeft(){
   }
 }
 
-/* ===== 描画 ===== */
-function applyData(data){
+function setNoCheckinMode(on){
+  const main = document.querySelector(".main");
+  if(!main) return;
 
-  document.getElementById("rackImage").src =
-    "rt-rack" + (data.rackNo || rackNo) + ".png";
+  if(on){
+    main.classList.add("no-checkin-mode");
+  }else{
+    main.classList.remove("no-checkin-mode");
+  }
+}
+
+function applyData(data){
+  const rackImage = document.getElementById("rackImage");
+  if(rackImage){
+    rackImage.src = "rt-rack" + (data.rackNo || rackNo) + ".png";
+  }
 
   let rawState = String(data.state || "").toLowerCase();
 
@@ -568,7 +568,7 @@ function applyData(data){
   safeHtml("updated", formatUpdated(data.nowText || data.lastUpdatedText));
 
   const currentName = extractCurrentName(data);
-  const nextName = cleanName(data.nextDisplayName);
+  const nextName = cleanName(data.nextDisplayName || "");
   const nextTime = formatTimeRange(data.nextStartText, data.nextEndText);
 
   const checkoutBtn = document.getElementById("checkoutBtn");
@@ -578,138 +578,245 @@ function applyData(data){
   if(mainRight) mainRight.style.display = "flex";
 
   if(rawState !== "no_checkin_required"){
+    setNoCheckinMode(false);
     restoreMainLeft();
-    restoreMainCardStyle();
   }
 
-  /* =========================
-     ■ チェックイン不要
-  ========================= */
   if(rawState === "no_checkin_required"){
     setAccent("#9E9E9E");
-    removeMainCardStyle();
+    setNoCheckinMode(true);
 
-    if(mainRight) mainRight.style.display = "none";
+    const mainLeft = document.querySelector(".main-left");
+    if(mainLeft){
+      mainLeft.innerHTML = `
+        <div class="no-checkin-layout">
 
-    document.querySelector(".main-left").innerHTML = `
-      <div class="no-checkin-layout">
-
-        <div class="no-checkin-main">
-          <div class="no-checkin-marquee">
-            ただいまの時間はチェックイン不要です。そのままご利用ください。 / 
-            No check-in required. Please use freely.
-          </div>
-        </div>
-
-        <div class="no-checkin-hours">
-          <div class="no-checkin-hours-title">
-            CHECK-IN HOURS
-            <span>チェックインが必要な時間帯</span>
+          <div class="no-checkin-main">
+            <div class="no-checkin-marquee">
+              ただいまの時間は<span class="accent">チェックイン不要</span>です。そのままご利用ください。 / 
+              <span class="accent">No check-in</span> is required at this time. Please use freely.
+            </div>
           </div>
 
-          <div class="no-checkin-hours-grid">
-
-            <div class="no-checkin-hour-box">
-              <img src="calender-weekday.png">
-              <div>
-                <div class="no-checkin-hour-label weekday">WEEKDAYS</div>
-                <div class="no-checkin-hour-time">12:00 – 22:00</div>
-              </div>
+          <div class="no-checkin-hours">
+            <div class="no-checkin-hours-title">
+              チェックインが必要な時間帯
+              <span>CHECK-IN HOURS</span>
             </div>
 
-            <div class="no-checkin-divider"></div>
+            <div class="no-checkin-hours-grid">
 
-            <div class="no-checkin-hour-box">
-              <img src="calender-weekend.png">
-              <div>
-                <div class="no-checkin-hour-label weekend">WEEKENDS & HOLIDAYS</div>
-                <div class="no-checkin-hour-time">07:00 – 22:00</div>
+              <div class="no-checkin-hour-box">
+                <img src="calender-weekday.png" alt="Weekdays">
+                <div>
+                  <div class="no-checkin-hour-label weekday">WEEKDAYS</div>
+                  <div class="no-checkin-hour-time">12:00 – 22:00</div>
+                </div>
               </div>
+
+              <div class="no-checkin-divider"></div>
+
+              <div class="no-checkin-hour-box">
+                <img src="calender-weekend.png" alt="Weekends and Holidays">
+                <div>
+                  <div class="no-checkin-hour-label weekend">WEEKENDS & HOLIDAYS</div>
+                  <div class="no-checkin-hour-time">07:00 – 22:00</div>
+                </div>
+              </div>
+
             </div>
-
           </div>
-        </div>
 
-      </div>
-    `;
+        </div>
+      `;
+    }
+
+    const msgs = data.messages || [];
+    safeSet("messageJa", msgs[0] || "");
+    safeSet("messageEn", msgs[1] || "");
     return;
   }
 
-  /* =========================
-     ■ その他状態（そのまま）
-  ========================= */
+  if(rawState === "priority_checkin"){
+    setAccent("#7A3EFF");
 
-  if(rawState === "free"){
+    safeSet("state", "繰上げ利用案内中");
+    safeSet("stateEn", "PRIORITY WINDOW FOR NEXT USER");
+    safeSet("user", "");
+    safeSet("subtext", "この時間は次の予約者が優先です");
+    safeSet("subtextEn", "Priority is given to the next user");
+
+    safeSet("time", data.priorityRemainingMin ? data.priorityRemainingMin + " min" : "");
+    safeSet("until", "残り時間");
+
+    safeSet("nextUserTitle", "次の利用者 / Next User");
+    safeSet("nextTimeTitle", "次の予定 / Next Reservation");
+    safeSet("nextUser", nextName ? nextName + "さん" : "—");
+    safeSet("nextTime", nextTime || "予定なし");
+  }
+
+  else if(rawState === "using_checked_in" || rawState === "checked_in"){
+    setAccent("#8DFF00");
+
+    safeSet("state", "チェックイン済");
+    safeSet("stateEn", "CHECKED IN");
+    safeSet("user", currentName ? currentName + "さんが利用中" : "利用中");
+    safeSet("subtext", "");
+    safeSet("subtextEn", currentName ? "In use by " + currentName : "Currently in use");
+
+    safeSet("time",
+      (data.remainingMin !== null && data.remainingMin !== undefined)
+        ? data.remainingMin + " min"
+        : ""
+    );
+
+    safeSet("until", data.currentText || "");
+
+    if(checkoutBtn){
+      checkoutBtn.style.display = data.canCheckout ? "flex" : "none";
+    }
+
+    safeSet("nextUserTitle", "次の利用者");
+    safeSet("nextTimeTitle", "次の予定");
+    safeSet("nextUser", nextName ? nextName + "さん" : "—");
+    safeSet("nextTime", nextTime || "予定なし");
+  }
+
+  else if(rawState === "using_not_checked_in" || rawState === "not_checked_in"){
+    setAccent("#FF8A00");
+
+    safeSet("state", "未チェックイン");
+    safeSet("stateEn", "NOT CHECKED IN");
+    safeSet("user", "");
+    safeSet("subtext", "QRコードでチェックインしてください");
+    safeSet("subtextEn", "Please check in with the QR code within 5 minutes");
+
+    safeSet("time",
+      (data.remainingMin !== null && data.remainingMin !== undefined)
+        ? (data.remainingMin <= 0 ? "まもなく" : data.remainingMin + " min")
+        : ""
+    );
+
+    safeSet("until", "自動キャンセルまで");
+
+    safeSet("nextUserTitle", "予約者");
+    safeSet("nextTimeTitle", "予定時間");
+    safeSet("nextUser", currentName ? currentName + "さん" : "—");
+    safeSet("nextTime", data.currentText || formatTimeRange(data.currentStartText, data.currentEndText) || "—");
+  }
+
+  else if(rawState === "free"){
     setAccent("#00C8FF");
 
     safeSet("state", "空いています");
     safeSet("stateEn", "AVAILABLE");
+    safeSet("user", "");
     safeSet("subtext", "店内タブレットよりチェックインしてください");
     safeSet("subtextEn", "Please check in using the in-gym tablet");
 
     if(mainRight) mainRight.style.display = "none";
+
+    safeSet("nextUserTitle", "次の利用者 / Next User");
+    safeSet("nextTimeTitle", "次の予定 / Next Reservation");
+    safeSet("nextUser", nextName ? nextName + "さん" : "—");
+    safeSet("nextTime", nextTime || "予定なし");
   }
 
-  else if(rawState === "reserved"){
+  else if(rawState === "reserved" || rawState === "scheduled"){
     setAccent("#FFD400");
 
     safeSet("state", "予定があります");
     safeSet("stateEn", "RESERVED SOON");
+    safeSet("user", "");
     safeSet("subtext", "次の予定の開始までご利用いただけます");
-    safeSet("subtextEn", "Available until next reservation");
+    safeSet("subtextEn", "Available until the next reservation starts");
+
+    safeSet("time",
+      (data.remainingMin !== null && data.remainingMin !== undefined)
+        ? (data.remainingMin <= 0 ? "まもなく" : data.remainingMin + " min")
+        : ""
+    );
+
+    safeSet("until", "開始まで");
+
+    safeSet("nextUserTitle", "次の利用者 / Next User");
+    safeSet("nextTimeTitle", "次の予定 / Next Reservation");
+    safeSet("nextUser", nextName ? nextName + "さん" : "—");
+    safeSet("nextTime", nextTime || "予定なし");
   }
 
-  else if(rawState === "priority_checkin"){
-    setAccent("#7A3EFF");
+  else{
+    setAccent("#8DFF00");
 
-    safeSet("state", "繰上げ利用案内中");
-    safeSet("stateEn", "PRIORITY WINDOW");
-    safeSet("subtext", "次の予約者が優先です");
-    safeSet("subtextEn", "Priority for next user");
-
-    safeSet("time", data.priorityRemainingMin + " min");
+    safeSet("state", "");
+    safeSet("stateEn", "");
+    safeSet("user", "");
+    safeSet("subtext", "");
+    safeSet("subtextEn", "");
   }
-
-  safeSet("nextUser", nextName ? nextName + "さん" : "—");
-  safeSet("nextTime", nextTime || "予定なし");
 
   const msgs = data.messages || [];
   safeSet("messageJa", msgs[0] || "");
   safeSet("messageEn", msgs[1] || "");
 }
 
-/* ===== 通信 ===== */
 async function loadData(){
   try{
-    const res = await fetch(API_URL + "?action=getracktabletjson&rackNo=" + rackNo + "&t=" + Date.now(), { cache:"no-store" });
+    const res = await fetch(API_URL + "?action=getracktabletjson&rackNo=" + rackNo + "&t=" + Date.now(), {
+      cache:"no-store"
+    });
     const data = await res.json();
     applyData(data);
   }catch(e){
-    console.log(e);
+    console.log("loadData error", e);
   }
 }
 
 loadData();
-setInterval(loadData,15000);
+setInterval(loadData, 15000);
 
-/* ===== 操作 ===== */
-document.getElementById("refresh").onclick = loadData;
+const refreshBtn = document.getElementById("refresh");
+if(refreshBtn){
+  refreshBtn.onclick = loadData;
+}
 
-document.getElementById("checkoutBtn").onclick = ()=>{
-  checkoutRack(rackNo);
-};
+const checkoutButton = document.getElementById("checkoutBtn");
+if(checkoutButton){
+  checkoutButton.onclick = function(){
+    checkoutRack(rackNo);
+  };
+}
 
-async function checkoutRack(rackNo){
-  const params = new URLSearchParams();
-  params.append("action","checkoutFromRackTablet");
-  params.append("rackNo",rackNo);
+async function checkoutRack(rackNo) {
+  if (!rackNo) {
+    alert("ラック番号が取得できません。\nRack number not found.");
+    return;
+  }
 
-  const res = await fetch(API_URL,{method:"POST",body:params});
-  const data = await res.json();
+  try {
+    const params = new URLSearchParams();
+    params.append("action", "checkoutFromRackTablet");
+    params.append("rackNo", rackNo);
 
-  if(data.ok){
-    alert("チェックアウトしました");
-    loadData();
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: params
+    });
+
+    const data = await res.json();
+
+    if (data && data.ok) {
+      alert("チェックアウトしました。\nChecked out successfully.");
+      loadData();
+    } else {
+      alert(
+        (data && data.message ? data.message : "チェックアウトできませんでした。") +
+        "\nCheckout failed."
+      );
+    }
+
+  } catch (e) {
+    alert("通信エラーが発生しました。\nNetwork error occurred.");
   }
 }
 </script>
