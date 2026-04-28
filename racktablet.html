@@ -681,9 +681,29 @@ function applyData(data){
             </div>
           </div>
 
+          <div class="no-checkin-next">
+            <div class="no-checkin-next-title">
+              NEXT RESERVATION / 次の予定
+            </div>
+            <div class="no-checkin-next-user">
+              ${data.nextDisplayName ? data.nextDisplayName + "さん" : "—"}
+            </div>
+            <div class="no-checkin-next-time">
+              ${(data.nextStartText && data.nextEndText)
+                ? data.nextStartText + "〜" + data.nextEndText
+                : "予定なし"}
+            </div>
+          </div>
+
         </div>
       `;
     }
+
+    const msgs = data.messages || [];
+    safeSet("messageJa", msgs[0] || "");
+    safeSet("messageEn", msgs[1] || "");
+    return;
+  }
 
     const msgs = data.messages || [];
     safeSet("messageJa", msgs[0] || "");
