@@ -117,6 +117,20 @@
       opacity: 0.65;
     }
 
+    #fadeCover {
+      position: fixed;
+      inset: 0;
+      background: #111;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s ease;
+    }
+
+    #fadeCover.show {
+      opacity: 1;
+    }
+
     @media (max-width: 480px) {
       h1 {
         font-size: 28px;
@@ -149,6 +163,8 @@
 </head>
 
 <body>
+
+  <div id="fadeCover"></div>
 
   <h1>QRチェックイン</h1>
 
@@ -186,6 +202,11 @@ Keep 15–20 cm distance</div>
 
     function setMessage(text) {
       document.getElementById("message").innerText = text;
+    }
+
+    function showFadeCover() {
+      const cover = document.getElementById("fadeCover");
+      if (cover) cover.classList.add("show");
     }
 
     function clearTimers() {
@@ -268,14 +289,17 @@ Keep 15–20 cm distance</div>
       isProcessing = false;
       setButtonDisabled(false);
 
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise(resolve => setTimeout(resolve, 300));
     }
 
     async function goBack() {
+      showFadeCover();
+
+      await new Promise(resolve => setTimeout(resolve, 120));
+
       await fullyStopCamera();
-      setTimeout(() => {
-        window.location.href = RETURN_URL + "?t=" + Date.now();
-      }, 1200);
+
+      window.location.href = RETURN_URL + "?t=" + Date.now();
     }
 
     async function handleQR(text) {
