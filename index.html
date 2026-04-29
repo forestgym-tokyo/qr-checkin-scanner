@@ -365,6 +365,8 @@ Keep 15–20 cm distance</div>
         video.srcObject = stream;
         await video.play();
 
+        video.style.display = "block";
+
         if (!("BarcodeDetector" in window)) {
           playErrorBeep();
           setMessage("この端末はQR自動読取に対応していません\n\n戻ります");
