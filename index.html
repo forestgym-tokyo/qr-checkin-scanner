@@ -170,8 +170,8 @@ Keep 15–20 cm distance</div>
   <button id="scanBtn" onclick="restartScan()">再スキャン</button>
 
   <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-const RETURN_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/tablet.html";
+    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+    const RETURN_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/tablet.html";
 
     let stream = null;
     let scanTimer = null;
@@ -271,56 +271,50 @@ const RETURN_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/tablet.
       await new Promise(resolve => setTimeout(resolve, 800));
     }
 
-  async function goBack() {
-  await fullyStopCamera();
-  setTimeout(() => {
-    window.location.href = RETURN_URL + "?t=" + Date.now();
-  }, 1200);
-}
-
-    async function handleQR(text) {
-  setMessage("読み取り成功\n送信中...");
-  clearTimers();
-
-  try {
-    const params = new URLSearchParams();
-    params.append("action", "checkinByQrText");
-    params.append("qrText", text);
-
-    const res = await fetch(API_URL, {
-      method: "POST",
-      body: params
-    });
-
-    const data = await res.json();
-
-    if (data && data.success) {
-      playSuccessBeep();
-      setMessage("チェックインしました");
-
-      setTimeout(function () {
+    async function goBack() {
+      await fullyStopCamera();
+      setTimeout(() => {
         window.location.href = RETURN_URL + "?t=" + Date.now();
       }, 1200);
-
-    } else {
-      playErrorBeep();
-      setMessage(
-        (data && data.message ? data.message : "失敗") +
-        "\n\n再スキャンしてください"
-      );
-      setButtonDisabled(false);
-      isScanning = false;
-      isProcessing = false;
     }
-  } catch (e) {
-    console.error(e);
-    playErrorBeep();
-    setMessage("通信エラー\n\n再スキャンしてください");
-    setButtonDisabled(false);
-    isScanning = false;
-    isProcessing = false;
-  }
-}
+
+    async function handleQR(text) {
+      setMessage("読み取り成功\n送信中...");
+      clearTimers();
+
+      try {
+        const params = new URLSearchParams();
+        params.append("action", "checkinByQrText");
+        params.append("qrText", text);
+
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: params
+        });
+
+        const data = await res.json();
+
+        if (data && data.success) {
+          playSuccessBeep();
+          setMessage("チェックインしました\n\n戻ります");
+          setTimeout(goBack, 1200);
+
+        } else {
+          playErrorBeep();
+          setMessage(
+            (data && data.message ? data.message : "無効なQRコードです") +
+            "\n\n戻ります"
+          );
+          setTimeout(goBack, 1500);
+        }
+
+      } catch (e) {
+        console.error(e);
+        playErrorBeep();
+        setMessage("通信エラー\n\n戻ります");
+        setTimeout(goBack, 1500);
+      }
+    }
 
     async function startScan() {
       const video = document.getElementById("video");
@@ -334,24 +328,23 @@ const RETURN_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/tablet.
       setButtonDisabled(true);
       setMessage("カメラ起動中...");
 
-     try {
-  stream = await navigator.mediaDevices.getUserMedia({
-    video: {
-      facingMode: "user",
-      width: { ideal: 1280 },
-      height: { ideal: 720 }
-    },
-    audio: false
-  });
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: "user",
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
+          audio: false
+        });
 
-  video.srcObject = stream;
-  await video.play();
+        video.srcObject = stream;
+        await video.play();
 
         if (!("BarcodeDetector" in window)) {
           playErrorBeep();
-          setMessage("この端末はQR自動読取に対応していません");
-          setButtonDisabled(false);
-          isScanning = false;
+          setMessage("この端末はQR自動読取に対応していません\n\n戻ります");
+          setTimeout(goBack, 1500);
           return;
         }
 
@@ -359,10 +352,10 @@ const RETURN_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/tablet.
         setMessage("カメラ起動OK / QR待機中");
 
         timeoutTimer = setTimeout(() => {
-  playErrorBeep();
-  setMessage("読み取れなかったため戻ります");
-  setTimeout(goBack, 1200);
-}, 10000);
+          playErrorBeep();
+          setMessage("読み取れなかったため戻ります");
+          setTimeout(goBack, 1200);
+        }, 10000);
 
         scanTimer = setInterval(async () => {
           if (!isScanning || isProcessing) return;
@@ -387,11 +380,10 @@ const RETURN_URL = "https://forestgym-tokyo.github.io/qr-checkin-scanner/tablet.
         setMessage(
           "カメラが使えません\n" +
           "name: " + (e && e.name ? e.name : "") + "\n" +
-          "message: " + (e && e.message ? e.message : "")
+          "message: " + (e && e.message ? e.message : "") +
+          "\n\n戻ります"
         );
-        setButtonDisabled(false);
-        isScanning = false;
-        isProcessing = false;
+        setTimeout(goBack, 2000);
       }
     }
 
