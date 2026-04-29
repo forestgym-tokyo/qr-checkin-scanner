@@ -124,7 +124,7 @@
       z-index: 9999;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.12s ease;
+      transition: opacity 0.08s ease;
     }
 
     #fadeCover.show {
@@ -197,11 +197,13 @@ Keep 15–20 cm distance</div>
     let detector = null;
 
     function setButtonDisabled(disabled) {
-      document.getElementById("scanBtn").disabled = disabled;
+      const btn = document.getElementById("scanBtn");
+      if (btn) btn.disabled = disabled;
     }
 
     function setMessage(text) {
-      document.getElementById("message").innerText = text;
+      const message = document.getElementById("message");
+      if (message) message.innerText = text;
     }
 
     function showFadeCover() {
@@ -266,10 +268,11 @@ Keep 15–20 cm distance</div>
       }
     }
 
-    async function fullyStopCamera() {
+    function fullyStopCamera() {
       clearTimers();
 
       const video = document.getElementById("video");
+
       if (video) {
         try { video.pause(); } catch (e) {}
         try { video.srcObject = null; } catch (e) {}
@@ -289,18 +292,16 @@ Keep 15–20 cm distance</div>
       isScanning = false;
       isProcessing = false;
       setButtonDisabled(false);
-
-      await new Promise(resolve => setTimeout(resolve, 300));
     }
 
-    async function goBack() {
+    function goBack() {
       showFadeCover();
 
-      await new Promise(resolve => setTimeout(resolve, 120));
+      fullyStopCamera();
 
-      await fullyStopCamera();
-
-      window.location.href = RETURN_URL + "?t=" + Date.now();
+      requestAnimationFrame(() => {
+        window.location.href = RETURN_URL + "?t=" + Date.now();
+      });
     }
 
     async function handleQR(text) {
@@ -322,7 +323,7 @@ Keep 15–20 cm distance</div>
         if (data && data.success) {
           playSuccessBeep();
           setMessage("チェックインしました\n\n戻ります");
-          setTimeout(goBack, 1200);
+          setTimeout(goBack, 700);
 
         } else {
           playErrorBeep();
@@ -330,14 +331,14 @@ Keep 15–20 cm distance</div>
             (data && data.message ? data.message : "無効なQRコードです") +
             "\n\n戻ります"
           );
-          setTimeout(goBack, 1500);
+          setTimeout(goBack, 900);
         }
 
       } catch (e) {
         console.error(e);
         playErrorBeep();
         setMessage("通信エラー\n\n戻ります");
-        setTimeout(goBack, 1500);
+        setTimeout(goBack, 900);
       }
     }
 
@@ -350,7 +351,7 @@ Keep 15–20 cm distance</div>
 
       if (isScanning || isProcessing) return;
 
-      await fullyStopCamera();
+      fullyStopCamera();
 
       isScanning = true;
       isProcessing = false;
@@ -375,7 +376,7 @@ Keep 15–20 cm distance</div>
         if (!("BarcodeDetector" in window)) {
           playErrorBeep();
           setMessage("この端末はQR自動読取に対応していません\n\n戻ります");
-          setTimeout(goBack, 1500);
+          setTimeout(goBack, 900);
           return;
         }
 
@@ -385,7 +386,7 @@ Keep 15–20 cm distance</div>
         timeoutTimer = setTimeout(() => {
           playErrorBeep();
           setMessage("読み取れなかったため戻ります");
-          setTimeout(goBack, 1200);
+          setTimeout(goBack, 900);
         }, 10000);
 
         scanTimer = setInterval(async () => {
@@ -393,6 +394,7 @@ Keep 15–20 cm distance</div>
           if (!video || video.readyState < 2) return;
 
           let codes = [];
+
           try {
             codes = await detector.detect(video);
           } catch (e) {
@@ -414,12 +416,12 @@ Keep 15–20 cm distance</div>
           "message: " + (e && e.message ? e.message : "") +
           "\n\n戻ります"
         );
-        setTimeout(goBack, 2000);
+        setTimeout(goBack, 900);
       }
     }
 
     async function restartScan() {
-      await fullyStopCamera();
+      fullyStopCamera();
       await startScan();
     }
 
