@@ -981,7 +981,8 @@ function playClickSound(){
         qrCard.addEventListener("keydown", function(e) {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            location.href = QR_PAGE_URL;
+            playClickSound();
+setTimeout(()=>location.href = QR_PAGE_URL, 80);
           }
         });
       }
