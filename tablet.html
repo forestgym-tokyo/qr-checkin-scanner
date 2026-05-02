@@ -960,7 +960,15 @@
         showError("データ取得失敗。GASレスポンスまたは通信状態をご確認ください。");
       }
     }
-
+function playClickSound(){
+  try{
+    const audio = new Audio("click.mp3");
+    audio.volume = 0.5;
+    audio.play();
+  }catch(e){
+    console.error(e);
+  }
+}
     function setupEvents() {
       const qrCard = document.getElementById("qrCard");
 
