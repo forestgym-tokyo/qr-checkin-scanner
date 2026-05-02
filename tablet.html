@@ -676,7 +676,14 @@ const CHECKIN_PAGE_URL = "checkin.html";
 const QUEUE_PAGE_URL = "queue.html";
 const REFRESH_MS = 15000;
 
-/* ================= UI ================= */
+const STATE_UI = {
+  free:{badgeClass:"free",badgeTextJa:"空き",badgeTextEn:"AVAILABLE",cardClass:"state-free",currentLabelClass:"green",nextLabelClass:"green",waitingLabelClass:"green"},
+  using:{badgeClass:"using",badgeTextJa:"利用中",badgeTextEn:"IN USE",cardClass:"state-using",currentLabelClass:"white",nextLabelClass:"green",waitingLabelClass:"white"},
+  reserved:{badgeClass:"reserved",badgeTextJa:"予約あり",badgeTextEn:"RESERVED",cardClass:"state-reserved",currentLabelClass:"orange",nextLabelClass:"orange",waitingLabelClass:"orange"},
+  maintenance:{badgeClass:"maintenance",badgeTextJa:"メンテ中",badgeTextEn:"MAINTENANCE",cardClass:"state-maintenance",currentLabelClass:"blue",nextLabelClass:"blue",waitingLabelClass:"blue"},
+  gap:{badgeClass:"gap",badgeTextJa:"すき間利用可",badgeTextEn:"SHORT USE",cardClass:"state-gap",currentLabelClass:"yellow",nextLabelClass:"orange",waitingLabelClass:"yellow"},
+  waiting:{badgeClass:"waiting",badgeTextJa:"順番待ち",badgeTextEn:"WAITING",cardClass:"state-waiting",currentLabelClass:"green",nextLabelClass:"green",waitingLabelClass:"green"}
+};
 
 function esc(str){
   return String(str ?? "")
@@ -692,128 +699,249 @@ function withBr(str){
 }
 
 function txt(v,fallback="—"){
-  const s = String(v ?? "").trim();
-  return s ? s : fallback;
+  const s=String(v??"").trim();
+  return s?s:fallback;
 }
 
-/* ================= 描画 ================= */
-
-function renderAll(data){
-
-  const authCodeEl = document.getElementById("authCode");
-  const todayLabelEl = document.getElementById("todayLabel");
-  const lastUpdatedEl = document.getElementById("lastUpdated");
-  const rackGridEl = document.getElementById("rackGrid");
-
-  if(authCodeEl){
-    authCodeEl.textContent = txt(data?.authCode,"----");
-  }
-
-  if(todayLabelEl){
-    todayLabelEl.textContent = txt(data?.todayLabel,"----/--/--");
-  }
-
-  if(lastUpdatedEl){
-    const updated =
-      data?.lastUpdatedText ||
-      data?.lastUpdated ||
-      "--";
-
-    lastUpdatedEl.textContent =
-      "最終更新 / LAST UPDATED: " + updated;
-  }
-
-  const racks = Array.isArray(data?.racks) ? data.racks : [];
-
-  if(rackGridEl){
-    rackGridEl.innerHTML = racks.map(r => renderRack(r)).join("");
-  }
+function showError(msg){
+  const el=document.getElementById("errorBox");
+  if(!el)return;
+  el.textContent=msg;
+  el.classList.add("show");
 }
 
-/* ================= ラック描画 ================= */
+function hideError(){
+  const el=document.getElementById("errorBox");
+  if(!el)return;
+  el.textContent="";
+  el.classList.remove("show");
+}
 
-function renderRack(r){
+function normalizeRack(raw){
+  raw=raw||{};
+  const state=String(raw.state||"free").toLowerCase().trim();
+  const ui=STATE_UI[state]||STATE_UI.free;
 
-  const rackNo = r?.rackNo ?? 0;
+  return{
+    rackNo:Number(raw.rackNo)||0,
+    state:state,
+    ui:ui,
 
-  const checkinUrl = r?.checkinUrl || `${CHECKIN_PAGE_URL}?rackNo=${encodeURIComponent(rackNo)}`;
-  const queueUrl = r?.queueUrl || `${QUEUE_PAGE_URL}?rackNo=${encodeURIComponent(rackNo)}&from=tablet&t=${Date.now()}`;
+    badgeTextJa:txt(raw.badgeTextJa||raw.badgeText,ui.badgeTextJa),
+    badgeTextEn:txt(raw.badgeTextEn,ui.badgeTextEn),
 
-  const useBtn = r?.showUseNowButton
-    ? `<button class="btn btn-use" data-url="${esc(checkinUrl)}">すぐに利用 ›</button>`
-    : "";
+    currentLabelJa:txt(raw.currentLabelJa,"現在"),
+    currentLabelEn:txt(raw.currentLabelEn,"CURRENT"),
+    currentText:txt(raw.currentText),
+    currentSubText:txt(raw.currentSubText,""),
 
-  const queueBtn = r?.showQueueButton
-    ? `<button class="btn btn-queue" data-url="${esc(queueUrl)}">順番待ち ›</button>`
-    : "";
+    nextLabelJa:txt(raw.nextLabelJa,"次の予定"),
+    nextLabelEn:txt(raw.nextLabelEn,"NEXT"),
+    nextText:txt(raw.nextText,""),
+    nextSubText:txt(raw.nextSubText,""),
 
+    scheduleCount:Number.isFinite(Number(raw.waitingCount))?Number(raw.waitingCount):0,
+
+    noteText:txt(raw.noteText,""),
+
+    showUseNowButton:Boolean(raw.showUseNowButton),
+    useNowLabelJa:txt(raw.useNowLabelJa,"すぐに利用"),
+    useNowLabelEn:txt(raw.useNowLabelEn,"USE NOW"),
+
+    showQueueButton:Boolean(raw.showQueueButton),
+    queueButtonText:txt(raw.queueButtonText,"順番待ち"),
+
+    checkinUrl:txt(raw.checkinUrl,""),
+    queueUrl:txt(raw.queueUrl,"")
+  };
+}
+
+function renderBadge(r){
   return `
-    <div class="rack-card">
-      <div style="padding:10px;font-weight:bold;">Rack ${rackNo}</div>
-      ${useBtn}
-      ${queueBtn}
+    <div class="badge ${r.ui.badgeClass}">
+      <div class="badge-ja">${esc(r.badgeTextJa)}</div>
+      <div class="badge-en">${esc(r.badgeTextEn)}</div>
     </div>
   `;
 }
 
-/* ================= API ================= */
+function renderRack(raw){
+  const r=normalizeRack(raw);
 
-async function fetchData(){
-  const url = `${API_URL}?action=getscheduletabletjson&t=${Date.now()}`;
+  const checkinUrl=r.checkinUrl||`${CHECKIN_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}`;
+  const queueUrl=r.queueUrl||`${QUEUE_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}&from=tablet&t=${Date.now()}`;
 
-  const res = await fetch(url,{cache:"no-store"});
+  const useButton=(r.showUseNowButton&&r.state!=="maintenance")
+    ? `
+      <button class="btn btn-use" data-url="${esc(checkinUrl)}" data-kind="use">
+        <div>
+          <div class="btn-use-ja">${esc(r.useNowLabelJa)}</div>
+          <div class="btn-use-en">${esc(r.useNowLabelEn)}</div>
+        </div>
+        <div class="btn-arrow">›</div>
+      </button>
+    `
+    : "";
 
-  if(!res.ok){
-    throw new Error("HTTP");
+  const queueButton=(r.showQueueButton&&r.state!=="maintenance")
+    ? `
+      <button class="btn btn-queue" data-url="${esc(queueUrl)}" data-kind="queue">
+        <span>${esc(r.queueButtonText)}</span>
+        <span>›</span>
+      </button>
+    `
+    : "";
+
+  return `
+    <article class="rack-card ${r.ui.cardClass}">
+      <div class="rack-top">
+        <div class="rack-visual">
+          <div class="rack-image-wrap">
+            <img src="rack${r.rackNo}.png?t=1" alt="Rack ${r.rackNo}">
+          </div>
+          <div class="badge-under">
+            ${renderBadge(r)}
+          </div>
+        </div>
+
+        <div class="rack-info">
+          <div class="label ${r.ui.currentLabelClass}">
+            ${esc(r.currentLabelJa)} / ${esc(r.currentLabelEn)}
+          </div>
+          <div class="status-main">${withBr(r.currentText)}</div>
+          ${r.currentSubText?`<div class="status-sub">${withBr(r.currentSubText)}</div>`:""}
+
+          <div class="divider"></div>
+
+          <div class="schedule-block">
+            <div class="label ${r.ui.nextLabelClass}">
+              ${esc(r.nextLabelJa)} / ${esc(r.nextLabelEn)}
+            </div>
+            <div class="schedule-main">${withBr(r.nextText||"予定なし")}</div>
+            ${r.nextSubText?`<div class="schedule-sub">${withBr(r.nextSubText)}</div>`:""}
+          </div>
+
+          <div class="waiting-row">
+            <div class="label ${r.ui.waitingLabelClass}">
+              予定数 / SCHEDULES
+            </div>
+            <div class="waiting-count">
+              <svg class="person-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-4.14 0-7.5 2.46-7.5 5.5A1.5 1.5 0 0 0 6 21h12a1.5 1.5 0 0 0 1.5-1.5C19.5 16.46 16.14 14 12 14Z"/>
+              </svg>
+              <span>${r.scheduleCount}件</span>
+            </div>
+          </div>
+
+          ${r.noteText?`<div class="note">${withBr(r.noteText)}</div>`:""}
+        </div>
+      </div>
+
+      <div class="bottom-actions">
+        ${useButton||queueButton||'<div style="height:54px;"></div>'}
+      </div>
+    </article>
+  `;
+}
+
+function renderAll(data){
+  const authCodeEl=document.getElementById("authCode");
+  const todayLabelEl=document.getElementById("todayLabel");
+  const lastUpdatedEl=document.getElementById("lastUpdated");
+  const rackGridEl=document.getElementById("rackGrid");
+
+  if(authCodeEl){
+    authCodeEl.textContent=txt(data&&data.authCode,"----");
   }
 
-  return await res.json();
+  if(todayLabelEl){
+    todayLabelEl.textContent=txt(data&&data.todayLabel,"----/--/--");
+  }
+
+  if(lastUpdatedEl){
+    const updatedText=
+      data?.lastUpdatedText||
+      data?.lastUpdated||
+      data?.updatedAt||
+      "--";
+
+    lastUpdatedEl.textContent=`最終更新 / LAST UPDATED: ${txt(updatedText,"--")}`;
+  }
+
+  const racks=Array.isArray(data?.racks)?data.racks.slice():[];
+
+  racks.sort(function(a,b){
+    return (Number(a?.rackNo)||0)-(Number(b?.rackNo)||0);
+  });
+
+  if(rackGridEl){
+    rackGridEl.innerHTML=racks.map(renderRack).join("");
+  }
+}
+
+async function fetchData(){
+  const url=`${API_URL}?action=getscheduletabletjson&t=${Date.now()}`;
+
+  const res=await fetch(url,{
+    method:"GET",
+    cache:"no-store"
+  });
+
+  if(!res.ok){
+    throw new Error(`HTTP ${res.status}`);
+  }
+
+  const data=await res.json();
+
+  if(!data||typeof data!=="object"){
+    throw new Error("invalid json");
+  }
+
+  return data;
 }
 
 async function loadData(){
   try{
-    const data = await fetchData();
+    hideError();
+    const data=await fetchData();
+    console.log("schedule data:",data);
     renderAll(data);
   }catch(e){
     console.error(e);
+    showError("データ取得失敗。GASレスポンスまたは通信状態をご確認ください。");
   }
 }
 
-/* ================= イベント ================= */
-
 function setupEvents(){
-
-  const qrCard = document.getElementById("qrCard");
+  const qrCard=document.getElementById("qrCard");
 
   if(qrCard){
-    qrCard.addEventListener("click", ()=>{
-      location.href = QR_PAGE_URL;
+    qrCard.addEventListener("click",function(){
+      location.href=QR_PAGE_URL;
     });
 
-    qrCard.addEventListener("keydown", e=>{
+    qrCard.addEventListener("keydown",function(e){
       if(e.key==="Enter"||e.key===" "){
         e.preventDefault();
-        location.href = QR_PAGE_URL;
+        location.href=QR_PAGE_URL;
       }
     });
   }
 
-  document.addEventListener("click", function(e){
-    const btn = e.target.closest("[data-url]");
-    if(!btn) return;
+  document.addEventListener("click",function(e){
+    const btn=e.target.closest("[data-url]");
+    if(!btn)return;
 
-    const url = btn.getAttribute("data-url");
-    if(!url) return;
+    const url=btn.getAttribute("data-url");
+    if(!url)return;
 
-    location.href = url;
+    location.href=url;
   });
 }
 
-/* ================= 起動 ================= */
-
 setupEvents();
 loadData();
-setInterval(loadData, REFRESH_MS);
+setInterval(loadData,REFRESH_MS);
 </script>
 </body>
 </html>
