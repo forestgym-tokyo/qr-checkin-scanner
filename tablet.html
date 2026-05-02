@@ -766,12 +766,12 @@ function renderBadge(r){
 }
 
 function renderRack(raw){
-  const r=normalizeRack(raw);
+  const r = normalizeRack(raw);
 
-  const checkinUrl=r.checkinUrl||`${CHECKIN_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}`;
-  const queueUrl=r.queueUrl||`${QUEUE_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}&from=tablet&t=${Date.now()}`;
+  const checkinUrl = r.checkinUrl || `${CHECKIN_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}`;
+  const queueUrl = r.queueUrl || `${QUEUE_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}&from=tablet&t=${Date.now()}`;
 
-  const useButton=(r.showUseNowButton&&r.state!=="maintenance")
+  const useButton = (r.showUseNowButton && r.state !== "maintenance")
     ? `
       <button class="btn btn-use" data-url="${esc(checkinUrl)}" data-kind="use">
         <div>
@@ -783,7 +783,7 @@ function renderRack(raw){
     `
     : "";
 
-  const queueButton=(r.showQueueButton&&r.state!=="maintenance")
+  const queueButton = (r.showQueueButton && r.state !== "maintenance")
     ? `
       <button class="btn btn-queue" data-url="${esc(queueUrl)}" data-kind="queue">
         <span>${esc(r.queueButtonText)}</span>
@@ -809,7 +809,7 @@ function renderRack(raw){
             ${esc(r.currentLabelJa)} / ${esc(r.currentLabelEn)}
           </div>
           <div class="status-main">${withBr(r.currentText)}</div>
-          ${r.currentSubText?`<div class="status-sub">${withBr(r.currentSubText)}</div>`:""}
+          ${r.currentSubText ? `<div class="status-sub">${withBr(r.currentSubText)}</div>` : ""}
 
           <div class="divider"></div>
 
@@ -817,8 +817,8 @@ function renderRack(raw){
             <div class="label ${r.ui.nextLabelClass}">
               ${esc(r.nextLabelJa)} / ${esc(r.nextLabelEn)}
             </div>
-            <div class="schedule-main">${withBr(r.nextText||"予定なし")}</div>
-            ${r.nextSubText?`<div class="schedule-sub">${withBr(r.nextSubText)}</div>`:""}
+            <div class="schedule-main">${withBr(r.nextText || "予定なし")}</div>
+            ${r.nextSubText ? `<div class="schedule-sub">${withBr(r.nextSubText)}</div>` : ""}
           </div>
 
           <div class="waiting-row">
@@ -833,17 +833,16 @@ function renderRack(raw){
             </div>
           </div>
 
-          ${r.noteText?`<div class="note">${withBr(r.noteText)}</div>`:""}
+          ${r.noteText ? `<div class="note">${withBr(r.noteText)}</div>` : ""}
         </div>
       </div>
 
       <div class="bottom-actions">
-        ${useButton||queueButton||'<div style="height:54px;"></div>'}
+        ${useButton || queueButton || '<div style="height:54px;"></div>'}
       </div>
     </article>
   `;
 }
-
 function renderAll(data){
   const authCodeEl=document.getElementById("authCode");
   const todayLabelEl=document.getElementById("todayLabel");
