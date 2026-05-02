@@ -669,34 +669,14 @@
     <footer class="footer">Copyright©2026 A-nauts Co., Ltd. All rights reserved.</footer>
   </div>
 
- <script>
+<script>
 const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
 const QR_PAGE_URL = "index.html";
 const CHECKIN_PAGE_URL = "checkin.html";
 const QUEUE_PAGE_URL = "queue.html";
 const REFRESH_MS = 15000;
 
-/* ===== 音（確実版） ===== */
-
-let clickAudio = null;
-
-function initSound(){
-  try{
-    clickAudio = new Audio("click.mp3");
-    clickAudio.volume = 0.4;
-  }catch(e){}
-}
-
-function playClickSound(){
-  try{
-    if(clickAudio){
-      clickAudio.currentTime = 0;
-      clickAudio.play();
-    }
-  }catch(e){}
-}
-
-/* ===== 既存 ===== */
+/* ================= UI ================= */
 
 function esc(str){
   return String(str ?? "")
@@ -712,39 +692,81 @@ function withBr(str){
 }
 
 function txt(v,fallback="—"){
-  const s=String(v??"").trim();
-  return s?s:fallback;
+  const s = String(v ?? "").trim();
+  return s ? s : fallback;
 }
 
-/* ===== 描画 ===== */
+/* ================= 描画 ================= */
 
 function renderAll(data){
-  document.getElementById("authCode").textContent = txt(data?.authCode,"----");
-  document.getElementById("todayLabel").textContent = txt(data?.todayLabel,"----/--/--");
 
-  const updated =
-    data?.lastUpdatedText ||
-    data?.lastUpdated ||
-    "--";
+  const authCodeEl = document.getElementById("authCode");
+  const todayLabelEl = document.getElementById("todayLabel");
+  const lastUpdatedEl = document.getElementById("lastUpdated");
+  const rackGridEl = document.getElementById("rackGrid");
 
-  document.getElementById("lastUpdated").textContent =
-    "最終更新 / LAST UPDATED: " + updated;
+  if(authCodeEl){
+    authCodeEl.textContent = txt(data?.authCode,"----");
+  }
 
-  const racks = Array.isArray(data?.racks)?data.racks:[];
+  if(todayLabelEl){
+    todayLabelEl.textContent = txt(data?.todayLabel,"----/--/--");
+  }
 
-  document.getElementById("rackGrid").innerHTML =
-    racks.map(r=>`
-      <div style="padding:10px;border:1px solid #333;margin:6px;border-radius:10px">
-        Rack ${r.rackNo}
-      </div>
-    `).join("");
+  if(lastUpdatedEl){
+    const updated =
+      data?.lastUpdatedText ||
+      data?.lastUpdated ||
+      "--";
+
+    lastUpdatedEl.textContent =
+      "最終更新 / LAST UPDATED: " + updated;
+  }
+
+  const racks = Array.isArray(data?.racks) ? data.racks : [];
+
+  if(rackGridEl){
+    rackGridEl.innerHTML = racks.map(r => renderRack(r)).join("");
+  }
 }
 
-/* ===== API ===== */
+/* ================= ラック描画 ================= */
+
+function renderRack(r){
+
+  const rackNo = r?.rackNo ?? 0;
+
+  const checkinUrl = r?.checkinUrl || `${CHECKIN_PAGE_URL}?rackNo=${encodeURIComponent(rackNo)}`;
+  const queueUrl = r?.queueUrl || `${QUEUE_PAGE_URL}?rackNo=${encodeURIComponent(rackNo)}&from=tablet&t=${Date.now()}`;
+
+  const useBtn = r?.showUseNowButton
+    ? `<button class="btn btn-use" data-url="${esc(checkinUrl)}">すぐに利用 ›</button>`
+    : "";
+
+  const queueBtn = r?.showQueueButton
+    ? `<button class="btn btn-queue" data-url="${esc(queueUrl)}">順番待ち ›</button>`
+    : "";
+
+  return `
+    <div class="rack-card">
+      <div style="padding:10px;font-weight:bold;">Rack ${rackNo}</div>
+      ${useBtn}
+      ${queueBtn}
+    </div>
+  `;
+}
+
+/* ================= API ================= */
 
 async function fetchData(){
-  const res = await fetch(API_URL + "?action=getscheduletabletjson&t=" + Date.now(),{cache:"no-store"});
-  if(!res.ok) throw new Error("HTTP");
+  const url = `${API_URL}?action=getscheduletabletjson&t=${Date.now()}`;
+
+  const res = await fetch(url,{cache:"no-store"});
+
+  if(!res.ok){
+    throw new Error("HTTP");
+  }
+
   return await res.json();
 }
 
@@ -757,7 +779,7 @@ async function loadData(){
   }
 }
 
-/* ===== イベント ===== */
+/* ================= イベント ================= */
 
 function setupEvents(){
 
@@ -765,15 +787,13 @@ function setupEvents(){
 
   if(qrCard){
     qrCard.addEventListener("click", ()=>{
-      playClickSound();
-      setTimeout(()=>location.href = QR_PAGE_URL,80);
+      location.href = QR_PAGE_URL;
     });
 
     qrCard.addEventListener("keydown", e=>{
       if(e.key==="Enter"||e.key===" "){
         e.preventDefault();
-        playClickSound();
-        setTimeout(()=>location.href = QR_PAGE_URL,80);
+        location.href = QR_PAGE_URL;
       }
     });
   }
@@ -785,17 +805,13 @@ function setupEvents(){
     const url = btn.getAttribute("data-url");
     if(!url) return;
 
-    playClickSound();
-    setTimeout(()=>location.href = url,80);
+    location.href = url;
   });
-
-  document.addEventListener("click", initSound, { once:true });
 }
 
-/* ===== 起動 ===== */
+/* ================= 起動 ================= */
 
 setupEvents();
-initSound();
 loadData();
 setInterval(loadData, REFRESH_MS);
 </script>
