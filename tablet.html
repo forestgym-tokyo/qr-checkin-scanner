@@ -986,16 +986,16 @@ function playClickSound(){
         });
       }
 
-      document.addEventListener("click", function(e) {
-        const btn = e.target.closest("[data-url]");
-        if (!btn) return;
+     document.addEventListener("click", function(e) {
+  const btn = e.target.closest("[data-url]");
+  if (!btn) return;
 
-        const url = btn.getAttribute("data-url");
-        if (!url) return;
+  const url = btn.getAttribute("data-url");
+  if (!url) return;
 
-        location.href = url;
-      });
-    }
+  playClickSound();
+  setTimeout(()=>location.href = url, 80);
+});
 
     setupEvents();
     loadData();
