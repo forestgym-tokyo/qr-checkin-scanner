@@ -973,9 +973,10 @@ function playClickSound(){
       const qrCard = document.getElementById("qrCard");
 
       if (qrCard) {
-        qrCard.addEventListener("click", function() {
-          location.href = QR_PAGE_URL;
-        });
+       qrCard.addEventListener("click", function() {
+  playClickSound();
+  setTimeout(()=>location.href = QR_PAGE_URL, 80);
+});
 
         qrCard.addEventListener("keydown", function(e) {
           if (e.key === "Enter" || e.key === " ") {
