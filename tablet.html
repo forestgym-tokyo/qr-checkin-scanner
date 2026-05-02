@@ -669,338 +669,135 @@
     <footer class="footer">Copyright©2026 A-nauts Co., Ltd. All rights reserved.</footer>
   </div>
 
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-    const QR_PAGE_URL = "index.html";
-    const CHECKIN_PAGE_URL = "checkin.html";
-    const QUEUE_PAGE_URL = "queue.html";
-    const REFRESH_MS = 15000;
+ <script>
+const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+const QR_PAGE_URL = "index.html";
+const CHECKIN_PAGE_URL = "checkin.html";
+const QUEUE_PAGE_URL = "queue.html";
+const REFRESH_MS = 15000;
 
-    const STATE_UI = {
-      free: {
-        badgeClass: "free",
-        badgeTextJa: "空き",
-        badgeTextEn: "AVAILABLE",
-        cardClass: "state-free",
-        currentLabelClass: "green",
-        nextLabelClass: "green",
-        waitingLabelClass: "green"
-      },
-      using: {
-        badgeClass: "using",
-        badgeTextJa: "利用中",
-        badgeTextEn: "IN USE",
-        cardClass: "state-using",
-        currentLabelClass: "white",
-        nextLabelClass: "green",
-        waitingLabelClass: "white"
-      },
-      reserved: {
-        badgeClass: "reserved",
-        badgeTextJa: "予約あり",
-        badgeTextEn: "RESERVED",
-        cardClass: "state-reserved",
-        currentLabelClass: "orange",
-        nextLabelClass: "orange",
-        waitingLabelClass: "orange"
-      },
-      maintenance: {
-        badgeClass: "maintenance",
-        badgeTextJa: "メンテ中",
-        badgeTextEn: "MAINTENANCE",
-        cardClass: "state-maintenance",
-        currentLabelClass: "blue",
-        nextLabelClass: "blue",
-        waitingLabelClass: "blue"
-      },
-      gap: {
-        badgeClass: "gap",
-        badgeTextJa: "すき間利用可",
-        badgeTextEn: "SHORT USE",
-        cardClass: "state-gap",
-        currentLabelClass: "yellow",
-        nextLabelClass: "orange",
-        waitingLabelClass: "yellow"
-      },
-      waiting: {
-        badgeClass: "waiting",
-        badgeTextJa: "順番待ち",
-        badgeTextEn: "WAITING",
-        cardClass: "state-waiting",
-        currentLabelClass: "green",
-        nextLabelClass: "green",
-        waitingLabelClass: "green"
-      }
-    };
+/* ===== 音（確実版） ===== */
 
-    function esc(str) {
-      return String(str ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
-    }
+let clickAudio = null;
 
-    function withBr(str) {
-      return esc(str).replace(/\n/g, "<br>");
-    }
+function initSound(){
+  try{
+    clickAudio = new Audio("click.mp3");
+    clickAudio.volume = 0.4;
+  }catch(e){}
+}
 
-    function txt(v, fallback = "—") {
-      const s = String(v ?? "").trim();
-      return s ? s : fallback;
-    }
-
-    function showError(msg) {
-      const el = document.getElementById("errorBox");
-      if (!el) return;
-      el.textContent = msg;
-      el.classList.add("show");
-    }
-
-    function hideError() {
-      const el = document.getElementById("errorBox");
-      if (!el) return;
-      el.textContent = "";
-      el.classList.remove("show");
-    }
-
-    function normalizeRack(raw) {
-      raw = raw || {};
-
-      const state = String(raw.state || "free").toLowerCase().trim();
-      const ui = STATE_UI[state] || STATE_UI.free;
-
-      return {
-        rackNo: Number(raw.rackNo) || 0,
-        state: state,
-        ui: ui,
-
-        badgeTextJa: txt(raw.badgeTextJa || raw.badgeText, ui.badgeTextJa),
-        badgeTextEn: txt(raw.badgeTextEn, ui.badgeTextEn),
-
-        currentLabelJa: txt(raw.currentLabelJa, "現在"),
-        currentLabelEn: txt(raw.currentLabelEn, "CURRENT"),
-        currentText: txt(raw.currentText),
-        currentSubText: txt(raw.currentSubText, ""),
-
-        nextLabelJa: txt(raw.nextLabelJa, "次の予定"),
-        nextLabelEn: txt(raw.nextLabelEn, "NEXT"),
-        nextText: txt(raw.nextText, ""),
-        nextSubText: txt(raw.nextSubText, ""),
-
-        scheduleCount: Number.isFinite(Number(raw.waitingCount)) ? Number(raw.waitingCount) : 0,
-
-        noteText: txt(raw.noteText, ""),
-
-        showUseNowButton: Boolean(raw.showUseNowButton),
-        useNowLabelJa: txt(raw.useNowLabelJa, "すぐに利用"),
-        useNowLabelEn: txt(raw.useNowLabelEn, "USE NOW"),
-
-        showQueueButton: Boolean(raw.showQueueButton),
-        queueButtonText: txt(raw.queueButtonText, "順番待ち"),
-
-        checkinUrl: txt(raw.checkinUrl, ""),
-        queueUrl: txt(raw.queueUrl, "")
-      };
-    }
-
-    function renderBadge(r) {
-      return `
-        <div class="badge ${r.ui.badgeClass}">
-          <div class="badge-ja">${esc(r.badgeTextJa)}</div>
-          <div class="badge-en">${esc(r.badgeTextEn)}</div>
-        </div>
-      `;
-    }
-
-    function renderRack(raw) {
-      const r = normalizeRack(raw);
-
-      const checkinUrl = r.checkinUrl || `${CHECKIN_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}`;
-      const queueUrl = r.queueUrl || `${QUEUE_PAGE_URL}?rackNo=${encodeURIComponent(r.rackNo)}&from=tablet&t=${Date.now()}`;
-
-      const useButton = (r.showUseNowButton && r.state !== "maintenance")
-        ? `
-          <button class="btn btn-use" data-url="${esc(checkinUrl)}" data-kind="use">
-            <div>
-              <div class="btn-use-ja">${esc(r.useNowLabelJa)}</div>
-              <div class="btn-use-en">${esc(r.useNowLabelEn)}</div>
-            </div>
-            <div class="btn-arrow">›</div>
-          </button>
-        `
-        : "";
-
-      const queueButton = (r.showQueueButton && r.state !== "maintenance")
-        ? `
-          <button class="btn btn-queue" data-url="${esc(queueUrl)}" data-kind="queue">
-            <span>${esc(r.queueButtonText)}</span>
-            <span>›</span>
-          </button>
-        `
-        : "";
-
-      return `
-        <article class="rack-card ${r.ui.cardClass}">
-          <div class="rack-top">
-            <div class="rack-visual">
-              <div class="rack-image-wrap">
-                <img src="rack${r.rackNo}.png?t=1" alt="Rack ${r.rackNo}">
-              </div>
-              <div class="badge-under">
-                ${renderBadge(r)}
-              </div>
-            </div>
-
-            <div class="rack-info">
-              <div class="label ${r.ui.currentLabelClass}">
-                ${esc(r.currentLabelJa)} / ${esc(r.currentLabelEn)}
-              </div>
-              <div class="status-main">${withBr(r.currentText)}</div>
-              ${r.currentSubText ? `<div class="status-sub">${withBr(r.currentSubText)}</div>` : ""}
-
-              <div class="divider"></div>
-
-              <div class="schedule-block">
-                <div class="label ${r.ui.nextLabelClass}">
-                  ${esc(r.nextLabelJa)} / ${esc(r.nextLabelEn)}
-                </div>
-                <div class="schedule-main">${withBr(r.nextText || "予定なし")}</div>
-                ${r.nextSubText ? `<div class="schedule-sub">${withBr(r.nextSubText)}</div>` : ""}
-              </div>
-
-              <div class="waiting-row">
-                <div class="label ${r.ui.waitingLabelClass}">
-                  予定数 / SCHEDULES
-                </div>
-                <div class="waiting-count">
-                  <svg class="person-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-4.14 0-7.5 2.46-7.5 5.5A1.5 1.5 0 0 0 6 21h12a1.5 1.5 0 0 0 1.5-1.5C19.5 16.46 16.14 14 12 14Z"/>
-                  </svg>
-                  <span>${r.scheduleCount}件</span>
-                </div>
-              </div>
-
-              ${r.noteText ? `<div class="note">${withBr(r.noteText)}</div>` : ""}
-            </div>
-          </div>
-
-          <div class="bottom-actions">
-            ${useButton || queueButton || '<div style="height:54px;"></div>'}
-          </div>
-        </article>
-      `;
-    }
-
-    function renderAll(data) {
-      const authCodeEl = document.getElementById("authCode");
-      const todayLabelEl = document.getElementById("todayLabel");
-      const lastUpdatedEl = document.getElementById("lastUpdated");
-      const rackGridEl = document.getElementById("rackGrid");
-
-      if (authCodeEl) {
-        authCodeEl.textContent = txt(data && data.authCode, "----");
-      }
-
-      if (todayLabelEl) {
-        todayLabelEl.textContent = txt(data && data.todayLabel, "----/--/--");
-      }
-
-      if (lastUpdatedEl) {
-        const updatedText =
-          data?.lastUpdatedText ||
-          data?.lastUpdated ||
-          data?.updatedAt ||
-          "--";
-
-        lastUpdatedEl.textContent = `最終更新 / LAST UPDATED: ${txt(updatedText, "--")}`;
-      }
-
-      const racks = Array.isArray(data?.racks) ? data.racks.slice() : [];
-
-      racks.sort(function(a, b) {
-        return (Number(a?.rackNo) || 0) - (Number(b?.rackNo) || 0);
-      });
-
-      if (rackGridEl) {
-        rackGridEl.innerHTML = racks.map(renderRack).join("");
-      }
-    }
-
-    async function fetchData() {
-      const url = `${API_URL}?action=getscheduletabletjson&t=${Date.now()}`;
-
-      const res = await fetch(url, {
-        method: "GET",
-        cache: "no-store"
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
-
-      const data = await res.json();
-
-      if (!data || typeof data !== "object") {
-        throw new Error("invalid json");
-      }
-
-      return data;
-    }
-
-    async function loadData() {
-      try {
-        hideError();
-        const data = await fetchData();
-        console.log("schedule data:", data);
-        renderAll(data);
-      } catch (e) {
-        console.error(e);
-        showError("データ取得失敗。GASレスポンスまたは通信状態をご確認ください。");
-      }
-    }
 function playClickSound(){
   try{
-    const audio = new Audio("click.mp3");
-    audio.volume = 0.5;
-    audio.play();
+    if(clickAudio){
+      clickAudio.currentTime = 0;
+      clickAudio.play();
+    }
+  }catch(e){}
+}
+
+/* ===== 既存 ===== */
+
+function esc(str){
+  return String(str ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#39;");
+}
+
+function withBr(str){
+  return esc(str).replace(/\n/g,"<br>");
+}
+
+function txt(v,fallback="—"){
+  const s=String(v??"").trim();
+  return s?s:fallback;
+}
+
+/* ===== 描画 ===== */
+
+function renderAll(data){
+  document.getElementById("authCode").textContent = txt(data?.authCode,"----");
+  document.getElementById("todayLabel").textContent = txt(data?.todayLabel,"----/--/--");
+
+  const updated =
+    data?.lastUpdatedText ||
+    data?.lastUpdated ||
+    "--";
+
+  document.getElementById("lastUpdated").textContent =
+    "最終更新 / LAST UPDATED: " + updated;
+
+  const racks = Array.isArray(data?.racks)?data.racks:[];
+
+  document.getElementById("rackGrid").innerHTML =
+    racks.map(r=>`
+      <div style="padding:10px;border:1px solid #333;margin:6px;border-radius:10px">
+        Rack ${r.rackNo}
+      </div>
+    `).join("");
+}
+
+/* ===== API ===== */
+
+async function fetchData(){
+  const res = await fetch(API_URL + "?action=getscheduletabletjson&t=" + Date.now(),{cache:"no-store"});
+  if(!res.ok) throw new Error("HTTP");
+  return await res.json();
+}
+
+async function loadData(){
+  try{
+    const data = await fetchData();
+    renderAll(data);
   }catch(e){
     console.error(e);
   }
 }
-    function setupEvents() {
-      const qrCard = document.getElementById("qrCard");
 
-      if (qrCard) {
-       qrCard.addEventListener("click", function() {
-  playClickSound();
-  setTimeout(()=>location.href = QR_PAGE_URL, 80);
-});
+/* ===== イベント ===== */
 
-        qrCard.addEventListener("keydown", function(e) {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            playClickSound();
-setTimeout(()=>location.href = QR_PAGE_URL, 80);
-          }
-        });
+function setupEvents(){
+
+  const qrCard = document.getElementById("qrCard");
+
+  if(qrCard){
+    qrCard.addEventListener("click", ()=>{
+      playClickSound();
+      setTimeout(()=>location.href = QR_PAGE_URL,80);
+    });
+
+    qrCard.addEventListener("keydown", e=>{
+      if(e.key==="Enter"||e.key===" "){
+        e.preventDefault();
+        playClickSound();
+        setTimeout(()=>location.href = QR_PAGE_URL,80);
       }
+    });
+  }
 
-     document.addEventListener("click", function(e) {
-  const btn = e.target.closest("[data-url]");
-  if (!btn) return;
+  document.addEventListener("click", function(e){
+    const btn = e.target.closest("[data-url]");
+    if(!btn) return;
 
-  const url = btn.getAttribute("data-url");
-  if (!url) return;
+    const url = btn.getAttribute("data-url");
+    if(!url) return;
 
-  playClickSound();
-  setTimeout(()=>location.href = url, 80);
-});
+    playClickSound();
+    setTimeout(()=>location.href = url,80);
+  });
 
-    setupEvents();
-    loadData();
-    setInterval(loadData, REFRESH_MS);
-  </script>
+  document.addEventListener("click", initSound, { once:true });
+}
+
+/* ===== 起動 ===== */
+
+setupEvents();
+initSound();
+loadData();
+setInterval(loadData, REFRESH_MS);
+</script>
 </body>
 </html>
