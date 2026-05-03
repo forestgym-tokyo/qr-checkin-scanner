@@ -188,6 +188,37 @@ if (fromTablet) {
 }
 
 function validateAuthCode(){
+  const input = document.getElementById("authCode");
+  const code = input ? input.value.trim() : "";
+
+  if(!code){
+    alert("認証コードを入力してください");
+    return;
+  }
+
+  fetch(GAS_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: "action=validateAuthCode&authCode=" + encodeURIComponent(code)
+  })
+  .then(r => r.json())
+  .then(res => {
+    if(res.ok){
+      verifiedAuthCode = code;
+
+      document.getElementById("authArea").style.display = "none";
+      document.getElementById("queueArea").style.display = "block";
+
+    }else{
+      alert(res.message || "認証失敗");
+    }
+  })
+  .catch(() => {
+    alert("通信エラー");
+  });
+}
 function queueNow(forceConfirm){
   const memberNo = document.getElementById("memberNo").value.trim();
   const memberName = document.getElementById("memberName").value.trim();
