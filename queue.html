@@ -216,33 +216,32 @@ btn.style.opacity = "0.6";
   }
 
   fetch(GAS_URL, {
-    method: "POST",
-    headers: {"Content-Type": "application/x-www-form-urlencoded"},
-    body: body
-  })
-  .then(r => r.json())
-  .then(res=>{
+  method: "POST",
+  headers: {"Content-Type": "application/x-www-form-urlencoded"},
+  body: body
+})
+.then(r => r.json())
+.then(res=>{
+  if (!res || !res.ok) {
+    alert(res.message || "失敗");
+
     btn.disabled = false;
+    btn.innerText = "順番待ち登録";
+    btn.style.opacity = "1";
 
-    if (!res || !res.ok) {
-     alert(res.message || "失敗");
+    return;
+  }
 
+  alert("受付完了");
+  location.href = "complete.html?from=" + (fromTablet ? "tablet" : "mobile") + "&t=" + Date.now();
+})
+.catch(()=>{
   btn.disabled = false;
   btn.innerText = "順番待ち登録";
   btn.style.opacity = "1";
 
-  return;
-}
-
-    alert("受付完了");
-    location.href = "complete.html?from=" + (fromTablet ? "tablet" : "mobile") + "&t=" + Date.now();
-  })
-  .catch(()=>{
-    btn.disabled = false;
-    alert("通信エラー");
-  });
-}
-
+  alert("通信エラー");
+});
 function back(){
   location.href = "complete.html?from=" + (fromTablet ? "tablet" : "mobile") + "&t=" + Date.now();
 }
