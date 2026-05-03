@@ -171,12 +171,24 @@ if (memberNoInput) {
 }
 
 function checkin(){
+  const btn = document.getElementById("checkinBtn");
+  if (btn) {
+    btn.disabled = true;
+    btn.innerText = "処理中... / Processing...";
+    btn.style.opacity = "0.6";
+  }
+
   const memberNo = document.getElementById("memberNo").value.trim();
   const memberName = document.getElementById("memberName").value.trim();
   const displayName = document.getElementById("displayName").value.trim();
 
   if(!memberNo || !memberName || !displayName){
     alert("入力してください / Please fill in all fields");
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = "チェックイン / Check In";
+      btn.style.opacity = "1";
+    }
     return;
   }
 
@@ -196,12 +208,22 @@ function checkin(){
   .then(res=>{
     if(!res || !res.ok){
       alert(res.message || "エラー / Error");
+      if (btn) {
+        btn.disabled = false;
+        btn.innerText = "チェックイン / Check In";
+        btn.style.opacity = "1";
+      }
       return;
     }
     showModal();
   })
   .catch(()=>{
     alert("通信エラー / Network error");
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = "チェックイン / Check In";
+      btn.style.opacity = "1";
+    }
   });
 }
 
