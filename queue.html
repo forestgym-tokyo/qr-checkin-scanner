@@ -93,7 +93,14 @@ button{
 
     <div class="card">
       <label class="form-label">認証コード / ACCESS CODE</label>
-      <input id="authCode" maxlength="4">
+      <input
+  id="authCode"
+  type="tel"
+  inputmode="numeric"
+  pattern="[0-9]*"
+  maxlength="4"
+  autocomplete="off"
+/>
 
       <button class="primary" onclick="validateAuthCode()">
         認証 / Verify
@@ -116,7 +123,14 @@ button{
     <div class="card">
 
       <label class="form-label">会員番号（数字のみ6桁）</label>
-      <input id="memberNo">
+      <input
+  id="memberNo"
+  type="tel"
+  inputmode="numeric"
+  pattern="[0-9]*"
+  maxlength="6"
+  autocomplete="off"
+/>
 
       <label class="form-label">お名前</label>
       <input id="memberName">
