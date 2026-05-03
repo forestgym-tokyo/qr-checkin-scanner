@@ -162,6 +162,11 @@ const params = new URLSearchParams(location.search);
 const rackNo = params.get("rackNo") || "1";
 document.getElementById("rackLabel").innerText = "Rack №" + rackNo;
 
+const memberNoInput = document.getElementById("memberNo");
+memberNoInput.addEventListener("input", function(){
+  this.value = this.value.replace(/\D/g, "").slice(0, 6);
+});
+
 function checkin(){
   const memberNo = document.getElementById("memberNo").value.trim();
   const memberName = document.getElementById("memberName").value.trim();
