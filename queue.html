@@ -199,6 +199,8 @@ function queueNow(forceConfirm){
 
   const btn = document.getElementById("queueBtn");
   btn.disabled = true;
+btn.innerText = "処理中... / Processing...";
+btn.style.opacity = "0.6";
 
   let body =
     "action=registerQueue"
@@ -223,9 +225,14 @@ function queueNow(forceConfirm){
     btn.disabled = false;
 
     if (!res || !res.ok) {
-      alert(res.message || "失敗");
-      return;
-    }
+     alert(res.message || "失敗");
+
+  btn.disabled = false;
+  btn.innerText = "順番待ち登録";
+  btn.style.opacity = "1";
+
+  return;
+}
 
     alert("受付完了");
     location.href = "complete.html?from=" + (fromTablet ? "tablet" : "mobile") + "&t=" + Date.now();
