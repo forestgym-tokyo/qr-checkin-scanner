@@ -166,6 +166,21 @@ const fromTablet = params.get("from") === "tablet";
 document.getElementById("rackLabel").innerText =
   rackNo ? "Rack №" + rackNo : "最短ラック自動選定";
 
+// ▼ここから追加
+["authCode", "memberNo"].forEach(function(id){
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  el.addEventListener("input", function(){
+    if (id === "authCode") {
+      this.value = this.value.replace(/\D/g, "").slice(0, 4);
+    } else if (id === "memberNo") {
+      this.value = this.value.replace(/\D/g, "").slice(0, 6);
+    }
+  });
+});
+// ▲ここまで追加
+
 if (fromTablet) {
   verifiedAuthCode = "";
   document.getElementById("authArea").style.display = "none";
