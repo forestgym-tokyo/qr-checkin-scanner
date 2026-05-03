@@ -188,33 +188,52 @@ if (fromTablet) {
 }
 
 function validateAuthCode(){
-  const code = document.getElementById("authCode").value.trim();
+  const input = document.getElementById("authCode");
+  const code = input ? input.value.trim() : "";
 
   if(!code){
     alert("認証コードを入力してください");
     return;
   }
 
+  alert("認証コード確認中: " + code); // ← 一旦テスト用
+
   fetch(GAS_URL, {
     method: "POST",
-    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
     body: "action=validateAuthCode&authCode=" + encodeURIComponent(code)
   })
-  .then(r=>r.json())
-  .then(res=>{
+  .then(function(r){
+    alert("通信成功。ステータス: " + r.status); // ← 一旦テスト用
+    return r.text();
+  })
+  .then(function(text){
+    alert("GAS応答: " + text); // ← 一旦テスト用
+
+    let res;
+    try {
+      res = JSON.parse(text);
+    } catch(e) {
+      alert("GASの返答がJSONではありません。\n\n" + text);
+      return;
+    }
+
     if(res.ok){
       verifiedAuthCode = code;
-      document.getElementById("authArea").style.display="none";
-      document.getElementById("queueArea").style.display="block";
+
+      document.getElementById("authArea").style.display = "none";
+      document.getElementById("queueArea").style.display = "block";
+
     }else{
       alert(res.message || "認証失敗");
     }
   })
-  .catch(()=>{
-    alert("通信エラー");
+  .catch(function(e){
+    alert("通信エラーです。\n\n" + e.message);
   });
 }
-
 function queueNow(forceConfirm){
   const memberNo = document.getElementById("memberNo").value.trim();
   const memberName = document.getElementById("memberName").value.trim();
