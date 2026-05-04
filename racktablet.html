@@ -885,17 +885,7 @@ async function checkoutRack(rackNo) {
     return;
   }
 
-  const btn = document.getElementById("checkoutBtn");
-
   try {
-    // ▼ 押した瞬間のフィードバック
-    if (btn) {
-      btn.disabled = true;
-      btn.innerText = "チェックアウト処理中...";
-      btn.style.opacity = "0.6";
-      btn.style.transform = "scale(0.96)";
-    }
-
     const params = new URLSearchParams();
     params.append("action", "checkoutFromRackTablet");
     params.append("rackNo", rackNo);
@@ -919,15 +909,39 @@ async function checkoutRack(rackNo) {
 
   } catch (e) {
     showToast("通信エラー");
-  } finally {
-    // ▼ 元に戻す（重要）
-    if (btn) {
-      btn.disabled = false;
-      btn.innerText = "チェックアウト";
-      btn.style.opacity = "1";
-      btn.style.transform = "scale(1)";
-    }
   }
+}
+
+
+// ▼ ここは関数の外（1回だけ定義）
+function showToast(msg) {
+  let el = document.getElementById("toast");
+
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "toast";
+    el.style.position = "fixed";
+    el.style.bottom = "40px";
+    el.style.left = "50%";
+    el.style.transform = "translateX(-50%)";
+    el.style.background = "rgba(0,0,0,0.85)";
+    el.style.color = "#8DFF00";
+    el.style.padding = "14px 24px";
+    el.style.borderRadius = "10px";
+    el.style.fontSize = "20px";
+    el.style.fontWeight = "700";
+    el.style.zIndex = "99999";
+    el.style.boxShadow = "0 0 20px rgba(141,255,0,0.35)";
+    document.body.appendChild(el);
+  }
+
+  el.innerText = msg;
+  el.style.display = "block";
+
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(function () {
+    el.style.display = "none";
+  }, 1800);
 }
 </script>
 
