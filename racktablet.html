@@ -885,6 +885,9 @@ async function checkoutRack(rackNo) {
     return;
   }
 
+  // ▼ 同一トーストで処理開始表示（中央）
+  showToast("チェックアウト処理中...", true, 0); // 0 = 自動消去しない
+
   try {
     const params = new URLSearchParams();
     params.append("action", "checkoutFromRackTablet");
@@ -892,7 +895,8 @@ async function checkoutRack(rackNo) {
 
     const res = await fetch(API_URL, {
       method: "POST",
-      body: params
+      body: params,
+      cache: "no-store"
     });
 
     let data = {};
@@ -901,47 +905,61 @@ async function checkoutRack(rackNo) {
     } catch (e) {}
 
     if (data && data.ok) {
-      showToast("チェックアウト完了");
-      loadData();
+      // ▼ 同じトーストを更新
+      showToast("チェックアウト完了", true, 1200);
+      setTimeout(() => loadData(), 800);
     } else {
-      showToast("チェックアウトできませんでした");
+      showToast("チェックアウト失敗", true, 1500);
     }
 
   } catch (e) {
-    showToast("通信エラー");
+    showToast("通信エラー", true, 1500);
   }
 }
 
 
-// ▼ ここは関数の外（1回だけ定義）
-function showToast(msg) {
+// ▼ トースト（1個を使い回し）
+function showToast(msg, center, duration) {
   let el = document.getElementById("toast");
 
   if (!el) {
     el = document.createElement("div");
     el.id = "toast";
     el.style.position = "fixed";
-    el.style.bottom = "40px";
     el.style.left = "50%";
-    el.style.transform = "translateX(-50%)";
-    el.style.background = "rgba(0,0,0,0.85)";
+    el.style.transform = "translate(-50%, -50%)";
+    el.style.background = "rgba(0,0,0,0.9)";
     el.style.color = "#8DFF00";
-    el.style.padding = "14px 24px";
-    el.style.borderRadius = "10px";
-    el.style.fontSize = "20px";
+    el.style.padding = "20px 30px";
+    el.style.borderRadius = "12px";
+    el.style.fontSize = "22px";
     el.style.fontWeight = "700";
     el.style.zIndex = "99999";
-    el.style.boxShadow = "0 0 20px rgba(141,255,0,0.35)";
+    el.style.boxShadow = "0 0 25px rgba(141,255,0,0.4)";
     document.body.appendChild(el);
   }
 
+  // ▼ 位置制御
+  if (center) {
+    el.style.top = "50%";
+    el.style.bottom = "auto";
+  } else {
+    el.style.top = "auto";
+    el.style.bottom = "40px";
+  }
+
+  // ▼ 内容更新（同一トースト）
   el.innerText = msg;
   el.style.display = "block";
 
   clearTimeout(window.__toastTimer);
-  window.__toastTimer = setTimeout(function () {
-    el.style.display = "none";
-  }, 1800);
+
+  // ▼ duration = 0 の場合は消さない（処理中用）
+  if (duration !== 0) {
+    window.__toastTimer = setTimeout(() => {
+      el.style.display = "none";
+    }, duration || 1500);
+  }
 }
 </script>
 
