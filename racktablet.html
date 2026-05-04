@@ -881,7 +881,7 @@ if(checkoutButton){
 
 async function checkoutRack(rackNo) {
   if (!rackNo) {
-    alert("ラック番号が取得できません。\nRack number not found.");
+    showToast("ラック番号が取得できません");
     return;
   }
 
@@ -895,21 +895,53 @@ async function checkoutRack(rackNo) {
       body: params
     });
 
-    const data = await res.json();
+    let data = {};
+    try {
+      data = await res.json();
+    } catch (e) {}
 
     if (data && data.ok) {
-      alert("チェックアウトしました。\nChecked out successfully.");
+      showToast("チェックアウト完了");
       loadData();
     } else {
-      alert(
-        (data && data.message ? data.message : "チェックアウトできませんでした。") +
-        "\nCheckout failed."
-      );
+      showToast("チェックアウトできませんでした");
     }
 
   } catch (e) {
-    alert("通信エラーが発生しました。\nNetwork error occurred.");
+    showToast("通信エラー");
   }
+}
+
+
+// ▼ ここは関数の外（1回だけ定義）
+function showToast(msg) {
+  let el = document.getElementById("toast");
+
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "toast";
+    el.style.position = "fixed";
+    el.style.bottom = "40px";
+    el.style.left = "50%";
+    el.style.transform = "translateX(-50%)";
+    el.style.background = "rgba(0,0,0,0.85)";
+    el.style.color = "#8DFF00";
+    el.style.padding = "14px 24px";
+    el.style.borderRadius = "10px";
+    el.style.fontSize = "20px";
+    el.style.fontWeight = "700";
+    el.style.zIndex = "99999";
+    el.style.boxShadow = "0 0 20px rgba(141,255,0,0.35)";
+    document.body.appendChild(el);
+  }
+
+  el.innerText = msg;
+  el.style.display = "block";
+
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(function () {
+    el.style.display = "none";
+  }, 1800);
 }
 </script>
 
