@@ -235,14 +235,15 @@ function queueNow(forceConfirm){
 btn.innerText = "処理中... / Processing...";
 btn.style.opacity = "0.6";
 
-  let body =
-    "action=registerQueue"
-    + "&authCode=" + encodeURIComponent(verifiedAuthCode)
-    + "&memberNo=" + encodeURIComponent(memberNo)
-    + "&memberName=" + encodeURIComponent(memberName)
-    + "&displayName=" + encodeURIComponent(displayName)
-    + "&email=" + encodeURIComponent(email)
-    + "&confirmedShortSlot=" + encodeURIComponent(forceConfirm ? "true" : "false");
+ let body =
+  "action=registerQueue"
+  + "&authCode=" + encodeURIComponent(fromTablet ? "" : verifiedAuthCode)
+  + "&fromTablet=" + encodeURIComponent(fromTablet ? "1" : "0")
+  + "&memberNo=" + encodeURIComponent(memberNo)
+  + "&memberName=" + encodeURIComponent(memberName)
+  + "&displayName=" + encodeURIComponent(displayName)
+  + "&email=" + encodeURIComponent(email)
+  + "&confirmedShortSlot=" + encodeURIComponent(forceConfirm ? "true" : "false");
 
   if (rackNo) {
     body += "&rackNo=" + encodeURIComponent(rackNo);
