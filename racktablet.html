@@ -485,6 +485,17 @@ html,body{
   overflow:hidden;
   text-overflow:ellipsis;
 }
+  .status-icon-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.status-icon-wrap img{
+  width:96px;
+  height:96px;
+  object-fit:contain;
+}
 </style>
 </head>
 
@@ -505,8 +516,13 @@ html,body{
 
 <div class="main">
 
-  <div class="main-card">
-    <div class="main-left">
+ <div class="main-card">
+
+  <div class="status-icon-wrap">
+    <img id="statusIcon" src="" alt="">
+  </div>
+
+  <div class="main-left">
       <div class="state" id="state"></div>
       <div class="state-en" id="stateEn"></div>
       <div class="user" id="user"></div>
