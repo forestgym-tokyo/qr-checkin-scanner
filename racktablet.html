@@ -647,7 +647,11 @@ function setNoCheckinMode(on){
   }
 }
 
+<script>
 function applyData(data){
+
+  const statusIcon = document.getElementById("statusIcon");
+
   const rackImage = document.getElementById("rackImage");
   if(rackImage){
     rackImage.src = "rt-rack" + (data.rackNo || rackNo) + ".png";
@@ -679,6 +683,8 @@ function applyData(data){
   }
 
   if(rawState === "no_checkin_required"){
+    if(statusIcon) statusIcon.src = "checkedin.png";
+
     setAccent("#8DFF00");
     setNoCheckinMode(true);
 
@@ -746,6 +752,8 @@ function applyData(data){
   }
 
   if(rawState === "priority_checkin"){
+    if(statusIcon) statusIcon.src = "priority.png";
+
     setAccent("#7A3EFF");
 
     safeSet("state", "繰上げ利用案内中");
@@ -764,6 +772,8 @@ function applyData(data){
   }
 
   else if(rawState === "using_checked_in" || rawState === "checked_in"){
+    if(statusIcon) statusIcon.src = "checkedin.png";
+
     setAccent("#8DFF00");
 
     safeSet("state", "チェックイン済");
@@ -791,6 +801,8 @@ function applyData(data){
   }
 
   else if(rawState === "using_not_checked_in" || rawState === "not_checked_in"){
+    if(statusIcon) statusIcon.src = "notcheckedin.png";
+
     setAccent("#FF8A00");
 
     safeSet("state", "未チェックイン");
@@ -814,6 +826,8 @@ function applyData(data){
   }
 
   else if(rawState === "free"){
+    if(statusIcon) statusIcon.src = "available.png";
+
     setAccent("#00C8FF");
 
     safeSet("state", "空いています");
@@ -831,6 +845,8 @@ function applyData(data){
   }
 
   else if(rawState === "reserved" || rawState === "scheduled"){
+    if(statusIcon) statusIcon.src = "reserved.png";
+
     setAccent("#FFD400");
 
     safeSet("state", "予定があります");
@@ -854,6 +870,8 @@ function applyData(data){
   }
 
   else{
+    if(statusIcon) statusIcon.src = "";
+
     setAccent("#8DFF00");
 
     safeSet("state", "");
@@ -901,8 +919,7 @@ async function checkoutRack(rackNo) {
     return;
   }
 
-  // ▼ 同一トーストで処理開始表示（中央）
-  showToast("チェックアウト処理中...", true, 0); // 0 = 自動消去しない
+  showToast("チェックアウト処理中...", true, 0);
 
   try {
     const params = new URLSearchParams();
@@ -921,7 +938,6 @@ async function checkoutRack(rackNo) {
     } catch (e) {}
 
     if (data && data.ok) {
-      // ▼ 同じトーストを更新
       showToast("チェックアウト完了", true, 1200);
       setTimeout(() => loadData(), 800);
     } else {
@@ -933,8 +949,6 @@ async function checkoutRack(rackNo) {
   }
 }
 
-
-// ▼ トースト（1個を使い回し）
 function showToast(msg, center, duration) {
   let el = document.getElementById("toast");
 
@@ -955,7 +969,6 @@ function showToast(msg, center, duration) {
     document.body.appendChild(el);
   }
 
-  // ▼ 位置制御
   if (center) {
     el.style.top = "50%";
     el.style.bottom = "auto";
@@ -964,13 +977,11 @@ function showToast(msg, center, duration) {
     el.style.bottom = "40px";
   }
 
-  // ▼ 内容更新（同一トースト）
   el.innerText = msg;
   el.style.display = "block";
 
   clearTimeout(window.__toastTimer);
 
-  // ▼ duration = 0 の場合は消さない（処理中用）
   if (duration !== 0) {
     window.__toastTimer = setTimeout(() => {
       el.style.display = "none";
