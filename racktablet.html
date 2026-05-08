@@ -883,7 +883,7 @@ function applyData(data){
     safeSet("stateEn", "RESERVED SOON");
     safeSet("user", "");
     safeHtml("subtext", "<span>次の予定の開始までご利用いただけます</span>");
-    safeSet("subtextEn", "Available until the next reservation starts");
+    safeHtml("subtextEn", "<span>Available until the next reservation starts</span>");
 
     safeSet("time",
       (data.remainingMin !== null && data.remainingMin !== undefined)
