@@ -332,20 +332,20 @@ html,body{
 
 /* ===== NO CHECKIN MODE ===== */
 .main.no-checkin-mode{
-  grid-template-rows:1fr 82px !important;
+  grid-template-rows:minmax(0, 1fr) 82px !important;
   gap:10px !important;
   align-content:stretch !important;
 }
 
 .main.no-checkin-mode .main-card{
   width:100% !important;
-  height:auto !important;
+  height:100% !important;
   grid-template-columns:1fr !important;
   padding:0 !important;
   border:none !important;
   box-shadow:none !important;
   background:transparent !important;
-  overflow:visible !important;
+  overflow:hidden !important;
 }
 
 .main.no-checkin-mode .main-right{
@@ -362,16 +362,16 @@ html,body{
 
 .main.no-checkin-mode .main-left{
   width:100% !important;
-  height:auto !important;
+  height:100% !important;
   display:block !important;
-  overflow:visible !important;
+  overflow:hidden !important;
 }
 
 .no-checkin-layout{
   width:100%;
-  height:auto;
+  height:100%;
   display:grid;
-  grid-template-rows:72px auto 82px;
+  grid-template-rows:72px minmax(0, 1fr) 82px;
   gap:10px;
 }
 
@@ -407,12 +407,14 @@ html,body{
 
 .no-checkin-hours{
   width:100%;
-  min-height:340px;
-  height:auto;
+  height:100%;
+  min-height:0;
   border-radius:14px;
   background:rgba(0,28,18,.92);
   padding:10px 24px;
-  overflow:visible;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
 }
 
 .no-checkin-hours-title{
@@ -421,6 +423,7 @@ html,body{
   line-height:1;
   font-weight:900;
   color:#fff;
+  flex-shrink:0;
 }
 
 .no-checkin-hours-title span{
@@ -432,15 +435,17 @@ html,body{
 }
 
 .no-checkin-hours-grid{
+  flex:1;
   margin-top:10px;
   display:grid;
   grid-template-columns:1fr 2px 1fr;
   gap:22px;
   align-items:center;
+  min-height:0;
 }
 
 .no-checkin-divider{
-  height:170px;
+  height:160px;
   background:#8DFF00;
   opacity:.7;
 }
@@ -454,8 +459,8 @@ html,body{
 }
 
 .no-checkin-hour-box img{
-  width:150px;
-  height:150px;
+  width:130px;
+  height:130px;
   object-fit:contain;
   flex-shrink:0;
 }
