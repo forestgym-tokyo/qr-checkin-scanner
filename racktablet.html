@@ -332,20 +332,20 @@ html,body{
 
 /* ===== NO CHECKIN MODE ===== */
 .main.no-checkin-mode{
-  grid-template-rows:560px 82px !important;
+  grid-template-rows:1fr 82px !important;
   gap:10px !important;
-  align-content:start !important;
+  align-content:stretch !important;
 }
 
 .main.no-checkin-mode .main-card{
   width:100% !important;
-  height:560px !important;
+  height:auto !important;
   grid-template-columns:1fr !important;
   padding:0 !important;
   border:none !important;
   box-shadow:none !important;
   background:transparent !important;
-  overflow:hidden !important;
+  overflow:visible !important;
 }
 
 .main.no-checkin-mode .main-right{
@@ -356,18 +356,22 @@ html,body{
   display:none !important;
 }
 
+.main.no-checkin-mode .status-icon-wrap{
+  display:none !important;
+}
+
 .main.no-checkin-mode .main-left{
   width:100% !important;
-  height:560px !important;
+  height:auto !important;
   display:block !important;
-  overflow:hidden !important;
+  overflow:visible !important;
 }
 
 .no-checkin-layout{
   width:100%;
-  height:560px;
+  height:auto;
   display:grid;
-  grid-template-rows:72px 136px 82px;
+  grid-template-rows:72px auto 82px;
   gap:10px;
 }
 
@@ -403,11 +407,12 @@ html,body{
 
 .no-checkin-hours{
   width:100%;
-  height:300px;
+  min-height:340px;
+  height:auto;
   border-radius:14px;
   background:rgba(0,28,18,.92);
   padding:10px 24px;
-  overflow:hidden;
+  overflow:visible;
 }
 
 .no-checkin-hours-title{
@@ -435,7 +440,7 @@ html,body{
 }
 
 .no-checkin-divider{
-  height:72px;
+  height:170px;
   background:#8DFF00;
   opacity:.7;
 }
