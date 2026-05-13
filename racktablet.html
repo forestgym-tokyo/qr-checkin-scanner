@@ -896,7 +896,9 @@ if(mainCard){
     safeSet("subtextEn", "Please check in using the in-gym tablet");
 
     if(mainRight) mainRight.style.display = "none";
-
+if(mainCard){
+  mainCard.classList.add("free-mode");
+}
     safeSet("nextUserTitle", "次の利用者 / Next User");
     safeSet("nextTimeTitle", "次の予定 / Next Reservation");
     safeSet("nextUser", nextName ? nextName + "さん" : "—");
