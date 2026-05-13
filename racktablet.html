@@ -540,6 +540,14 @@ html,body{
   .main.no-checkin-mode .status-icon-wrap{
   display:none !important;
 }
+  /* 空いていますの時だけ、右カラムを消してメインを右まで拡張 */
+.main-card.free-mode{
+  grid-template-columns:110px 1fr !important;
+}
+
+.main-card.free-mode .main-right{
+  display:none !important;
+}
 </style>
 </head>
 
