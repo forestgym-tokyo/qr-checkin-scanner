@@ -722,8 +722,16 @@ function applyData(data){
   const nextName = cleanName(data.nextDisplayName || "");
   const nextTime = formatTimeRange(data.nextStartText, data.nextEndText);
 
-  const checkoutBtn = document.getElementById("checkoutBtn");
-  const mainRight = document.getElementById("mainRight");
+ const checkoutBtn = document.getElementById("checkoutBtn");
+const mainRight = document.getElementById("mainRight");
+const mainCard = document.querySelector(".main-card");
+
+if(checkoutBtn) checkoutBtn.style.display = "none";
+if(mainRight) mainRight.style.display = "flex";
+
+if(mainCard){
+  mainCard.classList.remove("free-mode");
+}
 
   if(checkoutBtn) checkoutBtn.style.display = "none";
   if(mainRight) mainRight.style.display = "flex";
