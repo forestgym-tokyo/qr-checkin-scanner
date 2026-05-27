@@ -1,1 +1,286 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Queue</title>
 
+<style>
+body{
+  margin:0;
+  background:#0f1115;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:#fff;
+}
+.wrap{
+  max-width:520px;
+  margin:0 auto;
+  padding:40px 20px;
+}
+.page-title{
+  font-size:28px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+.rack-label{
+  font-size:24px;
+  font-weight:600;
+  color:#cfd6df;
+  margin-bottom:22px;
+}
+.lead{
+  color:#d7dbe2;
+  line-height:1.8;
+  font-size:14px;
+  margin-bottom:22px;
+}
+.lead-en{
+  color:#8f97a3;
+  font-size:13px;
+  margin-top:6px;
+}
+.card{
+  background:rgba(255,255,255,0.05);
+  border-radius:20px;
+  padding:24px;
+  backdrop-filter:blur(12px);
+}
+.form-label{
+  display:block;
+  font-size:13px;
+  color:#9aa3ad;
+  margin-bottom:6px;
+  margin-top:14px;
+}
+input{
+  width:100%;
+  padding:16px;
+  font-size:18px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.08);
+  color:#fff;
+  box-sizing:border-box;
+}
+button{
+  width:100%;
+  padding:16px;
+  font-size:18px;
+  border-radius:14px;
+  border:none;
+  margin-top:14px;
+  color:#fff;
+}
+.primary{
+  background:#2f80ed;
+}
+.back{
+  background:#444;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <div id="authArea">
+    <div class="page-title">認証コード入力</div>
+    <div class="lead">
+      店内タブレットに表示されている認証コードを入力してください
+      <div class="lead-en">Enter the authentication code shown on the in-gym tablet</div>
+    </div>
+
+    <div class="card">
+      <label class="form-label">認証コード / ACCESS CODE</label>
+      <input
+  id="authCode"
+  type="tel"
+  inputmode="numeric"
+  pattern="[0-9]*"
+  maxlength="4"
+  autocomplete="off"
+/>
+
+      <button class="primary" onclick="validateAuthCode()">
+        認証 / Verify
+      </button>
+    </div>
+  </div>
+
+  <div id="queueArea" style="display:none;">
+
+    <div class="page-title">順番待ち / Queue</div>
+    <div class="rack-label" id="rackLabel">最短ラック自動選定</div>
+
+    <div class="lead">
+      最も早く利用可能なラックを自動でご案内します。順番が来たらメールで通知されます。
+      <div class="lead-en">
+        The earliest available rack will be selected automatically. You will be notified by email when your turn comes.
+      </div>
+    </div>
+
+    <div class="card">
+
+      <label class="form-label">会員番号（数字のみ6桁）</label>
+      <input
+  id="memberNo"
+  type="tel"
+  inputmode="numeric"
+  pattern="[0-9]*"
+  maxlength="6"
+  autocomplete="off"
+/>
+
+      <label class="form-label">お名前</label>
+      <input id="memberName">
+
+      <label class="form-label">表示名</label>
+      <input id="displayName">
+
+      <label class="form-label">メールアドレス</label>
+      <input id="email" type="email">
+
+      <button class="primary" id="queueBtn" onclick="queueNow(false)">
+        順番待ち登録
+      </button>
+
+      <button class="back" onclick="back()">
+        戻る
+      </button>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+const GAS_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+
+let verifiedAuthCode = "";
+
+const params = new URLSearchParams(location.search);
+const rackNo = params.get("rackNo") || "";
+const fromTablet = params.get("from") === "tablet";
+
+document.getElementById("rackLabel").innerText =
+  rackNo ? "Rack №" + rackNo : "最短ラック自動選定";
+
+// ▼ここから追加
+["authCode", "memberNo"].forEach(function(id){
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  el.addEventListener("input", function(){
+    if (id === "authCode") {
+      this.value = this.value.replace(/\D/g, "").slice(0, 4);
+    } else if (id === "memberNo") {
+      this.value = this.value.replace(/\D/g, "").slice(0, 6);
+    }
+  });
+});
+// ▲ここまで追加
+
+if (fromTablet) {
+  verifiedAuthCode = "";
+  document.getElementById("authArea").style.display = "none";
+  document.getElementById("queueArea").style.display = "block";
+}
+
+function validateAuthCode(){
+  const input = document.getElementById("authCode");
+  const code = input ? input.value.trim() : "";
+
+  if(!code){
+    alert("認証コードを入力してください");
+    return;
+  }
+
+  fetch(GAS_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: "action=validateAuthCode&authCode=" + encodeURIComponent(code)
+  })
+  .then(r => r.json())
+  .then(res => {
+    if(res.ok){
+      verifiedAuthCode = code;
+
+      document.getElementById("authArea").style.display = "none";
+      document.getElementById("queueArea").style.display = "block";
+
+    }else{
+      alert(res.message || "認証失敗");
+    }
+  })
+  .catch(() => {
+    alert("通信エラー");
+  });
+}
+function queueNow(forceConfirm){
+  const memberNo = document.getElementById("memberNo").value.trim();
+  const memberName = document.getElementById("memberName").value.trim();
+  const displayName = document.getElementById("displayName").value.trim();
+  const email = document.getElementById("email").value.trim();
+
+  if(!memberNo || !memberName || !displayName || !email){
+    alert("入力してください");
+    return;
+  }
+
+  const btn = document.getElementById("queueBtn");
+  btn.disabled = true;
+btn.innerText = "処理中... / Processing...";
+btn.style.opacity = "0.6";
+
+ let body =
+  "action=registerQueue"
+  + "&authCode=" + encodeURIComponent(fromTablet ? "" : verifiedAuthCode)
+  + "&fromTablet=" + encodeURIComponent(fromTablet ? "1" : "0")
+  + "&memberNo=" + encodeURIComponent(memberNo)
+  + "&memberName=" + encodeURIComponent(memberName)
+  + "&displayName=" + encodeURIComponent(displayName)
+  + "&email=" + encodeURIComponent(email)
+  + "&confirmedShortSlot=" + encodeURIComponent(forceConfirm ? "true" : "false");
+
+  if (rackNo) {
+    body += "&rackNo=" + encodeURIComponent(rackNo);
+  }
+
+  fetch(GAS_URL, {
+  method: "POST",
+  headers: {"Content-Type": "application/x-www-form-urlencoded"},
+  body: body
+})
+.then(r => r.json())
+.then(res=>{
+  if (!res || !res.ok) {
+    alert(res.message || "失敗");
+
+    btn.disabled = false;
+    btn.innerText = "順番待ち登録";
+    btn.style.opacity = "1";
+
+    return;
+  }
+
+  alert("受付完了");
+  location.href = "complete.html?from=" + (fromTablet ? "tablet" : "mobile") + "&t=" + Date.now();
+})
+.catch(()=>{
+  btn.disabled = false;
+  btn.innerText = "順番待ち登録";
+  btn.style.opacity = "1";
+
+  alert("通信エラー");
+});
+  }
+function back(){
+  location.href = "complete.html?from=" + (fromTablet ? "tablet" : "mobile") + "&t=" + Date.now();
+}
+</script>
+
+</body>
+</html>
