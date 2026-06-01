@@ -148,15 +148,15 @@ function queueNow(forceConfirm){
   const displayName = document.getElementById("displayName").value.trim();
   const email = document.getElementById("email").value.trim();
 
-  if(!email || !displayName){
-    alert("メールアドレスと表示名を入力してください");
-    return;
-  }
+ if(!email){
+  alert("メールアドレスを入力してください");
+  return;
+}
 
-  if(!isValidDisplayName(displayName)){
-    alert("表示名は3文字以上で入力してください。あああ、あいう、ABC、AAA、111などは使用できません。");
-    return;
-  }
+if(displayName && !isValidDisplayName(displayName)){
+  alert("表示名は3文字以上で入力してください。あああ、あいう、ABC、AAA、111などは使用できません。");
+  return;
+}
 
   const btn = document.getElementById("queueBtn");
   btn.disabled = true;
