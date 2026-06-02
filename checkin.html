@@ -3,113 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Check In</title>
+<title>Check In Test</title>
 
 <style>
-body{
-  margin:0;
-  background:#0f1115;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  color:#fff;
-}
-.wrap{
-  max-width:520px;
-  margin:0 auto;
-  padding:40px 20px;
-}
-
-/* 見出し */
-.page-title{
-  font-size:28px;
-  font-weight:700;
-  margin-bottom:8px;
-}
-.rack-label{
-  font-size:24px;
-  font-weight:600;
-  color:#cfd6df;
-  margin-bottom:22px;
-}
-
-/* 説明 */
-.lead{
-  color:#d7dbe2;
-  line-height:1.8;
-  font-size:14px;
-  margin-bottom:22px;
-}
-.lead-en{
-  color:#8f97a3;
-  font-size:13px;
-  margin-top:6px;
-}
-
-/* カード */
-.card{
-  background:rgba(255,255,255,0.05);
-  border-radius:20px;
-  padding:24px;
-  backdrop-filter:blur(12px);
-}
-
-/* ラベル */
-.form-label{
-  display:block;
-  font-size:13px;
-  color:#9aa3ad;
-  margin-bottom:6px;
-  margin-top:14px;
-}
-
-/* 入力 */
-input{
-  width:100%;
-  padding:16px;
-  font-size:18px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.15);
-  background:rgba(255,255,255,0.08);
-  color:#fff;
-  box-sizing:border-box;
-}
-
-/* ボタン */
-button{
-  width:100%;
-  padding:16px;
-  font-size:18px;
-  border-radius:14px;
-  border:none;
-  margin-top:14px;
-  color:#fff;
-}
-.primary{
-  background:#2f80ed;
-}
-.back{
-  background:#444;
-}
-
-/* モーダル */
-.modal{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.7);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.modal-box{
-  background:#1a1d24;
-  padding:30px;
-  border-radius:18px;
-  text-align:center;
-  width:90%;
-  max-width:420px;
-}
+body{margin:0;background:#0f1115;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#fff;}
+.wrap{max-width:520px;margin:0 auto;padding:40px 20px;}
+.page-title{font-size:28px;font-weight:700;margin-bottom:8px;}
+.rack-label{font-size:24px;font-weight:600;color:#cfd6df;margin-bottom:22px;}
+.lead{color:#d7dbe2;line-height:1.8;font-size:14px;margin-bottom:22px;}
+.lead-en{color:#8f97a3;font-size:13px;margin-top:6px;}
+.card{background:rgba(255,255,255,0.05);border-radius:20px;padding:24px;backdrop-filter:blur(12px);}
+.form-label{display:block;font-size:13px;color:#9aa3ad;margin-bottom:6px;margin-top:14px;}
+input{width:100%;padding:16px;font-size:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:#fff;box-sizing:border-box;}
+button{width:100%;padding:16px;font-size:18px;border-radius:14px;border:none;margin-top:14px;color:#fff;}
+.primary{background:#2f80ed;}
+.back{background:#444;}
+.mode-box{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 6px;}
+.mode-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);padding:14px;border-radius:14px;color:#fff;font-size:14px;text-align:center;}
+.mode-btn.active{background:#2f80ed;border-color:#2f80ed;font-weight:700;}
+.hidden{display:none;}
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;}
+.modal-box{background:#1a1d24;padding:30px;border-radius:18px;text-align:center;width:90%;max-width:420px;}
+.note{font-size:12px;color:#9aa3ad;line-height:1.7;margin-top:10px;}
 </style>
 </head>
 
@@ -120,29 +35,38 @@ button{
   <div class="rack-label" id="rackLabel">Rack №-</div>
 
   <div class="lead">
-    このラックをすぐに利用できます。
+    このラックをすぐに利用できます。登録状況に応じて入力方法を選択してください。
     <div class="lead-en">
-      You can start using this rack immediately.
+      You can start using this rack immediately. Please choose your identification method.
     </div>
   </div>
 
   <div class="card">
 
-    <label class="form-label">会員番号 / Member ID（6 digits only）</label>
-   <input
-  id="memberNo"
-  type="tel"
-  inputmode="numeric"
-  pattern="[0-9]*"
-  maxlength="6"
-  autocomplete="off"
-/>
+    <div class="form-label">入力方法 / Method</div>
+    <div class="mode-box">
+      <button type="button" id="modeEmailBtn" class="mode-btn active" onclick="setMode('email')">
+        メール登録済
+      </button>
+      <button type="button" id="modeMemberNoBtn" class="mode-btn" onclick="setMode('memberNo')">
+        メール未登録
+      </button>
+    </div>
 
-    <label class="form-label">お名前 / Name</label>
-    <input id="memberName">
+    <div id="emailArea">
+      <label class="form-label">メールアドレス / Email</label>
+      <input id="email" type="email" autocomplete="email">
+      <div class="note">メールアドレス登録済の方は、会員番号ではなくメールアドレスを入力してください。</div>
+    </div>
+
+    <div id="memberNoArea" class="hidden">
+      <label class="form-label">会員番号 / Member ID（6 digits only）</label>
+      <input id="memberNo" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off">
+      <div class="note">メールアドレス未登録の方のみ、会員番号でチェックインできます。</div>
+    </div>
 
     <label class="form-label">表示名 / Display Name</label>
-    <input id="displayName">
+    <input id="displayName" autocomplete="off" maxlength="20">
 
     <button id="checkinBtn" class="primary" onclick="checkin()">
       チェックイン / Check In
@@ -156,66 +80,115 @@ button{
 </div>
 
 <script>
-const GAS_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxlPWQcmT81pH0U2Skl5P7C5eTNRI1uTXm-YW_rEhlE2vHCCWWG4_KPC0pu3Swf9znqNA/exec";
 
 const params = new URLSearchParams(location.search);
 const rackNo = params.get("rackNo") || "1";
 document.getElementById("rackLabel").innerText = "Rack №" + rackNo;
 
-const memberNoInput = document.getElementById("memberNo");
+let mode = "email";
 
+const memberNoInput = document.getElementById("memberNo");
 if (memberNoInput) {
   memberNoInput.addEventListener("input", function(){
     this.value = this.value.replace(/\D/g, "").slice(0, 6);
   });
 }
 
+function setMode(nextMode){
+  mode = nextMode;
+
+  document.getElementById("modeEmailBtn").classList.toggle("active", mode === "email");
+  document.getElementById("modeMemberNoBtn").classList.toggle("active", mode === "memberNo");
+
+  document.getElementById("emailArea").classList.toggle("hidden", mode !== "email");
+  document.getElementById("memberNoArea").classList.toggle("hidden", mode !== "memberNo");
+}
+
+function isValidDisplayName(name) {
+  const v = String(name || "").trim();
+
+  if (v.length < 3) return false;
+
+  const upper = v.toUpperCase();
+
+  const ngList = [
+    "あああ",
+    "あいう",
+    "アイウ",
+    "AAA",
+    "ABC",
+    "111",
+    "123"
+  ];
+
+  if (ngList.includes(upper) || ngList.includes(v)) return false;
+  if (/^(.)\1+$/.test(v)) return false;
+  if (/^\d+$/.test(v)) return false;
+
+  return true;
+}
+
+function resetButton(){
+  const btn = document.getElementById("checkinBtn");
+  btn.disabled = false;
+  btn.innerText = "チェックイン / Check In";
+  btn.style.opacity = "1";
+}
+
 function checkin(){
   const btn = document.getElementById("checkinBtn");
 
-  if (btn) {
-    btn.disabled = true;
-    btn.innerText = "処理中... / Processing...";
-    btn.style.opacity = "0.6";
+  const displayName = document.getElementById("displayName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const memberNo = document.getElementById("memberNo").value.trim();
+
+ if(displayName && !isValidDisplayName(displayName)){
+  alert("表示名は3文字以上で入力してください。あああ、あいう、ABC、AAA、111などは使用できません。");
+  return;
+}
+
+  if(mode === "email" && !email){
+    alert("メールアドレスを入力してください / Please enter your email address");
+    return;
   }
 
-  const memberNo = document.getElementById("memberNo").value.trim();
-  const memberName = document.getElementById("memberName").value.trim();
-  const displayName = document.getElementById("displayName").value.trim();
-
-  if(!memberNo || !memberName || !displayName){
-    alert("入力してください / Please fill in all fields");
-
-    if (btn) {
-      btn.disabled = false;
-      btn.innerText = "チェックイン / Check In";
-      btn.style.opacity = "1";
-    }
+  if(mode === "memberNo" && !memberNo){
+    alert("会員番号を入力してください / Please enter your member ID");
     return;
+  }
+
+  if(mode === "memberNo" && !/^\d{6}$/.test(memberNo)){
+    alert("会員番号は6桁の数字で入力してください");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerText = "処理中... / Processing...";
+  btn.style.opacity = "0.6";
+
+  let body =
+    "action=checkInNow"
+    + "&rackNo=" + encodeURIComponent(rackNo)
+    + "&displayName=" + encodeURIComponent(displayName)
+    + "&entryMethod=" + encodeURIComponent(mode);
+
+  if (mode === "email") {
+    body += "&email=" + encodeURIComponent(email);
+  } else {
+    body += "&memberNo=" + encodeURIComponent(memberNo);
   }
 
   fetch(GAS_URL, {
     method: "POST",
-    headers: {
-      "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"
-    },
-    body:
-      "action=checkInNow"
-      + "&rackNo=" + encodeURIComponent(rackNo)
-      + "&memberNo=" + encodeURIComponent(memberNo)
-      + "&memberName=" + encodeURIComponent(memberName)
-      + "&displayName=" + encodeURIComponent(displayName)
+    headers: {"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
+    body: body
   })
   .then(r => r.json())
   .then(res=>{
     if(!res || !res.ok){
       alert(res.message || "エラー / Error");
-
-      if (btn) {
-        btn.disabled = false;
-        btn.innerText = "チェックイン / Check In";
-        btn.style.opacity = "1";
-      }
+      resetButton();
       return;
     }
 
@@ -223,12 +196,7 @@ function checkin(){
   })
   .catch(()=>{
     alert("通信エラー / Network error");
-
-    if (btn) {
-      btn.disabled = false;
-      btn.innerText = "チェックイン / Check In";
-      btn.style.opacity = "1";
-    }
+    resetButton();
   });
 }
 
