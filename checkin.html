@@ -44,10 +44,12 @@ button{width:100%;padding:16px;font-size:18px;border-radius:14px;border:none;mar
   <div class="card">
 
     <div class="form-label">入力方法 / Method</div>
+
     <div class="mode-box">
       <button type="button" id="modeEmailBtn" class="mode-btn active" onclick="setMode('email')">
         メール登録済
       </button>
+
       <button type="button" id="modeMemberNoBtn" class="mode-btn" onclick="setMode('memberNo')">
         メール未登録
       </button>
@@ -56,18 +58,22 @@ button{width:100%;padding:16px;font-size:18px;border-radius:14px;border:none;mar
     <div id="emailArea">
       <label class="form-label">メールアドレス / Email</label>
       <input id="email" type="email" autocomplete="email">
-    <div class="note">
-  メールアドレス登録済の方は、会員番号ではなくメールアドレスを入力してください。<br>
-  Registered members: use your email address, not your member ID.
-</div>
+
+      <div class="note">
+        メールアドレス登録済の方は、会員番号ではなくメールアドレスを入力してください。<br>
+        Registered members: use your email address, not your member ID.
+      </div>
+    </div>
 
     <div id="memberNoArea" class="hidden">
       <label class="form-label">会員番号 / Member ID（6 digits only）</label>
       <input id="memberNo" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off">
-     <div class="note">
-  メールアドレス未登録の方のみ、会員番号でチェックインできます。<br>
-  Use your member ID only if your email address is not registered.
-</div>
+
+      <div class="note">
+        メールアドレス未登録の方のみ、会員番号でチェックインできます。<br>
+        Use your member ID only if your email address is not registered.
+      </div>
+    </div>
 
     <label class="form-label">表示名 / Display Name</label>
     <input id="displayName" autocomplete="off" maxlength="20">
@@ -147,10 +153,10 @@ function checkin(){
   const email = document.getElementById("email").value.trim();
   const memberNo = document.getElementById("memberNo").value.trim();
 
- if(displayName && !isValidDisplayName(displayName)){
-  alert("表示名は3文字以上で入力してください。あああ、あいう、ABC、AAA、111などは使用できません。");
-  return;
-}
+  if(displayName && !isValidDisplayName(displayName)){
+    alert("表示名は3文字以上で入力してください。あああ、あいう、ABC、AAA、111などは使用できません。");
+    return;
+  }
 
   if(mode === "email" && !email){
     alert("メールアドレスを入力してください / Please enter your email address");
@@ -163,7 +169,7 @@ function checkin(){
   }
 
   if(mode === "memberNo" && !/^\d{6}$/.test(memberNo)){
-    alert("会員番号は6桁の数字で入力してください");
+    alert("会員番号は6桁の数字で入力してください / Please enter a 6-digit member ID");
     return;
   }
 
@@ -206,7 +212,7 @@ function checkin(){
 
 function showModal(){
   const m = document.createElement("div");
-  m.className="modal";
+  m.className = "modal";
   m.innerHTML = `
     <div class="modal-box">
       <h2>チェックイン完了 / Check-in Complete</h2>
@@ -218,7 +224,7 @@ function showModal(){
 }
 
 function back(){
-  location.href="tablet.html";
+  location.href = "tablet.html";
 }
 </script>
 
