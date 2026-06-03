@@ -50,16 +50,25 @@ button{width:100%;padding:16px;font-size:18px;border-radius:14px;border:none;mar
       </div>
     </div>
 
-    <div class="card">
-      <label class="form-label">メールアドレス / Email</label>
-      <input id="email" type="email" autocomplete="email">
+   <div class="card">
+  <label class="form-label">メールアドレス / Email</label>
+  <input id="email" type="email" autocomplete="email">
 
-      <label class="form-label">表示名 / Display Name</label>
-      <input id="displayName" autocomplete="off" maxlength="20">
+  <label class="form-label">
+    表示名（任意） / Display Name (Optional)
+  </label>
 
-      <button class="primary" id="queueBtn" onclick="queueNow(false)">
-        順番待ち登録
-      </button>
+  <input id="displayName" autocomplete="off" maxlength="20">
+
+  <div class="note">
+    未入力の場合は会員氏名を使用します。<br>
+    If left blank, your registered member name will be used.
+  </div>
+
+  <button class="primary" id="queueBtn" onclick="queueNow(false)">
+    順番待ち登録/ Join Queue
+  </button>
+</div>
 
       <button class="back" onclick="back()">戻る</button>
     </div>
