@@ -77,12 +77,12 @@ const REFRESH_MS=15000;
 const MEMBER_OK_MESSAGE="ラック番号が取得できませんでした。";
 const DISPLAY_NAME_POOLS={
   male:{
-    ja:["最高にイケてる男","無敵のナイスガイ","男前レジェンド","魅惑の紳士","スタイル王","今日もカッコいい","筋肉ジェントルマン","最強の伊達男"],
-    en:["Mr. Cool Guy","Mr. Perfect","The Gentleman","King of Style","The Legend","Handsome Boss","Super Nice Guy","Mr. Awesome"]
+    ja:["最高にイケてる男","無敵のナイスガイ","男前レジェンド","魅惑の紳士","スタイル王","今日もカッコいい","筋肉ジェントルマン","最強の伊達男","鋼の使者","風のスクワッター","雷のベンチマン","静かなるデッドリフター","ケーブルの魔術師","バーベル侍","懸垂の達人","鉄の旅人","筋肉の伝道師","ラックの番人","スクワット職人","ベンチの切り札","デッドリフト忍者","ダンベルの貴公子","ショルダープレス侍","レッグプレス隊長","パワーの冒険者","鉄壁のリフター","爆発系ベンチマン","風来のスクワット男","筋トレの申し子","鉄の錬金術師","重力への挑戦者","筋肉の案内人"],
+    en:["Mr. Cool Guy","Mr. Perfect","The Gentleman","King of Style","The Legend","Handsome Boss","Super Nice Guy","Mr. Awesome","Steel Messenger","Wind Squat Ninja","Thunder Bench Ace","Deadlift Maverick","Cable Wizard","Barbell Samurai","Pull-Up Hero","Iron Traveler","Muscle Messenger","Rack Guardian","Squat Craftsman","Bench Wildcard","Deadlift Ninja","Dumbbell Rogue","Press Samurai","Leg Press Captain","Power Voyager","Iron Lifter","Bench Beast","Squat Drifter","Lift Alchemist","Gravity Challenger","Muscle Guide","Storm Lifter"]
   },
   female:{
-    ja:["美ボディ女神","輝く美女","美しきクイーン","スタイル女王","今日も美しい","奇跡のレディ","魅惑の美女","最強の美人"],
-    en:["The Beauty","Miss Gorgeous","Queen of Style","Beautiful Star","The Elegant","Glam Queen","Miss Fabulous","Beauty Legend"]
+    ja:["美ボディ女神","輝く美女","美しきクイーン","スタイル女王","今日も美しい","奇跡のレディ","魅惑の美女","最強の美人","スクワット姫","ヒップスラストの華","風のスクワット娘","雷のリフター","鉄のミューズ","ケーブルの魔女","バーベルの妖精","ダンベル天使","美尻の使者","レッグプレスの華","デッドリフトの星","しなやかリフター","パワーの女神","鉄の旅人","筋トレの申し子","重力と踊る人","スクワットの妖精","ケーブルの歌姫","バーベル美人","ヒップスラスト名人","ラックの華","風来のリフター","筋肉の案内人","鉄の錬金術師"],
+    en:["The Beauty","Miss Gorgeous","Queen of Style","Beautiful Star","The Elegant","Glam Queen","Miss Fabulous","Beauty Legend","Squat Princess","Hip Thrust Star","Wind Squat Star","Thunder Lifter","Iron Muse","Cable Witch","Barbell Fairy","Dumbbell Angel","Glute Messenger","Leg Press Star","Deadlift Star","Smooth Lifter","Power Goddess","Iron Traveler","Fitness Prodigy","Gravity Dancer","Squat Fairy","Cable Diva","Barbell Beauty","Hip Thrust Ace","Rack Star","Wind Lifter","Muscle Guide","Iron Alchemist"]
   }
 };
 let displayNameSuggestionValues={male:"",female:""};
@@ -187,7 +187,7 @@ async function confirmAction(){
       ?"利用登録が完了しました。\nチェックイン済みです。そのままラックをご利用ください。"
       :"順番待ち登録が完了しました。\nチェックイン用QRコードをメール送信しました。");
     await loadStatus();
-  }catch(e){showError("authError","通信エラーが発生しました。")}
+  }catch(e){showError("authError","通信エラーが発生しました。み")}
   finally{btn.disabled=false;btn.textContent=selected.kind==="use"?"利用登録する":"順番待ち登録する"}
 }
 
