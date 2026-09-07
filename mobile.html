@@ -140,7 +140,9 @@ async function confirmAction(){
     if(!res||!res.ok){showError("authError",res?.message||"登録できませんでした。");return}
     saveDisplayName(memberSession.displayName);
     document.getElementById("authModal").classList.remove("show");pendingAction=null;
-    alert(selected.kind==="use"?"利用登録が完了しました。":"順番待ち登録が完了しました。");
+    alert(selected.kind==="use"
+      ?"利用登録が完了しました。\nチェックイン済みです。そのままラックをご利用ください。"
+      :"順番待ち登録が完了しました。\nチェックイン用QRコードをメール送信しました。");
     await loadStatus();
   }catch(e){showError("authError","通信エラーが発生しました。")}
   finally{btn.disabled=false;btn.textContent=selected.kind==="use"?"利用登録する":"順番待ち登録する"}
