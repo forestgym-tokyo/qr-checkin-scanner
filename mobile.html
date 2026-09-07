@@ -11,7 +11,7 @@ body{margin:0;background:linear-gradient(180deg,#060708,#030405);color:var(--tex
 .app{max-width:620px;margin:0 auto;padding:22px 16px 36px}.logo{display:block;width:210px;max-width:62vw;margin:0 auto 18px;object-fit:contain}
 h1{font-size:27px;line-height:1.25;margin:0 0 6px;font-weight:900}.sub{font-size:13px;color:var(--muted);margin-bottom:20px}.card{background:rgba(255,255,255,.055);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 12px 32px rgba(0,0,0,.28)}
 label{display:block;font-size:13px;color:rgba(255,255,255,.65);margin:14px 0 7px}input{width:100%;border:1px solid rgba(255,255,255,.16);border-radius:13px;background:rgba(255,255,255,.08);color:#fff;padding:15px 14px;font-size:17px;outline:none}input:focus{border-color:rgba(120,197,58,.7)}
-button{appearance:none;border:0;border-radius:14px;cursor:pointer;font-weight:800;color:#fff}.primary{width:100%;padding:15px;margin-top:18px;background:linear-gradient(180deg,var(--green),var(--green2));font-size:17px}.secondary{width:100%;padding:13px;margin-top:10px;background:rgba(255,255,255,.10);font-size:15px}.primary:disabled,.secondary:disabled{opacity:.55;cursor:default}.note{font-size:12px;line-height:1.6;color:var(--muted);margin-top:8px}.error{display:none;margin:12px 0 0;padding:12px;border-radius:12px;background:rgba(217,83,79,.12);border:1px solid rgba(217,83,79,.3);color:#ffd8d7;font-size:13px;line-height:1.5}.error.show{display:block}
+button{appearance:none;border:0;border-radius:14px;cursor:pointer;font-weight:800;color:#fff}.primary{width:100%;padding:15px;margin-top:18px;background:linear-gradient(180deg,var(--green),var(--green2));font-size:17px}.secondary{width:100%;padding:13px;margin-top:10px;background:rgba(255,255,255,.10);font-size:15px}.primary:disabled,.secondary:disabled{opacity:.55;cursor:default}.note{font-size:12px;line-height:1.6;color:var(--muted);margin-top:8px}.suggestions{display:none;margin-top:12px;padding:12px;border-radius:14px;background:rgba(120,197,58,.07);border:1px solid rgba(120,197,58,.18)}.suggestion-title{font-size:12px;font-weight:900;color:#dfffc8;margin-bottom:9px}.suggestion-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.suggestion-btn{width:100%;padding:11px 9px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.11);text-align:left}.suggestion-btn span{display:block;font-size:10px;color:var(--muted);font-weight:700;margin-bottom:4px}.suggestion-btn strong{display:block;font-size:14px;line-height:1.25;color:#fff}.suggestion-foot{font-size:10px;color:var(--muted);margin-top:8px}.error{display:none;margin:12px 0 0;padding:12px;border-radius:12px;background:rgba(217,83,79,.12);border:1px solid rgba(217,83,79,.3);color:#ffd8d7;font-size:13px;line-height:1.5}.error.show{display:block}
 #statusArea{display:none}.status-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:2px 0 14px}.status-title{font-size:24px;font-weight:900}.updated{font-size:11px;color:var(--muted);text-align:right;white-space:pre-line}.rack-grid{display:grid;grid-template-columns:1fr;gap:12px}.rack-card{background:var(--panel);border:1px solid var(--line);border-radius:19px;padding:15px}.rack-card.free{border-color:rgba(120,197,58,.34)}.rack-card.reserved{border-color:rgba(208,138,32,.38)}.rack-card.maintenance{border-color:rgba(63,130,200,.38)}.rack-top{display:grid;grid-template-columns:92px 1fr;gap:14px}.rack-img{width:88px;height:88px;object-fit:contain}.rack-no{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:4px}.badge{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900;margin-bottom:8px;background:rgba(255,255,255,.09)}.badge.free{background:rgba(120,197,58,.16);color:#eaffd6}.badge.reserved{background:rgba(208,138,32,.16);color:#ffe0ae}.badge.maintenance{background:rgba(63,130,200,.16);color:#d8ebff}.current{font-size:19px;line-height:1.25;font-weight:900}.small{font-size:13px;line-height:1.45;color:rgba(255,255,255,.76);margin-top:4px}.divider{height:1px;background:rgba(255,255,255,.08);margin:11px 0}.next-label{font-size:11px;color:var(--muted);font-weight:800}.next{font-size:16px;font-weight:800;margin-top:3px}.count{font-size:12px;color:var(--muted);margin-top:8px}.actions{margin-top:14px}.use-btn{width:100%;padding:14px;background:linear-gradient(180deg,var(--green),var(--green2));font-size:16px}.queue-btn{width:100%;padding:13px;background:rgba(255,255,255,.12);font-size:15px}.member-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;border-radius:13px;background:rgba(120,197,58,.08);border:1px solid rgba(120,197,58,.16);font-size:12px}.member-name{font-weight:900}.change-btn{padding:8px 10px;background:rgba(255,255,255,.10);font-size:12px;white-space:nowrap}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:1000;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modal-box{width:100%;max-width:420px;background:#171b21;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:22px}.modal-title{font-size:22px;font-weight:900;margin-bottom:6px}.modal-sub{font-size:12px;line-height:1.55;color:var(--muted)}.auth-input{font-size:28px;letter-spacing:.28em;text-align:center;margin-top:12px}.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}.cancel-btn{padding:14px;background:rgba(255,255,255,.10);font-size:15px}.confirm-btn{padding:14px;background:var(--blue);font-size:15px}.footer{text-align:center;color:rgba(255,255,255,.25);font-size:10px;margin-top:24px}
 </style>
@@ -27,6 +27,14 @@ button{appearance:none;border:0;border-radius:14px;cursor:pointer;font-weight:80
       <input id="email" type="email" autocomplete="email" inputmode="email">
       <label for="displayName">表示名 / Display Name</label>
       <input id="displayName" maxlength="20" autocomplete="off">
+      <div class="suggestions" id="displayNameSuggestions">
+        <div class="suggestion-title">おすすめ表示名 / RANDOM PICKS</div>
+        <div class="suggestion-grid">
+          <button type="button" class="suggestion-btn" onclick="applyDisplayNameSuggestion('male')"><span>男性向け</span><strong id="maleSuggestion"></strong></button>
+          <button type="button" class="suggestion-btn" onclick="applyDisplayNameSuggestion('female')"><span>女性向け</span><strong id="femaleSuggestion"></strong></button>
+        </div>
+        <div class="suggestion-foot">気に入らなければ、そのまま自由に入力できます。</div>
+      </div>
       <div class="note">前回使用した表示名がある場合は自動表示されます。未入力の場合は会員氏名を使用します。</div>
       <button class="primary" id="memberBtn" onclick="verifyMember()">利用状況を見る</button>
       <div class="error" id="loginError"></div>
@@ -67,6 +75,17 @@ const API_URL="https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_
 const DISPLAY_NAME_KEY="tfgRackDisplayName";
 const REFRESH_MS=15000;
 const MEMBER_OK_MESSAGE="ラック番号が取得できませんでした。";
+const DISPLAY_NAME_POOLS={
+  male:{
+    ja:["最高にイケてる男","無敵のナイスガイ","男前レジェンド","魅惑の紳士","スタイル王","今日もカッコいい","筋肉ジェントルマン","最強の伊達男"],
+    en:["Mr. Cool Guy","Mr. Perfect","The Gentleman","King of Style","The Legend","Handsome Boss","Super Nice Guy","Mr. Awesome"]
+  },
+  female:{
+    ja:["美ボディ女神","輝く美女","美しきクイーン","スタイル女王","今日も美しい","奇跡のレディ","魅惑の美女","最強の美人"],
+    en:["The Beauty","Miss Gorgeous","Queen of Style","Beautiful Star","The Elegant","Glam Queen","Miss Fabulous","Beauty Legend"]
+  }
+};
+let displayNameSuggestionValues={male:"",female:""};
 let memberSession=null;
 let pendingAction=null;
 let refreshTimer=null;
@@ -76,7 +95,31 @@ function showError(id,msg){const e=document.getElementById(id);if(!e)return;e.te
 function hideError(id){const e=document.getElementById(id);if(!e)return;e.textContent="";e.classList.remove("show")}
 function setBusy(id,busy,text){const b=document.getElementById(id);if(!b)return;b.disabled=!!busy;if(text)b.textContent=text}
 function isValidDisplayName(name){const v=String(name||"").trim();if(!v)return true;if(v.length<3)return false;const upper=v.toUpperCase();const ng=["あああ","あいう","アイウ","AAA","ABC","111","123"];if(ng.includes(upper)||ng.includes(v))return false;if(/^(.)\1+$/.test(v))return false;if(/^\d+$/.test(v))return false;return true}
-function restoreDisplayName(){try{document.getElementById("displayName").value=localStorage.getItem(DISPLAY_NAME_KEY)||""}catch(e){}}
+function pickRandom(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function createRandomDisplayName(kind){const pools=DISPLAY_NAME_POOLS[kind];const lang=Math.random()<0.5?"ja":"en";return pickRandom(pools[lang])}
+function hideDisplayNameSuggestions(){document.getElementById("displayNameSuggestions").style.display="none"}
+function renderDisplayNameSuggestions(){
+  const input=document.getElementById("displayName");
+  const wrap=document.getElementById("displayNameSuggestions");
+  if(input.value.trim()){wrap.style.display="none";return}
+  displayNameSuggestionValues.male=createRandomDisplayName("male");
+  displayNameSuggestionValues.female=createRandomDisplayName("female");
+  document.getElementById("maleSuggestion").textContent=displayNameSuggestionValues.male;
+  document.getElementById("femaleSuggestion").textContent=displayNameSuggestionValues.female;
+  wrap.style.display="block";
+}
+function applyDisplayNameSuggestion(kind){
+  const value=displayNameSuggestionValues[kind]||"";
+  if(!value)return;
+  document.getElementById("displayName").value=value;
+  hideDisplayNameSuggestions();
+}
+function restoreDisplayName(){
+  let saved="";
+  try{saved=localStorage.getItem(DISPLAY_NAME_KEY)||""}catch(e){}
+  document.getElementById("displayName").value=saved;
+  if(saved)hideDisplayNameSuggestions();else renderDisplayNameSuggestions();
+}
 function saveDisplayName(v){try{if(v)localStorage.setItem(DISPLAY_NAME_KEY,v)}catch(e){}}
 
 async function post(params){const body=new URLSearchParams();Object.keys(params||{}).forEach(k=>body.append(k,params[k]??""));const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString(),cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);return await res.json()}
@@ -149,6 +192,7 @@ async function confirmAction(){
 }
 
 document.getElementById("authCode").addEventListener("input",function(){this.value=this.value.replace(/\D/g,"").slice(0,4)});
+document.getElementById("displayName").addEventListener("input",function(){if(this.value.trim())hideDisplayNameSuggestions();else renderDisplayNameSuggestions()});
 restoreDisplayName();
 </script>
 </body>
