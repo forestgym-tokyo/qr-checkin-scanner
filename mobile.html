@@ -122,7 +122,7 @@ function restoreDisplayName(){
 }
 function saveDisplayName(v){try{if(v)localStorage.setItem(DISPLAY_NAME_KEY,v)}catch(e){}}
 
-async function post(params){const body=new URLSearchParams();Object.keys(params||{}).forEach(k=>body.append(k,params[k]??""););const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString(),cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);return await res.json()}
+async function post(params){const body=new URLSearchParams();Object.keys(params||{}).forEach(k=>body.append(k,params[k]??""));const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString(),cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);return await res.json()}
 async function fetchSchedule(){const res=await fetch(API_URL+"?action=getscheduletabletjson&t="+Date.now(),{method:"GET",cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);const raw=await res.json();return{todayLabel:String(raw?.todayLabel||""),lastUpdatedText:String(raw?.lastUpdatedText||raw?.lastUpdated||""),racks:Array.isArray(raw?.racks)?raw.racks:[]}}
 
 async function verifyMember(){
