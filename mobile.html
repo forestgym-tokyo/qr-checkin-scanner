@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ラック利用状況 / Rack Status</title>
 <style>
-:root{--bg:#050607;--panel:#11151a;--line:rgba(255,255,255,.10);--text:#fff;--muted:rgba(255,255,255,.62);--green:#78c53a;--green2:#5fab24;--blue:#2f80ed;--orange:#d08a20;--yellow:#d6b428;--danger:#d9534f}
+:root{--panel:#11151a;--line:rgba(255,255,255,.10);--text:#fff;--muted:rgba(255,255,255,.62);--green:#78c53a;--green2:#5fab24;--blue:#2f80ed;--orange:#d08a20;--danger:#d9534f}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:linear-gradient(180deg,#060708,#030405);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",Roboto,sans-serif;min-height:100vh}
 .app{max-width:620px;margin:0 auto;padding:22px 16px 36px}.logo{display:block;width:210px;max-width:62vw;margin:0 auto 18px;object-fit:contain}
@@ -19,18 +19,15 @@ button{appearance:none;border:0;border-radius:14px;cursor:pointer;font-weight:80
 <body>
 <div class="app">
   <img class="logo" src="logo.png" alt="The Forest Gym">
-
   <section id="loginArea">
     <h1>ラック利用状況</h1>
     <div class="sub">Rack Status / 会員さま専用</div>
     <div class="card">
       <label for="email">メールアドレス / Email</label>
       <input id="email" type="email" autocomplete="email" inputmode="email">
-
       <label for="displayName">表示名 / Display Name</label>
       <input id="displayName" maxlength="20" autocomplete="off">
       <div class="note">前回使用した表示名がある場合は自動表示されます。未入力の場合は会員氏名を使用します。</div>
-
       <button class="primary" id="memberBtn" onclick="verifyMember()">利用状況を見る</button>
       <div class="error" id="loginError"></div>
     </div>
@@ -38,7 +35,7 @@ button{appearance:none;border:0;border-radius:14px;cursor:pointer;font-weight:80
 
   <section id="statusArea">
     <div class="member-bar">
-      <div><span class="member-name" id="memberDisplay">会員認証済み</span><br><span id="memberEmail"></span></div>
+      <div><span class="member-name" id="memberDisplay">ACT会員</span><br><span id="memberEmail"></span></div>
       <button class="change-btn" onclick="resetMember()">変更</button>
     </div>
     <div class="status-head">
@@ -49,7 +46,6 @@ button{appearance:none;border:0;border-radius:14px;cursor:pointer;font-weight:80
     <div class="rack-grid" id="rackGrid"></div>
     <button class="secondary" id="refreshBtn" onclick="loadStatus()">最新情報に更新</button>
   </section>
-
   <div class="footer">Copyright©2026 A-nauts Co., Ltd.</div>
 </div>
 
@@ -67,12 +63,13 @@ button{appearance:none;border:0;border-radius:14px;cursor:pointer;font-weight:80
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
-const DISPLAY_NAME_KEY = "tfgRackDisplayName";
-const REFRESH_MS = 15000;
-let memberSession = null;
-let pendingAction = null;
-let refreshTimer = null;
+const API_URL="https://script.google.com/macros/s/AKfycbx6mZdlpMCIcMWLcdH9J9O2n_1b2XuNcvW4TtvRqEFJ97Uz4Fp3C-6w-UlX5lXC3izn2Q/exec";
+const DISPLAY_NAME_KEY="tfgRackDisplayName";
+const REFRESH_MS=15000;
+const MEMBER_OK_MESSAGE="ラック番号が取得できませんでした。";
+let memberSession=null;
+let pendingAction=null;
+let refreshTimer=null;
 
 function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;")}
 function showError(id,msg){const e=document.getElementById(id);if(!e)return;e.textContent=msg||"エラーが発生しました。";e.classList.add("show")}
@@ -83,6 +80,7 @@ function restoreDisplayName(){try{document.getElementById("displayName").value=l
 function saveDisplayName(v){try{if(v)localStorage.setItem(DISPLAY_NAME_KEY,v)}catch(e){}}
 
 async function post(params){const body=new URLSearchParams();Object.keys(params||{}).forEach(k=>body.append(k,params[k]??""));const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString(),cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);return await res.json()}
+async function fetchSchedule(){const res=await fetch(API_URL+"?action=getscheduletabletjson&t="+Date.now(),{method:"GET",cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);const raw=await res.json();return{todayLabel:String(raw?.todayLabel||""),lastUpdatedText:String(raw?.lastUpdatedText||raw?.lastUpdated||""),racks:Array.isArray(raw?.racks)?raw.racks:[]}}
 
 async function verifyMember(){
   hideError("loginError");
@@ -92,15 +90,15 @@ async function verifyMember(){
   if(displayName&&!isValidDisplayName(displayName)){showError("loginError","表示名は3文字以上で入力してください。あああ、あいう、ABC、AAA、111などは使用できません。");return}
   setBusy("memberBtn",true,"確認中...");
   try{
-    const res=await post({action:"getMobileRackStatus",email});
-    if(!res||!res.ok){showError("loginError",res?.message||"会員情報を確認できませんでした。");return}
-    memberSession={email,displayName,memberName:String(res.memberName||"")};
+    const probe=await post({action:"checkInNow",entryMethod:"email",email:email,rackNo:"",displayName:""});
+    if(!probe||String(probe.message||"")!==MEMBER_OK_MESSAGE){showError("loginError","ACT会員を確認できませんでした。登録済みのメールアドレスをご確認ください。");return}
+    memberSession={email:email,displayName:displayName};
     saveDisplayName(displayName);
-    document.getElementById("memberDisplay").textContent=displayName||res.memberName||"会員認証済み";
+    document.getElementById("memberDisplay").textContent=displayName||"ACT会員";
     document.getElementById("memberEmail").textContent=email;
     document.getElementById("loginArea").style.display="none";
     document.getElementById("statusArea").style.display="block";
-    renderStatus(res);
+    renderStatus(await fetchSchedule());
     startRefresh();
   }catch(e){showError("loginError","通信エラーが発生しました。")}finally{setBusy("memberBtn",false,"利用状況を見る")}
 }
@@ -111,43 +109,41 @@ function renderRack(r){
   const state=normalizeState(r.state);const no=Number(r.rackNo)||0;
   const useBtn=(r.showUseNowButton&&state!=="maintenance")?`<button class="use-btn" onclick="requestAction('use',${no})">${esc(r.useNowLabelJa||"すぐに利用")}</button>`:"";
   const queueBtn=(r.showQueueButton&&state!=="maintenance")?`<button class="queue-btn" onclick="requestAction('queue',${no})">${esc(r.queueButtonText||"順番待ち")}</button>`:"";
-  return `<article class="rack-card ${state}"><div class="rack-top"><div><img class="rack-img" src="rack${no}.png" alt="Rack ${no}"></div><div><div class="rack-no">RACK №${no}</div><div class="badge ${state}">${esc(badgeLabel(r))}</div><div class="current">${esc(r.currentText||"—")}</div>${r.currentSubText?`<div class="small">${esc(r.currentSubText)}</div>`:""}<div class="divider"></div><div class="next-label">次の予定 / NEXT</div><div class="next">${esc(r.nextText||"予定なし")}</div>${r.nextSubText?`<div class="small">${esc(r.nextSubText)}</div>`:""}<div class="count">予定数 / SCHEDULES：${Number(r.waitingCount)||0}件</div></div></div>${(useBtn||queueBtn)?`<div class="actions">${useBtn||queueBtn}</div>`:""}</article>`;
+  return `<article class="rack-card ${state}"><div class="rack-top"><div><img class="rack-img" src="rack${no}.png" alt="Rack ${no}"></div><div><div class="rack-no">RACK №${no}</div><div class="badge ${state}">${esc(badgeLabel(r))}</div><div class="current">${esc(r.currentText||"—")}</div>${r.currentSubText?`<div class="small">${esc(r.currentSubText)}</div>`:""}<div class="divider"></div><div class="next-label">次の予定 / NEXT</div><div class="next">${esc(r.nextText||"予定なし")}</div>${r.nextSubText?`<div class="small">${esc(r.nextSubText)}</div>`:""}<div class="count">予定数 / SCHEDULES：${Number(r.waitingCount)||0}件</div></div></div>${(useBtn||queueBtn)?`<div class="actions">${useBtn||queueBtn}</div>`:""}</article>`
 }
-function renderStatus(data){hideError("statusError");document.getElementById("lastUpdated").textContent="最終更新 / LAST UPDATED\n"+(data.lastUpdatedText||data.lastUpdated||"--");const racks=Array.isArray(data.racks)?data.racks.slice():[];racks.sort((a,b)=>(Number(a.rackNo)||0)-(Number(b.rackNo)||0));document.getElementById("rackGrid").innerHTML=racks.map(renderRack).join("")}
-
-async function loadStatus(){
-  if(!memberSession)return;
-  hideError("statusError");setBusy("refreshBtn",true,"更新中...");
-  try{const res=await post({action:"getMobileRackStatus",email:memberSession.email});if(!res||!res.ok){showError("statusError",res?.message||"利用状況を取得できませんでした。");return}renderStatus(res)}catch(e){showError("statusError","利用状況の取得に失敗しました。")}finally{setBusy("refreshBtn",false,"最新情報に更新")}
-}
+function renderStatus(data){hideError("statusError");document.getElementById("lastUpdated").textContent="最終更新 / LAST UPDATED\n"+(data.lastUpdatedText||"--");const racks=Array.isArray(data.racks)?data.racks.slice():[];racks.sort((a,b)=>(Number(a.rackNo)||0)-(Number(b.rackNo)||0));document.getElementById("rackGrid").innerHTML=racks.map(renderRack).join("")}
+async function loadStatus(){if(!memberSession)return;hideError("statusError");setBusy("refreshBtn",true,"更新中...");try{renderStatus(await fetchSchedule())}catch(e){showError("statusError","利用状況の取得に失敗しました。")}finally{setBusy("refreshBtn",false,"最新情報に更新")}}
 function startRefresh(){if(refreshTimer)clearInterval(refreshTimer);refreshTimer=setInterval(loadStatus,REFRESH_MS)}
 function stopRefresh(){if(refreshTimer){clearInterval(refreshTimer);refreshTimer=null}}
 function resetMember(){stopRefresh();memberSession=null;pendingAction=null;document.getElementById("statusArea").style.display="none";document.getElementById("loginArea").style.display="block";hideError("loginError")}
 
-function requestAction(kind,rackNo){if(!memberSession)return;pendingAction={kind,rackNo};document.getElementById("authCode").value="";hideError("authError");document.getElementById("authConfirmBtn").textContent=kind==="use"?"利用登録する":"順番待ち登録する";document.getElementById("authModal").classList.add("show");setTimeout(()=>document.getElementById("authCode").focus(),80)}
+function requestAction(kind,rackNo){if(!memberSession)return;pendingAction={kind:kind,rackNo:rackNo};document.getElementById("authCode").value="";hideError("authError");document.getElementById("authConfirmBtn").textContent=kind==="use"?"利用登録する":"順番待ち登録する";document.getElementById("authModal").classList.add("show");setTimeout(()=>document.getElementById("authCode").focus(),80)}
 function closeAuthModal(){pendingAction=null;document.getElementById("authModal").classList.remove("show");hideError("authError")}
 
 async function confirmAction(){
   if(!memberSession||!pendingAction)return;
-  const action={kind:pendingAction.kind,rackNo:pendingAction.rackNo};
+  const selected={kind:pendingAction.kind,rackNo:pendingAction.rackNo};
   hideError("authError");
   const code=document.getElementById("authCode").value.trim();
   if(!/^\d{4}$/.test(code)){showError("authError","4桁の認証コードを入力してください。");return}
-  const btn=document.getElementById("authConfirmBtn");btn.disabled=true;btn.textContent="処理中...";
+  const btn=document.getElementById("authConfirmBtn");btn.disabled=true;btn.textContent="認証中...";
   try{
+    const auth=await post({action:"validateAuthCode",authCode:code});
+    if(!auth||!auth.ok){showError("authError",auth?.message||"認証コードが正しくありません。");return}
+    btn.textContent="処理中...";
     let res;
-    if(action.kind==="use"){
-      res=await post({action:"mobileCheckInNow",rackNo:action.rackNo,email:memberSession.email,displayName:memberSession.displayName,authCode:code});
+    if(selected.kind==="use"){
+      res=await post({action:"checkInNow",rackNo:selected.rackNo,email:memberSession.email,displayName:memberSession.displayName,entryMethod:"email"});
     }else{
-      res=await post({action:"registerQueue",rackNo:action.rackNo,email:memberSession.email,displayName:memberSession.displayName,authCode:code,fromTablet:"0",confirmedShortSlot:"false"});
+      res=await post({action:"registerQueue",rackNo:selected.rackNo,email:memberSession.email,displayName:memberSession.displayName,authCode:code,fromTablet:"0",confirmedShortSlot:"false"});
     }
     if(!res||!res.ok){showError("authError",res?.message||"登録できませんでした。");return}
     saveDisplayName(memberSession.displayName);
-    closeAuthModal();
-    alert(action.kind==="use"?"利用登録が完了しました。":"順番待ち登録が完了しました。");
+    document.getElementById("authModal").classList.remove("show");pendingAction=null;
+    alert(selected.kind==="use"?"利用登録が完了しました。":"順番待ち登録が完了しました。");
     await loadStatus();
   }catch(e){showError("authError","通信エラーが発生しました。")}
-  finally{btn.disabled=false;btn.textContent=action.kind==="use"?"利用登録する":"順番待ち登録する"}
+  finally{btn.disabled=false;btn.textContent=selected.kind==="use"?"利用登録する":"順番待ち登録する"}
 }
 
 document.getElementById("authCode").addEventListener("input",function(){this.value=this.value.replace(/\D/g,"").slice(0,4)});
