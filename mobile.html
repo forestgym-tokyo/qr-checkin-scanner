@@ -13,7 +13,7 @@ h1{font-size:27px;line-height:1.25;margin:0 0 6px;font-weight:900}.sub{font-size
 label{display:block;font-size:13px;color:rgba(255,255,255,.65);margin:14px 0 7px}input{width:100%;border:1px solid rgba(255,255,255,.16);border-radius:13px;background:rgba(255,255,255,.08);color:#fff;padding:15px 14px;font-size:17px;outline:none}input:focus{border-color:rgba(120,197,58,.7)}
 button{appearance:none;border:0;border-radius:14px;cursor:pointer;font-weight:800;color:#fff}.primary{width:100%;padding:15px;margin-top:18px;background:linear-gradient(180deg,var(--green),var(--green2));font-size:17px}.secondary{width:100%;padding:13px;margin-top:10px;background:rgba(255,255,255,.10);font-size:15px}.primary:disabled,.secondary:disabled{opacity:.55;cursor:default}.note{font-size:12px;line-height:1.6;color:var(--muted);margin-top:8px}.error{display:none;margin:12px 0 0;padding:12px;border-radius:12px;background:rgba(217,83,79,.12);border:1px solid rgba(217,83,79,.3);color:#ffd8d7;font-size:13px;line-height:1.5}.error.show{display:block}
 #statusArea{display:none}.status-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:2px 0 14px}.status-title{font-size:24px;font-weight:900}.updated{font-size:11px;color:var(--muted);text-align:right;white-space:pre-line}.rack-grid{display:grid;grid-template-columns:1fr;gap:12px}.rack-card{background:var(--panel);border:1px solid var(--line);border-radius:19px;padding:15px}.rack-card.free{border-color:rgba(120,197,58,.34)}.rack-card.reserved{border-color:rgba(208,138,32,.38)}.rack-card.maintenance{border-color:rgba(63,130,200,.38)}.rack-top{display:grid;grid-template-columns:92px 1fr;gap:14px}.rack-img{width:88px;height:88px;object-fit:contain}.rack-no{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:4px}.badge{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900;margin-bottom:8px;background:rgba(255,255,255,.09)}.badge.free{background:rgba(120,197,58,.16);color:#eaffd6}.badge.reserved{background:rgba(208,138,32,.16);color:#ffe0ae}.badge.maintenance{background:rgba(63,130,200,.16);color:#d8ebff}.current{font-size:19px;line-height:1.25;font-weight:900}.small{font-size:13px;line-height:1.45;color:rgba(255,255,255,.76);margin-top:4px}.divider{height:1px;background:rgba(255,255,255,.08);margin:11px 0}.next-label{font-size:11px;color:var(--muted);font-weight:800}.next{font-size:16px;font-weight:800;margin-top:3px}.count{font-size:12px;color:var(--muted);margin-top:8px}.actions{margin-top:14px}.use-btn{width:100%;padding:14px;background:linear-gradient(180deg,var(--green),var(--green2));font-size:16px}.queue-btn{width:100%;padding:13px;background:rgba(255,255,255,.12);font-size:15px}.member-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;border-radius:13px;background:rgba(120,197,58,.08);border:1px solid rgba(120,197,58,.16);font-size:12px}.member-name{font-weight:900}.change-btn{padding:8px 10px;background:rgba(255,255,255,.10);font-size:12px;white-space:nowrap}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:1000;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modal-box{width:100%;max-width:420px;background:#171b21;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:22px}.modal-title{font-size:22px;font-weight:900;margin-bottom:6px}.modal-sub{font-size:12px;line-height:1.55;color:var(--muted)}.auth-input{font-size:28px;letter-spacing:.28em;text-align:center;margin-top:12px}.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}.cancel-btn{padding:14px;background:rgba(255,255,255,.10);font-size:15px}.confirm-btn{padding:14px;background:var(--blue);font-size:15px}.footer{text-align:center;color:rgba(255,255,255,.25);font-size:10px;margin-top:24px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:1000;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modal-box{width:100%;max-width:420px;background:#171b21;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:22px}.modal-title{font-size:22px;font-weight:900;margin-bottom:6px}.modal-sub{font-size:12px;line-height:1.55;color:var(--muted)}.auth-code-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}.auth-digit{width:100%;min-width:0;height:64px;padding:0;border-radius:14px;font-size:30px;font-weight:900;line-height:64px;text-align:center;letter-spacing:0}.auth-digit:focus{border-color:rgba(120,197,58,.85);box-shadow:0 0 0 3px rgba(120,197,58,.16)}.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}.cancel-btn{padding:14px;background:rgba(255,255,255,.10);font-size:15px}.confirm-btn{padding:14px;background:var(--blue);font-size:15px}.footer{text-align:center;color:rgba(255,255,255,.25);font-size:10px;margin-top:24px}
 </style>
 </head>
 <body>
@@ -53,7 +53,12 @@ button{appearance:none;border:0;border-radius:14px;cursor:pointer;font-weight:80
   <div class="modal-box">
     <div class="modal-title">認証コード入力</div>
     <div class="modal-sub">店内タブレットに表示されている4桁の認証コードを入力してください。<br>利用登録・順番待ち登録の実行時のみ必要です。</div>
-    <input class="auth-input" id="authCode" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off">
+    <div class="auth-code-grid" id="authCodeGrid" aria-label="4桁の認証コード">
+      <input class="auth-digit" id="authCode1" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="認証コード1桁目">
+      <input class="auth-digit" id="authCode2" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="認証コード2桁目">
+      <input class="auth-digit" id="authCode3" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="認証コード3桁目">
+      <input class="auth-digit" id="authCode4" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="認証コード4桁目">
+    </div>
     <div class="modal-actions">
       <button class="cancel-btn" onclick="closeAuthModal()">キャンセル</button>
       <button class="confirm-btn" id="authConfirmBtn" onclick="confirmAction()">登録する</button>
@@ -70,6 +75,7 @@ const MEMBER_OK_MESSAGE="ラック番号が取得できませんでした。";
 let memberSession=null;
 let pendingAction=null;
 let refreshTimer=null;
+const authInputs=[1,2,3,4].map(n=>document.getElementById("authCode"+n));
 
 function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;")}
 function showError(id,msg){const e=document.getElementById(id);if(!e)return;e.textContent=msg||"エラーが発生しました。";e.classList.add("show")}
@@ -78,6 +84,30 @@ function setBusy(id,busy,text){const b=document.getElementById(id);if(!b)return;
 function isValidDisplayName(name){const v=String(name||"").trim();if(!v)return true;if(v.length<3)return false;const upper=v.toUpperCase();const ng=["あああ","あいう","アイウ","AAA","ABC","111","123"];if(ng.includes(upper)||ng.includes(v))return false;if(/^(.)\1+$/.test(v))return false;if(/^\d+$/.test(v))return false;return true}
 function restoreDisplayName(){try{document.getElementById("displayName").value=localStorage.getItem(DISPLAY_NAME_KEY)||""}catch(e){}}
 function saveDisplayName(v){try{if(v)localStorage.setItem(DISPLAY_NAME_KEY,v)}catch(e){}}
+function clearAuthCode(){authInputs.forEach(input=>{input.value=""})}
+function getAuthCode(){return authInputs.map(input=>String(input.value||"").replace(/\D/g,"").slice(0,1)).join("")}
+function focusFirstEmptyAuth(){const target=authInputs.find(input=>!input.value)||authInputs[0];if(target)target.focus()}
+function setupAuthInputs(){
+  authInputs.forEach((input,index)=>{
+    input.addEventListener("input",function(){
+      this.value=String(this.value||"").replace(/\D/g,"").slice(-1);
+      if(this.value&&index<authInputs.length-1)authInputs[index+1].focus();
+    });
+    input.addEventListener("keydown",function(event){
+      if(event.key==="Backspace"&&!this.value&&index>0){event.preventDefault();authInputs[index-1].focus();authInputs[index-1].select()}
+      if(event.key==="ArrowLeft"&&index>0){event.preventDefault();authInputs[index-1].focus()}
+      if(event.key==="ArrowRight"&&index<authInputs.length-1){event.preventDefault();authInputs[index+1].focus()}
+      if(event.key==="Enter"&&index===authInputs.length-1){event.preventDefault();confirmAction()}
+    });
+    input.addEventListener("paste",function(event){
+      const digits=String(event.clipboardData?.getData("text")||"").replace(/\D/g,"").slice(0,authInputs.length-index);
+      if(!digits)return;
+      event.preventDefault();
+      digits.split("").forEach((digit,offset)=>{const target=authInputs[index+offset];if(target)target.value=digit});
+      authInputs[Math.min(index+digits.length,authInputs.length-1)].focus();
+    });
+  });
+}
 
 async function post(params){const body=new URLSearchParams();Object.keys(params||{}).forEach(k=>body.append(k,params[k]??""));const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString(),cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);return await res.json()}
 async function fetchSchedule(){const res=await fetch(API_URL+"?action=getscheduletabletjson&t="+Date.now(),{method:"GET",cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);const raw=await res.json();return{todayLabel:String(raw?.todayLabel||""),lastUpdatedText:String(raw?.lastUpdatedText||raw?.lastUpdated||""),racks:Array.isArray(raw?.racks)?raw.racks:[]}}
@@ -117,15 +147,15 @@ function startRefresh(){if(refreshTimer)clearInterval(refreshTimer);refreshTimer
 function stopRefresh(){if(refreshTimer){clearInterval(refreshTimer);refreshTimer=null}}
 function resetMember(){stopRefresh();memberSession=null;pendingAction=null;document.getElementById("statusArea").style.display="none";document.getElementById("loginArea").style.display="block";hideError("loginError")}
 
-function requestAction(kind,rackNo){if(!memberSession)return;pendingAction={kind:kind,rackNo:rackNo};document.getElementById("authCode").value="";hideError("authError");document.getElementById("authConfirmBtn").textContent=kind==="use"?"利用登録する":"順番待ち登録する";document.getElementById("authModal").classList.add("show");setTimeout(()=>document.getElementById("authCode").focus(),80)}
+function requestAction(kind,rackNo){if(!memberSession)return;pendingAction={kind:kind,rackNo:rackNo};clearAuthCode();hideError("authError");document.getElementById("authConfirmBtn").textContent=kind==="use"?"利用登録する":"順番待ち登録する";document.getElementById("authModal").classList.add("show");setTimeout(()=>{if(authInputs[0])authInputs[0].focus()},80)}
 function closeAuthModal(){pendingAction=null;document.getElementById("authModal").classList.remove("show");hideError("authError")}
 
 async function confirmAction(){
   if(!memberSession||!pendingAction)return;
   const selected={kind:pendingAction.kind,rackNo:pendingAction.rackNo};
   hideError("authError");
-  const code=document.getElementById("authCode").value.trim();
-  if(!/^\d{4}$/.test(code)){showError("authError","4桁の認証コードを入力してください。");return}
+  const code=getAuthCode();
+  if(!/^\d{4}$/.test(code)){showError("authError","4桁の認証コードを入力してください。");focusFirstEmptyAuth();return}
   const btn=document.getElementById("authConfirmBtn");btn.disabled=true;btn.textContent="認証中...";
   try{
     const auth=await post({action:"validateAuthCode",authCode:code});
@@ -146,7 +176,7 @@ async function confirmAction(){
   finally{btn.disabled=false;btn.textContent=selected.kind==="use"?"利用登録する":"順番待ち登録する"}
 }
 
-document.getElementById("authCode").addEventListener("input",function(){this.value=this.value.replace(/\D/g,"").slice(0,4)});
+setupAuthInputs();
 restoreDisplayName();
 </script>
 </body>
