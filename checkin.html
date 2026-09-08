@@ -187,7 +187,8 @@ function checkin(){
     "action=checkInNow"
     + "&rackNo=" + encodeURIComponent(rackNo)
     + "&displayName=" + encodeURIComponent(displayName)
-    + "&entryMethod=" + encodeURIComponent(mode);
+    + "&entryMethod=" + encodeURIComponent(mode)
+    + "&fromTablet=1";
 
   if (mode === "email") {
     body += "&email=" + encodeURIComponent(email);
