@@ -4,7 +4,7 @@ const TFG_TOUR_RACK_SYNC_ = Object.freeze({
   sheetName: 'reservations',
   reservationTag: 'TFG_TOUR_RESERVATION_ID',
   slotTag: 'TFG_TOUR_SLOT',
-  cacheKey: 'TFG_TOUR_RACK_SYNC_LAST_V1',
+  cacheKey: 'TFG_TOUR_PERSONAL_RACK_SYNC_LAST_V2',
   intervalSeconds: 30
 });
 
@@ -112,6 +112,7 @@ function tfgTourRackTime_(value) {
 /** Caller holds the same script lock used by rack bookings and checkouts. */
 function syncTfgTourRacksUnlocked_(now) {
   // Validate the complete source snapshot and all four calendars before changing any hold.
+  const personalRequests = readTfgPersonalRackRequests_(now);
   const requests = readTfgTourRackRequests_(now);
   const from = new Date(now.getTime() - 2 * 86400000);
   const to = new Date(now.getTime() + 35 * 86400000);
@@ -182,7 +183,8 @@ function syncTfgTourRacksUnlocked_(now) {
     }
     result.created++;
   });
-  if (result.created || result.adopted || result.released || result.pending.length) console.log(JSON.stringify(result));
+  result.personal = syncTfgPersonalRacksUnlocked_(now, personalRequests, racks);
+  if (result.created || result.adopted || result.released || result.pending.length || result.personal.created || result.personal.adopted || result.personal.released || result.personal.pending.length) console.log(JSON.stringify(result));
   return result;
 }
 

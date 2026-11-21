@@ -658,6 +658,10 @@ function cleanName(text){
     .trim();
 }
 
+function rackTabletName(name){
+  return name ? (name === "パーソナル" ? name : name + "さん") : "";
+}
+
 function extractCurrentName(data){
   if(data.currentDisplayName) return cleanName(data.currentDisplayName);
   if(data.currentUserName) return cleanName(data.currentUserName);
@@ -791,7 +795,7 @@ if(mainCard){
           <div class="no-checkin-next">
             <div class="no-checkin-next-box">
               <div class="no-checkin-next-title">次の利用者 / NEXT USER</div>
-              <div class="no-checkin-next-value">${nextName ? nextName + "さん" : "—"}</div>
+              <div class="no-checkin-next-value">${nextName ? rackTabletName(nextName) : "—"}</div>
             </div>
 
             <div class="no-checkin-next-box">
@@ -826,7 +830,7 @@ if(mainCard){
 
     safeSet("nextUserTitle", "次の利用者 / Next User");
     safeSet("nextTimeTitle", "次の予定 / Next Reservation");
-    safeSet("nextUser", nextName ? nextName + "さん" : "—");
+    safeSet("nextUser", nextName ? rackTabletName(nextName) : "—");
     safeSet("nextTime", nextTime || "予定なし");
   }
 
@@ -837,7 +841,7 @@ if(mainCard){
 
     safeSet("state", "チェックイン済");
     safeSet("stateEn", "CHECKED IN");
-    safeSet("user", currentName ? currentName + "さんが利用中" : "利用中");
+    safeSet("user", currentName ? rackTabletName(currentName) + "が利用中" : "利用中");
     safeSet("subtext", "");
     safeSet("subtextEn", currentName ? "In use by " + currentName : "Currently in use");
 
@@ -855,7 +859,7 @@ if(mainCard){
 
     safeSet("nextUserTitle", "次の利用者");
     safeSet("nextTimeTitle", "次の予定");
-    safeSet("nextUser", nextName ? nextName + "さん" : "—");
+    safeSet("nextUser", nextName ? rackTabletName(nextName) : "—");
     safeSet("nextTime", nextTime || "予定なし");
   }
 
@@ -880,7 +884,7 @@ if(mainCard){
 
     safeSet("nextUserTitle", "予約者");
     safeSet("nextTimeTitle", "予定時間");
-    safeSet("nextUser", currentName ? currentName + "さん" : "—");
+    safeSet("nextUser", currentName ? rackTabletName(currentName) : "—");
     safeSet("nextTime", data.currentText || formatTimeRange(data.currentStartText, data.currentEndText) || "—");
   }
 
@@ -901,7 +905,7 @@ if(mainCard){
 }
     safeSet("nextUserTitle", "次の利用者 / Next User");
     safeSet("nextTimeTitle", "次の予定 / Next Reservation");
-    safeSet("nextUser", nextName ? nextName + "さん" : "—");
+    safeSet("nextUser", nextName ? rackTabletName(nextName) : "—");
     safeSet("nextTime", nextTime || "予定なし");
   }
 
@@ -926,7 +930,7 @@ if(mainCard){
 
     safeSet("nextUserTitle", "次の利用者 / Next User");
     safeSet("nextTimeTitle", "次の予定 / Next Reservation");
-    safeSet("nextUser", nextName ? nextName + "さん" : "—");
+    safeSet("nextUser", nextName ? rackTabletName(nextName) : "—");
     safeSet("nextTime", nextTime || "予定なし");
   }
 

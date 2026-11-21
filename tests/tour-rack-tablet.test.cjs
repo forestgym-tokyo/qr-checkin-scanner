@@ -21,3 +21,11 @@ test('a scheduled tour keeps checkout hidden and uses the requested honorific',(
 test('normal member names retain their honorific and checkout behavior',()=>{
   const f=fixture();f.scope.applyData({state:'using_checked_in',currentDisplayName:'テスト会員',canCheckout:true});assert.equal(f.element('user').textContent,'テスト会員さんが利用中');assert.equal(f.element('checkoutBtn').style.display,'flex');
 });
+test('an active personal uses the exact display label and enables checkout',()=>{
+  const f=fixture();f.scope.applyData({state:'using_checked_in',currentDisplayName:'パーソナル',nextDisplayName:'パーソナル',canCheckout:true,remainingMin:35,currentText:'10:10～10:50'});
+  assert.equal(f.element('user').textContent,'パーソナルが利用中');assert.equal(f.element('nextUser').textContent,'パーソナル');assert.equal(f.element('checkoutBtn').style.display,'flex');
+});
+test('a scheduled personal uses the exact display label and hides checkout',()=>{
+  const f=fixture();f.scope.applyData({state:'reserved',nextDisplayName:'パーソナル',canCheckout:false,remainingMin:12});
+  assert.equal(f.element('nextUser').textContent,'パーソナル');assert.equal(f.element('checkoutBtn').style.display,'none');
+});
