@@ -10,7 +10,7 @@ function fixture({party=1,start='10:00',now='2026-11-21T09:00:00+09:00'}={}){
   function event(title,start,end,description='',tags={}){
     const item={id:String(++serial),title,start:date(start),end:date(end),description,tags:{...tags},deleted:false,
       getId(){return this.id},getTitle(){return this.title},getStartTime(){return this.start},getEndTime(){return this.end},
-      getDescription(){return this.description},getTag(key){return this.tags[key]||null},
+      getDescription(){return this.description},setDescription(value){this.description=value;return this},getTag(key){return this.tags[key]||null},
       setTag(key,value){if(state.failTags)throw Error('tag failure');this.tags[key]=value;return this},
       deleteEvent(){assert.equal(locked,true);this.deleted=true;writes.push(['delete',this.id]);}
     };return item;
@@ -33,6 +33,7 @@ function fixture({party=1,start='10:00',now='2026-11-21T09:00:00+09:00'}={}){
     CalendarApp:{getCalendarById:id=>state.missing===id?null:calendars.get(id)},
     getRackPriorityForTour_:()=>[2,3,4,1].map(no=>({id:String(no),label:'ラック№'+no})),
     buildAdminBookingDescription_:meta=>Object.entries(meta).map(([k,v])=>k+': '+v).join('\n'),
+    parseAdminBookingDescription_:text=>Object.fromEntries(text.split('\n').filter(x=>x.includes(': ')).map(x=>[x.slice(0,x.indexOf(': ')),x.slice(x.indexOf(': ')+2)])),
     logError_(){},checkInNowWithoutTourSync_:params=>{assert.equal(locked,true);return {ok:true,params}},
     ScriptApp:{getProjectTriggers:()=>triggers,newTrigger:handler=>({timeBased(){return this},everyMinutes(n){assert.equal(n,1);return this},create(){triggers.push({getHandlerFunction:()=>handler})}})}
   });
@@ -112,4 +113,24 @@ test('native sheet dates and times use Japan time',()=>{
 });
 test('impossible dates fail instead of silently shifting a booking',()=>{
   const f=fixture();f.rows[1][3]='2026-11-31';assert.equal(f.sync().ok,false);assert.equal(f.writes.length,0);
+});
+function addLegacyHold(f,no){
+  f.block(no);const event=f.alive(no).at(-1);event.title='店内見学';event.end=new Date('2026-11-21T11:00:00+09:00');
+  event.description='A-nauts OS Reserve\n\nreservation_id: RSV-ONE\nservice_code: TOUR\ncustomer_name: private-name';return event;
+}
+test('an existing OS rack hold is adopted in place and made checkout-compatible',()=>{
+  const f=fixture();const old=addLegacyHold(f,2);const result=f.sync();assert.equal(result.created,0);assert.equal(result.adopted,1);assert.equal(f.alive(2)[0],old);assert.match(old.description,/BOOKING_TYPE: tour/);assert.match(old.description,/CHECKIN: true/);assert.doesNotMatch(old.description,/private-name/);
+});
+test('existing legacy and newly tagged duplicates are reduced to one rack in priority order',()=>{
+  const f=fixture();const preferred=addLegacyHold(f,2);f.sync();
+  const duplicate=addLegacyHold(f,3);const result=f.sync();assert.equal(result.created,0);assert.equal(result.released,1);assert.equal(duplicate.deleted,true);assert.equal(preferred.deleted,false);
+});
+test('a higher-priority legacy hold replaces a duplicate generated before adoption was enabled',()=>{
+  const f=fixture();f.block(2);f.sync();const generated=f.alive(3)[0];f.alive(2)[0].deleted=true;const legacy=addLegacyHold(f,2);const result=f.sync();assert.equal(result.adopted,1);assert.equal(result.released,1);assert.equal(generated.deleted,true);assert.equal(legacy.deleted,false);
+});
+test('unrelated manual tour events are not adopted or deleted',()=>{
+  const f=fixture();const manual=addLegacyHold(f,2);manual.description='BOOKING_TYPE: tour\nADMIN_TOKEN: manual';f.sync();assert.equal(manual.deleted,false);assert.equal(f.alive(3)[0].title,'店内見学');
+});
+test('a legacy hold conflicting with a member reservation is moved without changing the member booking',()=>{
+  const f=fixture();const legacy=addLegacyHold(f,2);f.block(2);const member=f.alive(2)[1];const result=f.sync();assert.equal(result.created,1);assert.equal(legacy.deleted,true);assert.equal(member.deleted,false);assert.equal(f.alive(3)[0].title,'店内見学');
 });
