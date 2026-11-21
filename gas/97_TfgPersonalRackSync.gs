@@ -1,5 +1,6 @@
 /** A-nauts personal lessons use one rack; no customer details enter rack calendars. */
 const TFG_PERSONAL_RACK_SYNC_ = Object.freeze({
+  legacyCalendarId: 'yachiyomidorigaoka@theforestgym.com',
   reservationTag: 'TFG_PERSONAL_RESERVATION_ID',
   slotTag: 'TFG_PERSONAL_SLOT',
   gapMinutes: 40
@@ -8,7 +9,36 @@ const TFG_PERSONAL_RACK_SYNC_ = Object.freeze({
 function readTfgPersonalRackRequests_(now) {
   const sheet = SpreadsheetApp.openById(TFG_TOUR_RACK_SYNC_.spreadsheetId).getSheetByName(TFG_TOUR_RACK_SYNC_.sheetName);
   if (!sheet || sheet.getLastRow() < 1) throw new Error('パーソナル予約の参照シートを確認できません。');
-  return buildTfgPersonalRackRequests_(sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn()).getValues(), now);
+  const requests = buildTfgPersonalRackRequests_(sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn()).getValues(), now);
+  const calendar = CalendarApp.getCalendarById(TFG_PERSONAL_RACK_SYNC_.legacyCalendarId);
+  if (!calendar) throw new Error('旧形式パーソナル予約のカレンダーを参照できません。');
+  const events = calendar.getEvents(new Date(now.getTime() - 2 * 86400000), new Date(now.getTime() + 35 * 86400000));
+  return mergeTfgLegacyPersonalRackRequests_(requests, events, now);
+}
+
+/** The prior trainer booking app stores BK reservations directly in the personal calendar. */
+function mergeTfgLegacyPersonalRackRequests_(requests, events, now) {
+  const seen = Object.create(null);
+  events.forEach(function(event) {
+    const description = String(event.getDescription() || '');
+    const match = description.match(/^予約ID[:：]\s*(BK-[A-Z0-9]+)\s*$/m);
+    if (!match) return;
+    const id = match[1];
+    const title = String(event.getTitle() || '');
+    if (!title.includes('[' + id + ']') || !/^トレーナー[:：]\s*\S.+$/m.test(description) || !/^プラン[:：]\s*\S.+$/m.test(description) || event.isAllDayEvent()) throw new Error('旧形式パーソナル予約の内容を確認できません。');
+    if (seen[id]) throw new Error('旧形式パーソナル予約IDが重複しています。');
+    seen[id] = true;
+    const lessonStart = event.getStartTime();
+    const lessonEnd = event.getEndTime();
+    if (!Number.isFinite(lessonStart.getTime()) || !Number.isFinite(lessonEnd.getTime()) || lessonEnd <= lessonStart) throw new Error('旧形式パーソナル予約の日時が不正です。');
+    const start = new Date(lessonStart.getTime() + 10 * 60000);
+    const end = new Date(start.getTime() + 40 * 60000);
+    if (end <= now || start.getTime() > now.getTime() + 33 * 86400000) return;
+    const signature = start.toISOString() + '/' + end.toISOString();
+    if (requests[id] && requests[id].signature !== signature) throw new Error('旧形式パーソナル予約の日時が参照元と一致しません。');
+    requests[id] = {id: id, start: start, end: end, signature: signature};
+  });
+  return requests;
 }
 
 function buildTfgPersonalRackRequests_(values, now) {

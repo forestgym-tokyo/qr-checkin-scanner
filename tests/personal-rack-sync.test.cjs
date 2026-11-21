@@ -88,5 +88,31 @@ test('failed ownership tags roll back a newly created personal event',()=>{
 });
 test('calendar snapshots keep API reads constant as personal reservations increase',()=>{
   const f=personal();for(let i=11;i<21;i++)f.rows.push(['RSV-'+i,'PT60','YACHIYO','2026-11-21',i+':00','RESERVED','']);
-  assert.equal(f.sync().personal.created,11);assert.equal(f.state.calendarReads,8);
+  assert.equal(f.sync().personal.created,11);assert.equal(f.state.calendarReads,9);
+});
+
+function legacySource(f,id='BK-ABC12345',start='11:00'){
+  f.block(1,'2026-11-21T'+start+':00+09:00','2026-11-21T13:00:00+09:00');const e=f.calendars.get('1').events.pop();
+  e.title='【テストトレーナー】'+start+' プライムプラン 非公開 ['+id+']';e.description='予約ID: '+id+'\nトレーナー: テストトレーナー\nプラン: プライムプラン\nお名前: private-name\nメールアドレス: private@example.invalid';f.sourceEvents.push(e);return e;
+}
+test('legacy BK lessons missing from the OS sheet are included at +10 for 40 minutes',()=>{
+  const f=personal();legacySource(f);f.sync();const e=f.alive(3)[0];assert.equal(e.tags.TFG_PERSONAL_RESERVATION_ID,'BK-ABC12345');assert.equal(e.start.toISOString(),'2026-11-21T02:10:00.000Z');assert.equal(e.end.toISOString(),'2026-11-21T02:50:00.000Z');assert.doesNotMatch(e.description,/private|メール/);
+});
+test('the reported 10:00 OS, 11:00 and 12:00 BK lessons plus tour receive one nonconflicting rack each',()=>{
+  const f=personal();legacySource(f,'BK-11111111','11:00');legacySource(f,'BK-22222222','12:00');
+  f.block(3,'2026-11-21T11:30:00+09:00','2026-11-21T12:00:00+09:00');f.alive(3)[0].title='店内見学';
+  let r=f.sync();assert.equal(r.personal.created,3);assert.deepEqual(f.alive(4).map(e=>e.tags.TFG_PERSONAL_RESERVATION_ID),['RSV-PT','BK-22222222']);assert.equal(f.alive(2)[0].tags.TFG_PERSONAL_RESERVATION_ID,'BK-11111111');assert.equal(f.sync().personal.created,0);
+});
+test('moving and cancelling a legacy calendar booking updates and releases only its hold',()=>{
+  const f=personal();const source=legacySource(f);f.sync();source.start=new Date('2026-11-21T12:00:00+09:00');let r=f.sync();assert.equal(r.personal.released,1);assert.equal(r.personal.created,1);
+  f.sourceEvents.length=0;r=f.sync();assert.equal(r.personal.released,1);assert.equal(f.alive(4).length,1);assert.equal(f.alive(4)[0].tags.TFG_PERSONAL_RESERVATION_ID,'RSV-PT');
+});
+test('a BK reservation present in both sources is deduplicated by ID and exact interval',()=>{
+  const f=personal();legacySource(f);f.rows.push(['BK-ABC12345','PT60','YACHIYO','2026-11-21','11:00','RESERVED','']);assert.equal(f.sync().personal.created,2);
+});
+test('unrelated manual calendar events and normal OS calendar copies are not inferred as BK lessons',()=>{
+  const f=personal();const e=legacySource(f);e.description='会員番号: 123456\nプラン: プライムプラン';assert.equal(f.sync().personal.created,1);
+});
+test('missing source calendar or malformed BK identity fails before changing any holds',()=>{
+  for(const corrupt of [f=>f.state.missing='yachiyomidorigaoka@theforestgym.com',f=>legacySource(f).title='different title',f=>{legacySource(f);legacySource(f)}]){const f=personal();corrupt(f);assert.equal(f.sync().ok,false);assert.equal(f.writes.length,0);}
 });
