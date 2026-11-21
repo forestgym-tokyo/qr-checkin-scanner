@@ -12,7 +12,6 @@ function patchTourRackSource(source) {
   const oldName = source.slice(start, end);
   if (oldName.split("return '見学';").length !== 3) throw new Error('Tour display labels changed');
   once(oldName, oldName.replaceAll("return '見学';", "return '店内見学';"));
-  once("('状況：' + currentDisplayName + 'さん')", "('状況：' + formatDisplayNameWithSan_(currentDisplayName))");
   once('function checkInNow(params) {', 'function checkInNowWithoutTourSync_(params) {');
   for (const name of ['reserveSelectedSlot', 'reservePersonalSlot', 'reserveTourSlot']) {
     once('function ' + name + '(payload) {\n  const lock', 'function ' + name + '(payload) {\n  syncTfgTourRacksIfDue_(false);\n  const lock');
